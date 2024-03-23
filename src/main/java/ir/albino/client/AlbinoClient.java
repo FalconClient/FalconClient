@@ -20,7 +20,6 @@ public class AlbinoClient {
     public static void prePerform() {
         File gamePath = getGamePath();
         if (!gamePath.exists()) gamePath.mkdirs();
-        System.out.println("test");
     }
 
     public static File getGamePath() {
