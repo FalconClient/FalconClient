@@ -255,7 +255,11 @@
             <artifactId>slick-util</artifactId>
             <version>1.0.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.cosium.matrix_communication_client</groupId>
+            <artifactId>matrix-communication-client</artifactId>
+            <version>1.9</version>
+        </dependency>
     </dependencies>
 
 </project>

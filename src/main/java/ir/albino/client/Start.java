@@ -10,8 +10,8 @@ public class Start {
         // Provide natives
         // Currently supported Linux and Windows
 
+        AlbinoClient.prePerform();
         System.setProperty("org.lwjgl.librarypath", new File("C:/Users/Mmd4j/IdeaProjects/AlbinoClient/test_natives/" + (System.getProperty("os.name").startsWith("Windows") ? "windows" : "linux")).getAbsolutePath());
-//        AlbinoClient.prePerform();
         Main.main(concat(new String[]{"--version", "AlbinoClient", "--accessToken", "0", "--assetsDir", "assets", "--assetIndex", "1.8", "--userProperties", "{}", "--illegal-access", "warn"}, args));
     }
 
