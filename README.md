@@ -14,7 +14,7 @@
 - آیکون کاستوم
 - کار راحت
 - فولدر متفاوت کلاینت(تنظیمات کلاینتتون به ورژنای دیگه هیچ ربطی نخواهد داشت)
-- ترک کردن سرورای ایرانی و اوردنشون تو یک بخش از مولتی پلیر
+- در دسترس بودن سرور های ایرانی در قسمت مولتی پلیر (قدرت گرفته از MCTools.ir)
 
 ## امکانات درحال توسعه
 
@@ -67,3 +67,4 @@
     - Thanks to the **MCP Development** team for providing the great MCP.
     - Thanks to **Marcloud** for providing maven to the MCP and providing all Minecraft libraries into a repo.
     - Thanks to **Purple** for creating the first icon of the client
+    - Thanks to MCTools Team for providing a complete iranian servers database.
