@@ -9,11 +9,17 @@
 همچنین همکاری دوستان برای ایجاد یک کلاینت برای بازی هست 
 که هرکسی آزاد هست تا به نحوی کمک کنه.
 
+## فضای مجازی
+تلگرام: https://t.me/AlbinoClient
+
+دیسکورد: https://discord.gg/tqEwRgjwR3
+
 ## امکانات
 
 - آیکون کاستوم
 - کار راحت
 - فولدر متفاوت کلاینت(تنظیمات کلاینتتون به ورژنای دیگه هیچ ربطی نخواهد داشت)
+- در دسترس بودن سرور های ایرانی در قسمت مولتی پلیر (قدرت گرفته از MCTools.ir)
 
 ## امکانات درحال توسعه
 
@@ -27,9 +33,8 @@
 - موسیقی منو دلخواه
 - چت و اد فرند دادن
 - ویژگی های پی وی پی
-- وصل کردنش به اسپاتیفای و یوتیوب موزیک واسه موسیقی گوش کردن حین بازی
-- ترک کردن سرورای ایرانی و اوردنشون تو یک بخش از مولتی پلیر
-  نوشتن ادان برای کلاینت(با زبان پایتون و جاوا)
+- گوش کردن به اسپاتیفای و یوتیوب موزیک حین بازی
+ - نوشتن ادان برای کلاینت(با زبان پایتون و جاوا)
 
 ## کمک به توسعه
 
@@ -57,6 +62,8 @@
 از اونجایی که پروژه هیچ درامدی نداره میتونین با حمایت مالی مارو حمایت کنید.
 لینک دونیشن درحال حاضر قرار نمیگیره!
 
+**ضمنا اگه یک دونه استار هم به این ریپو بدید خیلی کمک بزرگی کردید :)
+**
 ## Credits
 - **Mmd4J** Developer
 - **Amir Enderman** UI/ResourcePack Artist
@@ -67,3 +74,4 @@
     - Thanks to the **MCP Development** team for providing the great MCP.
     - Thanks to **Marcloud** for providing maven to the MCP and providing all Minecraft libraries into a repo.
     - Thanks to **Purple** for creating the first icon of the client
+    - Thanks to **MCTools** Team for providing a complete iranian servers database.
