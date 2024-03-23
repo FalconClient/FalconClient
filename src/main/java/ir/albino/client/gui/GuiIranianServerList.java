@@ -52,6 +52,6 @@ public class GuiIranianServerList extends ServerList {
 
     @Override
     public void saveServerList() {
-        
+
     }
 }

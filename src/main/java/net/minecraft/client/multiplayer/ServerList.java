@@ -21,7 +21,6 @@ public class ServerList
     public ServerList(Minecraft mcIn)
     {
         this.mc = mcIn;
-        this.loadServerList();
     }
 
     /**

@@ -40,7 +40,7 @@ public class ServerSelectionList extends GuiListExtended
             else
             {
                 --index;
-                return (GuiListExtended.IGuiListEntry)this.serverListLan.get(index);
+                return this.serverListLan.get(index);
             }
         }
     }

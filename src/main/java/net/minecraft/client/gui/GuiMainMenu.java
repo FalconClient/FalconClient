@@ -93,6 +93,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
      * Minecraft Realms button.
      */
     private GuiButton realmsButton;
+    private GuiButton altButton;
     private boolean field_183502_L;
     private GuiScreen field_183503_M;
 
@@ -236,6 +237,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer", new Object[0])));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer", new Object[0])));
         this.buttonList.add(this.realmsButton = new GuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, I18n.format("menu.online", new Object[0])));
+        this.buttonList.add(this.altButton = new GuiButton(15, this.width / 2 - 50, (p_73969_1_ + p_73969_2_ * 2) - 70, 100, 20, I18n.format("menu.altmanager")));
     }
 
     /**
@@ -256,42 +258,41 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
      * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
      */
     protected void actionPerformed(GuiButton button) throws IOException {
-        if (button.id == 0) {
-            this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
-        }
+        switch (button.id) {
+            case 0:
+                this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
+                break;
+            case 1:
+                this.mc.displayGuiScreen(new GuiSelectWorld(this));
+                break;
+            case 2:
+                this.mc.displayGuiScreen(new GuiMultiplayer(this));
+                break;
+            case 4:
+                this.mc.shutdown();
+                break;
+            case 11:
+                this.mc.launchIntegratedServer("Demo_World", "Demo_World", DemoWorldServer.demoWorldSettings);
+                break;
+            case 5:
+                this.mc.displayGuiScreen(new GuiLanguage(this, this.mc.gameSettings, this.mc.getLanguageManager()));
+                break;
+            case 14:
+                if (this.realmsButton.visible) this.switchToRealms();
+                break;
+            case 12:
+                ISaveFormat isaveformat = this.mc.getSaveLoader();
+                WorldInfo worldinfo = isaveformat.getWorldInfo("Demo_World");
 
-        if (button.id == 5) {
-            this.mc.displayGuiScreen(new GuiLanguage(this, this.mc.gameSettings, this.mc.getLanguageManager()));
-        }
+                if (worldinfo != null) {
+                    GuiYesNo guiyesno = GuiSelectWorld.makeDeleteWorldYesNo(this, worldinfo.getWorldName(), 12);
+                    this.mc.displayGuiScreen(guiyesno);
+                }
+                break;
+            case 15:
+                this.mc.displayGuiScreen(new GuiAltManager());
+                break;
 
-        if (button.id == 1) {
-            this.mc.displayGuiScreen(new GuiSelectWorld(this));
-        }
-
-        if (button.id == 2) {
-            this.mc.displayGuiScreen(new GuiMultiplayer(this));
-        }
-
-        if (button.id == 14 && this.realmsButton.visible) {
-            this.switchToRealms();
-        }
-
-        if (button.id == 4) {
-            this.mc.shutdown();
-        }
-
-        if (button.id == 11) {
-            this.mc.launchIntegratedServer("Demo_World", "Demo_World", DemoWorldServer.demoWorldSettings);
-        }
-
-        if (button.id == 12) {
-            ISaveFormat isaveformat = this.mc.getSaveLoader();
-            WorldInfo worldinfo = isaveformat.getWorldInfo("Demo_World");
-
-            if (worldinfo != null) {
-                GuiYesNo guiyesno = GuiSelectWorld.makeDeleteWorldYesNo(this, worldinfo.getWorldName(), 12);
-                this.mc.displayGuiScreen(guiyesno);
-            }
         }
     }
 

@@ -174,7 +174,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
                     this.refreshServerList();
                     break;
                 case 9:
-                    switch (currentTab){
+                    switch (currentTab) {
                         case SAVED:
                             loadIranianServers();
                             currentTab = ServerTab.IRANIAN;

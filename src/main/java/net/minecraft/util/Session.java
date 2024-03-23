@@ -1,5 +1,6 @@
 package net.minecraft.util;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import com.mojang.authlib.GameProfile;
 import com.mojang.util.UUIDTypeAdapter;
@@ -8,10 +9,19 @@ import java.util.UUID;
 
 public class Session
 {
-    private final String username;
-    private final String playerID;
-    private final String token;
-    private final Session.Type sessionType;
+    private String username;
+    private String playerID;
+    private String token;
+    private Session.Type sessionType;
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPlayerID(String playerID) {
+        this.playerID = playerID;
+    }
+
 
     public Session(String usernameIn, String playerIDIn, String tokenIn, String sessionTypeIn)
     {
@@ -20,7 +30,7 @@ public class Session
         this.token = tokenIn;
         this.sessionType = Session.Type.setSessionType(sessionTypeIn);
     }
-
+    @JsonIgnore
     public String getSessionID()
     {
         return "token:" + this.token + ":" + this.playerID;
@@ -41,6 +51,7 @@ public class Session
         return this.token;
     }
 
+    @JsonIgnore
     public GameProfile getProfile()
     {
         try
@@ -86,5 +97,8 @@ public class Session
                 SESSION_TYPES.put(session$type.sessionType, session$type);
             }
         }
+    }
+    public Session(){
+
     }
 }

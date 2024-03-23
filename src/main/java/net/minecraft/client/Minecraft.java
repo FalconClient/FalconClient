@@ -31,13 +31,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import javax.imageio.ImageIO;
 
 import ir.albino.client.AlbinoClient;
+import ir.albino.client.account.AltManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.audio.MusicTicker;
@@ -212,7 +212,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * The RenderEngine instance used by Minecraft
      */
     private TextureManager renderEngine;
-    public AlbinoClient client = new AlbinoClient();
+    public AlbinoClient client = new AlbinoClient(AltManager.getInstance());
 
     /**
      * Set to 'this' in Minecraft constructor; used by some settings get methods
@@ -249,7 +249,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     private Entity renderViewEntity;
     public Entity pointedEntity;
     public EffectRenderer effectRenderer;
-    private final Session session;
+    public Session session;
     private boolean isGamePaused;
 
     /**
@@ -419,6 +419,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
     public Minecraft(GameConfiguration gameConfig) {
         theMinecraft = this;
+        client.altManager.makeCurrentSession(gameConfig.userInfo.session);
         this.mcDataDir = gameConfig.folderInfo.mcDataDir;
         this.fileAssets = gameConfig.folderInfo.assetsDir;
         this.fileResourcepacks = gameConfig.folderInfo.resourcePacksDir;
@@ -427,7 +428,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         this.profileProperties = gameConfig.userInfo.profileProperties;
         this.mcDefaultResourcePack = new DefaultResourcePack((new ResourceIndex(gameConfig.folderInfo.assetsDir, gameConfig.folderInfo.assetIndex)).getResourceMap());
         this.proxy = gameConfig.userInfo.proxy == null ? Proxy.NO_PROXY : gameConfig.userInfo.proxy;
-        this.sessionService = (new YggdrasilAuthenticationService(gameConfig.userInfo.proxy, UUID.randomUUID().toString())).createMinecraftSessionService();
+        this.sessionService = (new YggdrasilAuthenticationService(gameConfig.userInfo.proxy, client.altManager.currentSession.getSessionID())).
+                createMinecraftSessionService();
         this.session = gameConfig.userInfo.session;
         logger.info("Setting user: " + this.session.getUsername());
         logger.info("(Session ID is " + this.session.getSessionID() + ")");
@@ -634,12 +636,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
     private void createDisplay() throws LWJGLException {
         Display.setResizable(true);
-        Display.setTitle("Minecraft 1.8.9");
-
+        Display.setTitle("Albino 1.8.9");
         try {
             Display.create((new PixelFormat()).withDepthBits(24));
         } catch (LWJGLException lwjglexception) {
-            logger.error((String) "Couldn\'t set pixel format", (Throwable) lwjglexception);
+            logger.error("Couldn't set pixel format", lwjglexception);
 
             try {
                 Thread.sleep(1000L);
@@ -2814,4 +2815,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     public void setConnectedToRealms(boolean isConnected) {
         this.connectedToRealms = isConnected;
     }
+
+
 }

@@ -1,7 +1,9 @@
 package ir.albino.client;
 
 import com.cosium.matrix_communication_client.MatrixResources;
+import ir.albino.client.account.AltManager;
 import ir.albino.client.gui.font.AlbinoFontRenderer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.Matrix4f;
 import org.apache.commons.lang3.SystemUtils;
 
@@ -10,13 +12,15 @@ import java.io.File;
 
 public class AlbinoClient {
     public AlbinoFontRenderer fontRenderer;
+    public AltManager altManager;
 
     public void initializeFontRenderer() {
+
         this.fontRenderer = new AlbinoFontRenderer("vazir", 20, Font.PLAIN, true, false);
     }
 
-    public AlbinoClient() {
-
+    public AlbinoClient(AltManager manager) {
+        this.altManager = manager;
     }
 
     public static String prePerform() {

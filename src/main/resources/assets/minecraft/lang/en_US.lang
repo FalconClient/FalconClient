@@ -26,6 +26,7 @@ translation.test.world=world
 menu.game=Game menu
 menu.singleplayer=Singleplayer
 menu.multiplayer=Multiplayer
+menu.altmanager=AltManager
 menu.online=Minecraft Realms
 menu.options=Options...
 menu.quit=Quit Game
@@ -216,6 +217,7 @@ lanServer.start=Start LAN World
 lanServer.otherPlayers=Settings for Other Players
 mcoServer.title=Minecraft Online World
 
+altmanager.title=Select Account
 multiplayer.title=Play Multiplayer
 multiplayer.connect=Connect
 multiplayer.info1=Minecraft Multiplayer is currently not finished, but there
