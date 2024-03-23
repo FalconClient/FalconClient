@@ -5,6 +5,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundEventAccessorComposite;
 import net.minecraft.client.audio.SoundHandler;
+import net.minecraft.client.gui.multiplayer.ScreenChatOptions;
 import net.minecraft.client.gui.stream.GuiStreamOptions;
 import net.minecraft.client.gui.stream.GuiStreamUnavailable;
 import net.minecraft.client.resources.I18n;

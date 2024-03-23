@@ -88,7 +88,6 @@ public class Main {
         PropertyMap propertymap1 = gson.fromJson(optionset.valueOf(optionspec16), PropertyMap.class);
         File file1 = optionset.valueOf(optionspec2);
         File file2 = new File(file1, "assets/");
-        System.out.println(optionset.valueOf(optionspec2));
         File file3 = new File(file1, "resourcepacks/");
         String s4 = optionset.has(optionspec10) ? optionspec10.value(optionset) : optionspec9.value(optionset);
         String s5 = optionset.has(optionspec17) ? optionspec17.value(optionset) : null;

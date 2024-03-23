@@ -19,7 +19,6 @@ public class Start {
         AltManager manager = new AltManager();
         if (file.exists()) {
             manager = new JsonMapper().readValue(file, AltManager.class);
-            System.out.println(manager.currentSession);
             playerUserName = manager.currentSession.getUsername();
             uuid = manager.currentSession.getPlayerID();
         }

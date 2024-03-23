@@ -1,8 +1,9 @@
-package net.minecraft.client.gui;
+package net.minecraft.client.gui.multiplayer;
 
 import com.google.common.collect.Lists;
 import java.util.List;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.network.LanServerDetector;
 
@@ -27,7 +28,7 @@ public class ServerSelectionList extends GuiListExtended
     {
         if (index < this.serverListInternet.size())
         {
-            return (GuiListExtended.IGuiListEntry)this.serverListInternet.get(index);
+            return this.serverListInternet.get(index);
         }
         else
         {

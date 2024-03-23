@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.LogManager;
 
 public class AltManager {
 
@@ -50,7 +51,7 @@ public class AltManager {
     public void makeCurrentSession(Session session) {
         currentSession = session;
         sessions.put(session.getUsername(), session);
-        Minecraft.getMinecraft().session = currentSession;
+        System.out.println("Changed account to " + session.getUsername());
     }
 
 }

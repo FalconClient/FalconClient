@@ -1,6 +1,7 @@
-package net.minecraft.client.gui;
+package net.minecraft.client.gui.multiplayer;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.resources.I18n;
 
 public class ServerListEntryLanScan implements GuiListExtended.IGuiListEntry

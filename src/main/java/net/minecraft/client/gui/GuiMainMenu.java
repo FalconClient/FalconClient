@@ -3,6 +3,8 @@ package net.minecraft.client.gui;
 import com.google.common.collect.Lists;
 import ir.albino.client.gui.font.AlbinoFontRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.altmanager.GuiAltManager;
+import net.minecraft.client.gui.multiplayer.GuiMultiplayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;

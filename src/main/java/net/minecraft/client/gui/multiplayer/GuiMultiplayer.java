@@ -1,4 +1,4 @@
-package net.minecraft.client.gui;
+package net.minecraft.client.gui.multiplayer;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 import ir.albino.client.gui.GuiIranianServerList;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
@@ -156,10 +157,11 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
                     break;
                 case 3:
                     this.addingServer = true;
-                    this.mc.displayGuiScreen(new GuiScreenAddServer(this, this.selectedServer = new ServerData(I18n.format("selectServer.defaultName", new Object[0]), "", false)));
+                    this.mc.displayGuiScreen(new GuiScreenAddServer(this, this.selectedServer = new ServerData(I18n.format("selectServer.defaultName"), "", false)));
                     break;
                 case 4:
                     this.directConnect = true;
+                    this.mc.displayGuiScreen(new GuiScreenServerList(this, this.selectedServer = new ServerData(I18n.format("selectServer.defaultName", new Object[0]), "", false)));
                     break;
                 case 7:
                     if (guilistextended$iguilistentry instanceof ServerListEntryNormal) {
@@ -208,6 +210,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
         serverListSelector.func_148195_a(iranianServers);
     }
 
+    @Override
     public void confirmClicked(boolean result, int id) {
         GuiListExtended.IGuiListEntry guilistextended$iguilistentry = this.serverListSelector.func_148193_k() < 0 ? null : this.serverListSelector.getListEntry(this.serverListSelector.func_148193_k());
 
@@ -225,11 +228,10 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
         } else if (this.directConnect) {
             this.directConnect = false;
 
-            if (result) {
+            if (result)
                 this.connectToServer(this.selectedServer);
-            } else {
-                this.mc.displayGuiScreen(this);
-            }
+            else this.mc.displayGuiScreen(this);
+
         } else if (this.addingServer) {
             this.addingServer = false;
 
@@ -333,7 +335,8 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
         this.hoveringText = null;
         this.drawDefaultBackground();
         this.serverListSelector.drawScreen(mouseX, mouseY, partialTicks);
-        this.drawCenteredString(this.fontRenderer, I18n.format("multiplayer.title", new Object[0]), this.width / 2, 20, 16777215);
+        this.drawCenteredString(this.fontRenderer, I18n.format("multiplayer.title")
+                , this.width / 2, 20, 16777215);
         super.drawScreen(mouseX, mouseY, partialTicks);
 
         if (this.hoveringText != null) {

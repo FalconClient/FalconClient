@@ -46,6 +46,10 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>marcloud-development-repository</id>
             <name>marCloud-Repository</name>
             <url>https://repo.marcloud.net/</url>
@@ -259,6 +263,11 @@
             <groupId>com.cosium.matrix_communication_client</groupId>
             <artifactId>matrix-communication-client</artifactId>
             <version>1.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.JnCrMx</groupId>
+            <artifactId>discord-game-sdk4j</artifactId>
+            <version>v0.5.5</version>
         </dependency>
     </dependencies>
 

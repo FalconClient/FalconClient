@@ -249,7 +249,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     private Entity renderViewEntity;
     public Entity pointedEntity;
     public EffectRenderer effectRenderer;
-    public Session session;
     private boolean isGamePaused;
 
     /**
@@ -430,9 +429,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         this.proxy = gameConfig.userInfo.proxy == null ? Proxy.NO_PROXY : gameConfig.userInfo.proxy;
         this.sessionService = (new YggdrasilAuthenticationService(gameConfig.userInfo.proxy, client.altManager.currentSession.getSessionID())).
                 createMinecraftSessionService();
-        this.session = gameConfig.userInfo.session;
-        logger.info("Setting user: " + this.session.getUsername());
-        logger.info("(Session ID is " + this.session.getSessionID() + ")");
+        this.client.altManager.currentSession = gameConfig.userInfo.session;
+        logger.info("Setting user: " + this.client.altManager.currentSession.getUsername());
+        logger.info("(Session ID is " + this.client.altManager.currentSession.getSessionID() + ")");
         this.isDemo = gameConfig.gameInfo.isDemo;
         this.displayWidth = gameConfig.displayInfo.width > 0 ? gameConfig.displayInfo.width : 1;
         this.displayHeight = gameConfig.displayInfo.height > 0 ? gameConfig.displayInfo.height : 1;
@@ -2605,7 +2604,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     }
 
     public Session getSession() {
-        return this.session;
+        return this.client.altManager.currentSession;
     }
 
     public PropertyMap getTwitchDetails() {
@@ -2617,7 +2616,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      */
     public PropertyMap getProfileProperties() {
         if (this.profileProperties.isEmpty()) {
-            GameProfile gameprofile = this.getSessionService().fillProfileProperties(this.session.getProfile(), false);
+            GameProfile gameprofile = this.getSessionService().fillProfileProperties(this.client.altManager.currentSession.getProfile(), false);
             this.profileProperties.putAll(gameprofile.getProperties());
         }
 

@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import ir.albino.client.gui.font.AlbinoFontRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.multiplayer.GuiMultiplayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;

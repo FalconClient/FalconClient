@@ -82,7 +82,7 @@ public class ServerList
      */
     public ServerData getServerData(int index)
     {
-        return (ServerData)this.servers.get(index);
+        return this.servers.get(index);
     }
 
     /**

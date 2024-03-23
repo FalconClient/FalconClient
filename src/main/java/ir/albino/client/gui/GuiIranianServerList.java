@@ -28,9 +28,6 @@ public class GuiIranianServerList extends ServerList {
         super(mcIn);
     }
 
-    public void loadServers() {
-
-    }
 
     @Override
     public void loadServerList() {

@@ -1,4 +1,4 @@
-package net.minecraft.client.gui;
+package net.minecraft.client.gui.multiplayer;
 
 import com.google.common.base.Charsets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiListExtended;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -53,24 +56,20 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
             this.server.pingToServer = -2L;
             this.server.serverMOTD = "";
             this.server.populationInfo = "";
-            field_148302_b.submit(new Runnable()
-            {
-                public void run()
+            field_148302_b.submit(() -> {
+                try
                 {
-                    try
-                    {
-                        ServerListEntryNormal.this.owner.getOldServerPinger().ping(ServerListEntryNormal.this.server);
-                    }
-                    catch (UnknownHostException var2)
-                    {
-                        ServerListEntryNormal.this.server.pingToServer = -1L;
-                        ServerListEntryNormal.this.server.serverMOTD = EnumChatFormatting.DARK_RED + "Can\'t resolve hostname";
-                    }
-                    catch (Exception var3)
-                    {
-                        ServerListEntryNormal.this.server.pingToServer = -1L;
-                        ServerListEntryNormal.this.server.serverMOTD = EnumChatFormatting.DARK_RED + "Can\'t connect to server.";
-                    }
+                    ServerListEntryNormal.this.owner.getOldServerPinger().ping(ServerListEntryNormal.this.server);
+                }
+                catch (UnknownHostException var2)
+                {
+                    ServerListEntryNormal.this.server.pingToServer = -1L;
+                    ServerListEntryNormal.this.server.serverMOTD = EnumChatFormatting.DARK_RED + "Can\'t resolve hostname";
+                }
+                catch (Exception var3)
+                {
+                    ServerListEntryNormal.this.server.pingToServer = -1L;
+                    ServerListEntryNormal.this.server.serverMOTD = EnumChatFormatting.DARK_RED + "Can\'t connect to server.";
                 }
             });
         }
@@ -83,7 +82,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
 
         for (int i = 0; i < Math.min(list.size(), 2); ++i)
         {
-            this.mc.fontRendererObj.drawString((String)list.get(i), x + 32 + 3, y + 12 + this.mc.fontRendererObj.FONT_HEIGHT * i, 8421504);
+            this.mc.fontRendererObj.drawString(list.get(i), x + 32 + 3, y + 12 + this.mc.fontRendererObj.FONT_HEIGHT * i, 8421504);
         }
 
         String s2 = flag2 ? EnumChatFormatting.DARK_RED + this.server.gameVersion : this.server.populationInfo;
@@ -327,6 +326,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
 
     public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_)
     {
+
     }
 
     /**
@@ -334,6 +334,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
      */
     public void mouseReleased(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY)
     {
+
     }
 
     public ServerData getServerData()

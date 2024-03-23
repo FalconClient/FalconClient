@@ -218,6 +218,9 @@ lanServer.otherPlayers=Settings for Other Players
 mcoServer.title=Minecraft Online World
 
 altmanager.title=Select Account
+altmanager.add=Add Alt
+
+
 multiplayer.title=Play Multiplayer
 multiplayer.connect=Connect
 multiplayer.info1=Minecraft Multiplayer is currently not finished, but there
