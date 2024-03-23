@@ -67,4 +67,4 @@
     - Thanks to the **MCP Development** team for providing the great MCP.
     - Thanks to **Marcloud** for providing maven to the MCP and providing all Minecraft libraries into a repo.
     - Thanks to **Purple** for creating the first icon of the client
-    - Thanks to MCTools Team for providing a complete iranian servers database.
+    - Thanks to **MCTools** Team for providing a complete iranian servers database.
