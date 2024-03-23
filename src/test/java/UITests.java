@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMultiplayer;
+import net.minecraft.client.gui.GuiScreen;
 import org.junit.Test;
 
 import java.io.File;
@@ -16,9 +17,10 @@ public class UITests {
     @Test
     public void jacksonTest() throws IOException {
         XmlMapper map = XmlMapper.builder().build();
-        map.writeValue(new File("test.xml"), new GuiButton(3,2,2,"Hey"));
-        GuiButton button = map.readValue(new File("test.xml"),GuiButton.class);
-        System.out.println(button);
+        map.writeValue(new File("test.xml"), new GuiScreen() {
+        });
+        GuiScreen screen = map.readValue(new File("test.xml"), GuiScreen.class);
+        System.out.println(screen);
     }
 
     public static class Screen {
