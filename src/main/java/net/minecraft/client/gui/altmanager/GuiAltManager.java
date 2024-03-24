@@ -66,6 +66,7 @@ public class GuiAltManager extends GuiScreen implements GuiYesNoCallback {
                 break;
             case 1:
                 this.mc.displayGuiScreen(parent);
+                mc.client.altManager.save();
                 break;
         }
     }
@@ -73,7 +74,6 @@ public class GuiAltManager extends GuiScreen implements GuiYesNoCallback {
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        mc.client.altManager.save();
     }
 
     @Override
