@@ -12,7 +12,7 @@
 ## فضای مجازی
 تلگرام: https://t.me/AlbinoClient
 
-دیسکورد: https://discord.gg/tqEwRgjwR3
+دیسکورد: [https://discord.gg/tqEwRgjwR3](https://discord.gg/JqCrSkN9dv)
 
 ## امکانات
 
