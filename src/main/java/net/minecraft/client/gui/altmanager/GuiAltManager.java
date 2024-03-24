@@ -3,6 +3,7 @@ package net.minecraft.client.gui.altmanager;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.stats.AchievementList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
@@ -15,6 +16,7 @@ public class GuiAltManager extends GuiScreen implements GuiYesNoCallback {
     private GuiButton btnAddAccount;
     private GuiButton btnDone;
     private GuiScreen parent;
+    private GuiButton btnRemove;
 
     public GuiAltManager(GuiScreen parent) {
         this.parent = parent;
@@ -29,7 +31,7 @@ public class GuiAltManager extends GuiScreen implements GuiYesNoCallback {
     public void initGui() {
         Keyboard.enableRepeatEvents(true);
         buttonList.clear();
-        this.altSelector = new AltSelectionList(this.mc, this.width, this.height, 32, this.height - 64, 36);
+        this.altSelector = new AltSelectionList(this.mc, this, this.width, this.height, 32, this.height - 64, 36);
         createButtons();
     }
 
@@ -44,11 +46,13 @@ public class GuiAltManager extends GuiScreen implements GuiYesNoCallback {
         this.altSelector.registerScrollButtons(7, 8);
         this.drawCenteredString(this.fontRenderer, I18n.format("altmanager.title"), this.width / 2, 20, 16777215);
         super.drawScreen(mouseX, mouseY, partialTicks);
+        mc.guiAchievement.displayAchievement(AchievementList.bakeCake);
     }
 
     public void createButtons() {
-        this.buttonList.add(btnAddAccount = new GuiButton(0, width - 150, height - 30, 100, 20, I18n.format("altmanager.add")));
-        this.buttonList.add(btnDone = new GuiButton(1, 50, height - 30, 100, 20, I18n.format("gui.done")));
+        this.buttonList.add(btnAddAccount = new GuiButton(0, width - 150, height - 60, 100, 20, I18n.format("altmanager.add")));
+        this.buttonList.add(btnRemove = new GuiButton(2, btnAddAccount.xPosition - 150, btnAddAccount.yPosition, 100, 20, I18n.format("altmanager.remove")));
+        this.buttonList.add(btnDone = new GuiButton(1, width - 150, height - 30, 100, 20, I18n.format("gui.done")));
     }
 
     @Override

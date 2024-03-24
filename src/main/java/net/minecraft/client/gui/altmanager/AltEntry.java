@@ -8,6 +8,8 @@ import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.stats.Achievement;
+import net.minecraft.stats.AchievementList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
 import org.apache.logging.log4j.LogManager;
@@ -20,16 +22,19 @@ public class AltEntry implements GuiListExtended.IGuiListEntry {
 
     private final AltManager altManager;
     private final Session session;
+    private final GuiAltManager parent;
 
-    public AltEntry(Minecraft mc, Session session) {
+    public AltEntry(Minecraft mc, Session session,GuiAltManager parent) {
         this.mc = mc;
         this.altManager = mc.client.altManager;
         this.session = session;
+        this.parent = parent;
     }
 
     @Override
     public boolean mousePressed(int slotIndex, int p_148278_2_, int p_148278_3_, int p_148278_4_, int p_148278_5_, int p_148278_6_) {
         altManager.makeCurrentSession(session);
+        parent.altSelector.selectAlt(this);
         return false;
     }
 

@@ -219,6 +219,7 @@ mcoServer.title=Minecraft Online World
 
 altmanager.title=Select Account
 altmanager.add=Add Alt
+altmanager.remove=Remove Alt
 
 
 multiplayer.title=Play Multiplayer

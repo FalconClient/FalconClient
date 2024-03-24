@@ -288,7 +288,7 @@ public class GuiAchievements extends GuiScreen implements IProgressMeter {
         this.mc.getTextureManager().bindTexture(ACHIEVEMENT_BACKGROUND);
 
         for (int j5 = 0; j5 < AchievementList.achievementList.size(); ++j5) {
-            Achievement achievement1 = (Achievement) AchievementList.achievementList.get(j5);
+            Achievement achievement1 = AchievementList.achievementList.get(j5);
 
             if (achievement1.parentAchievement != null) {
                 int k5 = achievement1.displayColumn * 24 - i + 11;

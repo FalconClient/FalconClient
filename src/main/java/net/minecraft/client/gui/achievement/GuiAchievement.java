@@ -31,7 +31,7 @@ public class GuiAchievement extends Gui
 
     public void displayAchievement(Achievement ach)
     {
-        this.achievementTitle = I18n.format("achievement.get", new Object[0]);
+        this.achievementTitle = I18n.format("achievement.get");
         this.achievementDescription = ach.getStatName().getUnformattedText();
         this.notificationTime = Minecraft.getSystemTime();
         this.theAchievement = ach;
