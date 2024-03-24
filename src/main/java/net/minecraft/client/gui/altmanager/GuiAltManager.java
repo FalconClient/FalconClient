@@ -1,9 +1,6 @@
 package net.minecraft.client.gui.altmanager;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiScreenAddServer;
-import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.resources.I18n;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +13,12 @@ public class GuiAltManager extends GuiScreen implements GuiYesNoCallback {
     private static final Logger logger = LogManager.getLogger();
     public AltSelectionList altSelector;
     private GuiButton btnAddAccount;
+    private GuiButton btnDone;
+    private GuiScreen parent;
+
+    public GuiAltManager(GuiScreen parent) {
+        this.parent = parent;
+    }
 
     @Override
     public void confirmClicked(boolean result, int id) {
@@ -44,8 +47,8 @@ public class GuiAltManager extends GuiScreen implements GuiYesNoCallback {
     }
 
     public void createButtons() {
-        this.buttonList.add(btnAddAccount = new GuiButton(0, width / 2 - 50, height - 30, I18n.format("altmanager.add")));
-
+        this.buttonList.add(btnAddAccount = new GuiButton(0, width - 150, height - 30, 100, 20, I18n.format("altmanager.add")));
+        this.buttonList.add(btnDone = new GuiButton(1, 50, height - 30, 100, 20, I18n.format("gui.done")));
     }
 
     @Override
@@ -60,6 +63,9 @@ public class GuiAltManager extends GuiScreen implements GuiYesNoCallback {
             case 0:
                 this.mc.displayGuiScreen(new GuiAddAlt(this));
                 altSelector.loadAlts();
+                break;
+            case 1:
+                this.mc.displayGuiScreen(parent);
                 break;
         }
     }

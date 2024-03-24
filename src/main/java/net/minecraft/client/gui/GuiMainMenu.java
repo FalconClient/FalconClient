@@ -292,7 +292,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
                 }
                 break;
             case 15:
-                this.mc.displayGuiScreen(new GuiAltManager());
+                this.mc.displayGuiScreen(new GuiAltManager(this));
                 break;
 
         }
