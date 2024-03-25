@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import ir.albino.client.AlbinoClient;
+import ir.albino.client.event.impl.ConnectionEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiDisconnected;
@@ -60,6 +63,14 @@ public class GuiConnecting extends GuiScreen
                     {
                         return;
                     }
+
+                    ConnectionEvent event = new ConnectionEvent(ip,port);
+                    AlbinoClient.getInstance.eventManager.post(event);
+
+                    if(event.isCancelled())
+                        return;
+
+
 
                     inetaddress = InetAddress.getByName(ip);
                     GuiConnecting.this.networkManager = NetworkManager.createNetworkManagerAndConnect(inetaddress, port, GuiConnecting.this.mc.gameSettings.isUsingNativeTransport());
