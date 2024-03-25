@@ -37,7 +37,7 @@ public class GuiIranianServerList extends ServerList {
         try {
             Reader reader = new InputStreamReader(new URL("https://mctools.ir/api/v1/servers/").openStream());
             servers = new Gson().fromJson(reader, listType);
-
+            reader.close();
         } catch (IOException e) {
             Minecraft.logger.warn("Couldn't track iranian mc servers from mctools. " + "\n Report the rest error to the AlbinoClient developers");
         }
