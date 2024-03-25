@@ -15,7 +15,7 @@ public class VersionCheckThread extends Thread
 
     public void run()
     {
-        HttpURLConnection httpurlconnection = null;
+        HttpURLConnection httpurlconnection;
 
         try
         {

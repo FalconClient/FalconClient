@@ -570,7 +570,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.checkGLError("Post startup");
         this.ingameGUI = new GuiIngame(this);
 
-        AlbinoClient.getInstance.start();
+        AlbinoClient.instance.start();
 
         if (this.serverName != null)
         {
@@ -1054,7 +1054,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     {
         try
         {
-            AlbinoClient.getInstance.shutDown();
+            AlbinoClient.instance   .shutDown();
             this.stream.shutdownStream();
             logger.info("Stopping!");
 
