@@ -1,6 +1,8 @@
 package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
+import ir.albino.client.AlbinoClient;
+import ir.albino.client.event.impl.ServerChatEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -134,6 +136,11 @@ public class GuiNewChat extends Gui
      */
     public void printChatMessageWithOptionalDeletion(IChatComponent chatComponent, int chatLineId)
     {
+        ServerChatEvent event = new ServerChatEvent(chatComponent.getUnformattedText());
+        AlbinoClient.getInstance.eventManager.post(event);
+        if(event.isCancelled())
+            return;
+
         this.setChatLine(chatComponent, chatLineId, this.mc.ingameGUI.getUpdateCounter(), false);
         logger.info("[CHAT] " + chatComponent.getUnformattedText());
     }

@@ -1,4 +1,4 @@
-package ir.albino.client.account;
+package ir.albino.client.features.account;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import ir.albino.client.utils.Common;

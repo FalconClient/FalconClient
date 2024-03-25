@@ -1,5 +1,7 @@
 package net.minecraft.client.gui;
 
+import ir.albino.client.AlbinoClient;
+import ir.albino.client.features.ui.MainMenu;
 import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.gui.achievement.GuiStats;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -19,6 +21,8 @@ public class GuiIngameMenu extends GuiScreen
      */
     public void initGui()
     {
+        AlbinoClient.getInstance.moduleManager.getModuleByName("Fps").toggle();
+
         this.field_146445_a = 0;
         this.buttonList.clear();
         int i = -16;
@@ -59,7 +63,7 @@ public class GuiIngameMenu extends GuiScreen
 
                 if (flag)
                 {
-                    this.mc.displayGuiScreen(new GuiMainMenu());
+                    this.mc.displayGuiScreen(new MainMenu());
                 }
                 else if (flag1)
                 {
@@ -68,7 +72,7 @@ public class GuiIngameMenu extends GuiScreen
                 }
                 else
                 {
-                    this.mc.displayGuiScreen(new GuiMultiplayer(new GuiMainMenu()));
+                    this.mc.displayGuiScreen(new GuiMultiplayer(new MainMenu()));
                 }
 
             case 2:

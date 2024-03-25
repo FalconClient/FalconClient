@@ -37,6 +37,9 @@ import java.util.concurrent.FutureTask;
 import javax.imageio.ImageIO;
 
 import ir.albino.client.AlbinoClient;
+import ir.albino.client.event.impl.KeypressEvent;
+import ir.albino.client.features.ui.MainMenu;
+import lombok.Getter;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.audio.MusicTicker;
@@ -278,6 +281,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private final File fileAssets;
     private final String launchedVersion;
     private final Proxy proxy;
+    /**
+     * -- GETTER --
+     *  Returns the save loader that is currently being used
+     */
+    @Getter
     private ISaveFormat saveLoader;
 
     /**
@@ -574,11 +582,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         if (this.serverName != null)
         {
-            this.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), this, this.serverName, this.serverPort));
+            this.displayGuiScreen(new GuiConnecting(new MainMenu(), this, this.serverName, this.serverPort));
         }
         else
         {
-            this.displayGuiScreen(new GuiMainMenu());
+            this.displayGuiScreen(new MainMenu());
         }
 
         this.renderEngine.deleteTexture(this.mojangLogo);
@@ -628,7 +636,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private void createDisplay() throws LWJGLException
     {
         Display.setResizable(true);
-        Display.setTitle("Minecraft 1.8.9");
+        Display.setTitle(String.format("Loading %s %s....", AlbinoClient.getInstance.NAME, AlbinoClient.getInstance.VERSION));
 
         try
         {
@@ -977,14 +985,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     }
 
     /**
-     * Returns the save loader that is currently being used
-     */
-    public ISaveFormat getSaveLoader()
-    {
-        return this.saveLoader;
-    }
-
-    /**
      * Sets the argument GuiScreen as the main (topmost visible) screen.
      */
     public void displayGuiScreen(GuiScreen guiScreenIn)
@@ -1003,7 +1003,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             guiScreenIn = new GuiGameOver();
         }
 
-        if (guiScreenIn instanceof GuiMainMenu)
+        if (guiScreenIn instanceof MainMenu)
         {
             this.gameSettings.showDebugProfilerChart = false;
             this.ingameGUI.getChatGUI().clearChatMessages();
@@ -1948,6 +1948,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     }
                     else
                     {
+                        KeypressEvent event = new KeypressEvent(k);
+
+
                         if (k == 1)
                         {
                             this.displayInGameMenu();
