@@ -1,7 +1,6 @@
-package ir.albino.client.gui;
+package ir.albino.client.features.ui;
 
 import net.minecraft.client.gui.GuiScreen;
-import org.lwjgl.opengl.XRandR;
 
 public class Notification extends GuiScreen {
     public Notification(String msg) {

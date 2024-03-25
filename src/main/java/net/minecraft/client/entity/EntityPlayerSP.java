@@ -1,5 +1,9 @@
 package net.minecraft.client.entity;
 
+import ir.albino.client.AlbinoClient;
+import ir.albino.client.event.impl.PlayerChatEvent;
+import ir.albino.client.event.impl.ServerChatEvent;
+import ir.albino.client.event.impl.UpdateEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -161,6 +165,11 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void onUpdateWalkingPlayer()
     {
+
+        UpdateEvent event = new UpdateEvent();
+        AlbinoClient.getInstance.eventManager.post(event);
+
+
         boolean flag = this.isSprinting();
 
         if (flag != this.serverSprintState)
@@ -268,7 +277,13 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void sendChatMessage(String message)
     {
+        PlayerChatEvent event = new PlayerChatEvent(message);
+        AlbinoClient.getInstance.eventManager.post(event);
+        if(event.isCancelled())
+            return;
+
         this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
+
     }
 
     /**

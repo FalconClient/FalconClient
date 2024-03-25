@@ -1,20 +1,16 @@
-package ir.albino.client.gui;
+package ir.albino.client.features.ui;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import ir.albino.client.server.ServerDetails;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.*;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
-import net.minecraft.server.MinecraftServer;
-import org.apache.logging.log4j.core.jmx.Server;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;

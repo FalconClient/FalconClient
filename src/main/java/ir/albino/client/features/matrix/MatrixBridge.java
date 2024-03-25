@@ -1,4 +1,4 @@
-package ir.albino.client.matrix;
+package ir.albino.client.features.matrix;
 
 public class MatrixBridge {
 //    private MatrixResources matrix;

@@ -1,4 +1,4 @@
-package ir.albino.client.gui.font;
+package ir.albino.client.features.ui.font;
 
 
 import net.minecraft.client.renderer.texture.DynamicTexture;
