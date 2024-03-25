@@ -20,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.src.Config;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumParticleTypes;
@@ -34,6 +35,10 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.storage.SaveDataMemoryStorage;
 import net.minecraft.world.storage.SaveHandlerMP;
 import net.minecraft.world.storage.WorldInfo;
+import net.optifine.CustomGuis;
+import net.optifine.DynamicLights;
+import net.optifine.override.PlayerControllerOF;
+import net.optifine.reflect.Reflector;
 
 public class WorldClient extends World
 {
@@ -46,18 +51,26 @@ public class WorldClient extends World
     private final Set<Entity> entitySpawnQueue = Sets.<Entity>newHashSet();
     private final Minecraft mc = Minecraft.getMinecraft();
     private final Set<ChunkCoordIntPair> previousActiveChunkSet = Sets.<ChunkCoordIntPair>newHashSet();
+    private boolean playerUpdate = false;
 
     public WorldClient(NetHandlerPlayClient netHandler, WorldSettings settings, int dimension, EnumDifficulty difficulty, Profiler profilerIn)
     {
         super(new SaveHandlerMP(), new WorldInfo(settings, "MpServer"), WorldProvider.getProviderForDimension(dimension), profilerIn, true);
         this.sendQueue = netHandler;
         this.getWorldInfo().setDifficulty(difficulty);
-        this.setSpawnPoint(new BlockPos(8, 64, 8));
         this.provider.registerWorld(this);
+        this.setSpawnPoint(new BlockPos(8, 64, 8));
         this.chunkProvider = this.createChunkProvider();
         this.mapStorage = new SaveDataMemoryStorage();
         this.calculateInitialSkylight();
         this.calculateInitialWeather();
+        Reflector.postForgeBusEvent(Reflector.WorldEvent_Load_Constructor, new Object[] {this});
+
+        if (this.mc.playerController != null && this.mc.playerController.getClass() == PlayerControllerMP.class)
+        {
+            this.mc.playerController = new PlayerControllerOF(this.mc, netHandler);
+            CustomGuis.setPlayerControllerOF((PlayerControllerOF)this.mc.playerController);
+        }
     }
 
     /**
@@ -478,5 +491,48 @@ public class WorldClient extends World
         }
 
         super.setWorldTime(time);
+    }
+
+    public int getCombinedLight(BlockPos pos, int lightValue)
+    {
+        int i = super.getCombinedLight(pos, lightValue);
+
+        if (Config.isDynamicLights())
+        {
+            i = DynamicLights.getCombinedLight(pos, i);
+        }
+
+        return i;
+    }
+
+    /**
+     * Sets the block state at a given location. Flag 1 will cause a block update. Flag 2 will send the change to
+     * clients (you almost always want this). Flag 4 prevents the block from being re-rendered, if this is a client
+     * world. Flags can be added together.
+     */
+    public boolean setBlockState(BlockPos pos, IBlockState newState, int flags)
+    {
+        this.playerUpdate = this.isPlayerActing();
+        boolean flag = super.setBlockState(pos, newState, flags);
+        this.playerUpdate = false;
+        return flag;
+    }
+
+    private boolean isPlayerActing()
+    {
+        if (this.mc.playerController instanceof PlayerControllerOF)
+        {
+            PlayerControllerOF playercontrollerof = (PlayerControllerOF)this.mc.playerController;
+            return playercontrollerof.isActing();
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public boolean isPlayerUpdate()
+    {
+        return this.playerUpdate;
     }
 }

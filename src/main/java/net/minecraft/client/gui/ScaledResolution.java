@@ -17,7 +17,7 @@ public class ScaledResolution
         this.scaledHeight = p_i46445_1_.displayHeight;
         this.scaleFactor = 1;
         boolean flag = p_i46445_1_.isUnicode();
-        int i = p_i46445_1_.gameSettings.guiScale;
+        int i = p_i46445_1_.gameSettings.particleSetting;
 
         if (i == 0)
         {

@@ -2,11 +2,6 @@ package net.minecraft.entity;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.item.ItemStack;
@@ -14,7 +9,14 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.Rotations;
+import net.minecraft.world.biome.BiomeGenBase;
 import org.apache.commons.lang3.ObjectUtils;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class DataWatcher
 {
@@ -28,6 +30,8 @@ public class DataWatcher
     /** true if one or more object was changed */
     private boolean objectChanged;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
+    public BiomeGenBase spawnBiome = BiomeGenBase.plains;
+    public BlockPos spawnPosition = BlockPos.ORIGIN;
 
     public DataWatcher(Entity owner)
     {

@@ -606,9 +606,7 @@ public class StructureMineshaftPieces
                 j = 1;
             }
 
-            int k;
-
-            for (k = 0; k < this.boundingBox.getXSize(); k = k + 4)
+            for (int k = 0; k < this.boundingBox.getXSize(); k = k + 4)
             {
                 k = k + rand.nextInt(this.boundingBox.getXSize());
 
@@ -626,7 +624,7 @@ public class StructureMineshaftPieces
                 }
             }
 
-            for (k = 0; k < this.boundingBox.getXSize(); k = k + 4)
+            for (int k = 0; k < this.boundingBox.getXSize(); k = k + 4)
             {
                 k = k + rand.nextInt(this.boundingBox.getXSize());
 
@@ -644,7 +642,7 @@ public class StructureMineshaftPieces
                 }
             }
 
-            for (k = 0; k < this.boundingBox.getZSize(); k = k + 4)
+            for (int k = 0; k < this.boundingBox.getZSize(); k = k + 4)
             {
                 k = k + rand.nextInt(this.boundingBox.getZSize());
 
@@ -662,7 +660,7 @@ public class StructureMineshaftPieces
                 }
             }
 
-            for (k = 0; k < this.boundingBox.getZSize(); k = k + 4)
+            for (int k = 0; k < this.boundingBox.getZSize(); k = k + 4)
             {
                 k = k + rand.nextInt(this.boundingBox.getZSize());
 

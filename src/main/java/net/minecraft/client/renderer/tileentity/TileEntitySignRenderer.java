@@ -2,14 +2,20 @@ package net.minecraft.client.renderer.tileentity;
 
 import java.util.List;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiUtilRenderComponents;
+import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.model.ModelSign;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.src.Config;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
+import net.optifine.CustomColors;
+import net.optifine.shaders.Shaders;
 import org.lwjgl.opengl.GL11;
 
 public class TileEntitySignRenderer extends TileEntitySpecialRenderer<TileEntitySign>
@@ -18,6 +24,7 @@ public class TileEntitySignRenderer extends TileEntitySpecialRenderer<TileEntity
 
     /** The ModelSign instance for use in this renderer */
     private final ModelSign model = new ModelSign();
+    private static double textRenderDistanceSq = 4096.0D;
 
     public void renderTileEntityAt(TileEntitySign te, double x, double y, double z, float partialTicks, int destroyStage)
     {
@@ -77,32 +84,41 @@ public class TileEntitySignRenderer extends TileEntitySpecialRenderer<TileEntity
         GlStateManager.scale(f, -f, -f);
         this.model.renderSign();
         GlStateManager.popMatrix();
-        FontRenderer fontrenderer = this.getFontRenderer();
-        float f3 = 0.015625F * f;
-        GlStateManager.translate(0.0F, 0.5F * f, 0.07F * f);
-        GlStateManager.scale(f3, -f3, f3);
-        GL11.glNormal3f(0.0F, 0.0F, -1.0F * f3);
-        GlStateManager.depthMask(false);
-        int i = 0;
 
-        if (destroyStage < 0)
+        if (isRenderText(te))
         {
-            for (int j = 0; j < te.signText.length; ++j)
-            {
-                if (te.signText[j] != null)
-                {
-                    IChatComponent ichatcomponent = te.signText[j];
-                    List<IChatComponent> list = GuiUtilRenderComponents.splitText(ichatcomponent, 90, fontrenderer, false, true);
-                    String s = list != null && list.size() > 0 ? ((IChatComponent)list.get(0)).getFormattedText() : "";
+            FontRenderer fontrenderer = this.getFontRenderer();
+            float f3 = 0.015625F * f;
+            GlStateManager.translate(0.0F, 0.5F * f, 0.07F * f);
+            GlStateManager.scale(f3, -f3, f3);
+            GL11.glNormal3f(0.0F, 0.0F, -1.0F * f3);
+            GlStateManager.depthMask(false);
+            int i = 0;
 
-                    if (j == te.lineBeingEdited)
+            if (Config.isCustomColors())
+            {
+                i = CustomColors.getSignTextColor(i);
+            }
+
+            if (destroyStage < 0)
+            {
+                for (int j = 0; j < te.signText.length; ++j)
+                {
+                    if (te.signText[j] != null)
                     {
-                        s = "> " + s + " <";
-                        fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, j * 10 - te.signText.length * 5, i);
-                    }
-                    else
-                    {
-                        fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, j * 10 - te.signText.length * 5, i);
+                        IChatComponent ichatcomponent = te.signText[j];
+                        List<IChatComponent> list = GuiUtilRenderComponents.splitText(ichatcomponent, 90, fontrenderer, false, true);
+                        String s = list != null && list.size() > 0 ? ((IChatComponent)list.get(0)).getFormattedText() : "";
+
+                        if (j == te.lineBeingEdited)
+                        {
+                            s = "> " + s + " <";
+                            fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, j * 10 - te.signText.length * 5, i);
+                        }
+                        else
+                        {
+                            fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, j * 10 - te.signText.length * 5, i);
+                        }
                     }
                 }
             }
@@ -118,5 +134,40 @@ public class TileEntitySignRenderer extends TileEntitySpecialRenderer<TileEntity
             GlStateManager.popMatrix();
             GlStateManager.matrixMode(5888);
         }
+    }
+
+    private static boolean isRenderText(TileEntitySign p_isRenderText_0_)
+    {
+        if (Shaders.isShadowPass)
+        {
+            return false;
+        }
+        else if (Config.getMinecraft().currentScreen instanceof GuiEditSign)
+        {
+            return true;
+        }
+        else
+        {
+            if (!Config.zoomMode && p_isRenderText_0_.lineBeingEdited < 0)
+            {
+                Entity entity = Config.getMinecraft().getRenderViewEntity();
+                double d0 = p_isRenderText_0_.getDistanceSq(entity.posX, entity.posY, entity.posZ);
+
+                if (d0 > textRenderDistanceSq)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    public static void updateTextRenderDistance()
+    {
+        Minecraft minecraft = Config.getMinecraft();
+        double d0 = (double)Config.limit(minecraft.gameSettings.gammaSetting, 1.0F, 120.0F);
+        double d1 = Math.max(1.5D * (double)minecraft.displayHeight / d0, 16.0D);
+        textRenderDistanceSq = d1 * d1;
     }
 }

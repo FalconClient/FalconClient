@@ -1,6 +1,5 @@
 package net.minecraft.client.gui;
 
-import ir.albino.client.gui.font.AlbinoFontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -106,10 +105,10 @@ public class Gui
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldrenderer.pos(right, top, this.zLevel).color(f1, f2, f3, f).endVertex();
-        worldrenderer.pos(left, top, this.zLevel).color(f1, f2, f3, f).endVertex();
-        worldrenderer.pos(left, bottom, this.zLevel).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.pos(right, bottom, this.zLevel).color(f5, f6, f7, f4).endVertex();
+        worldrenderer.pos((double)right, (double)top, (double)this.zLevel).color(f1, f2, f3, f).endVertex();
+        worldrenderer.pos((double)left, (double)top, (double)this.zLevel).color(f1, f2, f3, f).endVertex();
+        worldrenderer.pos((double)left, (double)bottom, (double)this.zLevel).color(f5, f6, f7, f4).endVertex();
+        worldrenderer.pos((double)right, (double)bottom, (double)this.zLevel).color(f5, f6, f7, f4).endVertex();
         tessellator.draw();
         GlStateManager.shadeModel(7424);
         GlStateManager.disableBlend();
@@ -124,20 +123,11 @@ public class Gui
     {
         fontRendererIn.drawStringWithShadow(text, (float)(x - fontRendererIn.getStringWidth(text) / 2), (float)y, color);
     }
-    public void drawCenteredString(AlbinoFontRenderer fontRendererIn, String text, int x, int y, int color)
-    {
-        fontRendererIn.drawStringWithShadow(text, (float)(x - fontRendererIn.getStringWidth(text) / 2), (float)y, color);
-    }
-
 
     /**
      * Renders the specified text to the screen. Args : renderer, string, x, y, color
      */
     public void drawString(FontRenderer fontRendererIn, String text, int x, int y, int color)
-    {
-        fontRendererIn.drawStringWithShadow(text, (float)x, (float)y, color);
-    }
-    public void drawString(AlbinoFontRenderer fontRendererIn, String text, int x, int y, int color)
     {
         fontRendererIn.drawStringWithShadow(text, (float)x, (float)y, color);
     }

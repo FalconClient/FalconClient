@@ -65,7 +65,7 @@ public class RenderFish extends Render<EntityFishHook>
             double d2 = entity.angler.prevPosZ + (entity.angler.posZ - entity.angler.prevPosZ) * (double)partialTicks + vec3.zCoord;
             double d3 = (double)entity.angler.getEyeHeight();
 
-            if (this.renderManager.options != null && this.renderManager.options.thirdPersonView > 0 || entity.angler != Minecraft.getMinecraft().thePlayer)
+            if (this.renderManager.options != null && this.renderManager.options.showDebugInfo > 0 || entity.angler != Minecraft.getMinecraft().thePlayer)
             {
                 float f9 = (entity.angler.prevRenderYawOffset + (entity.angler.renderYawOffset - entity.angler.prevRenderYawOffset) * partialTicks) * (float)Math.PI / 180.0F;
                 double d4 = (double)MathHelper.sin(f9);

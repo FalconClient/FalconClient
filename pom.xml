@@ -269,6 +269,12 @@
             <artifactId>discord-game-sdk4j</artifactId>
             <version>v0.5.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

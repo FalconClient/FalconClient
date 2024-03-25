@@ -41,4 +41,9 @@ public class Frustum implements ICamera
     {
         return this.isBoxInFrustum(p_78546_1_.minX, p_78546_1_.minY, p_78546_1_.minZ, p_78546_1_.maxX, p_78546_1_.maxY, p_78546_1_.maxZ);
     }
+
+    public boolean isBoxInFrustumFully(double p_isBoxInFrustumFully_1_, double p_isBoxInFrustumFully_3_, double p_isBoxInFrustumFully_5_, double p_isBoxInFrustumFully_7_, double p_isBoxInFrustumFully_9_, double p_isBoxInFrustumFully_11_)
+    {
+        return this.clippingHelper.isBoxInFrustumFully(p_isBoxInFrustumFully_1_ - this.xPosition, p_isBoxInFrustumFully_3_ - this.yPosition, p_isBoxInFrustumFully_5_ - this.zPosition, p_isBoxInFrustumFully_7_ - this.xPosition, p_isBoxInFrustumFully_9_ - this.yPosition, p_isBoxInFrustumFully_11_ - this.zPosition);
+    }
 }

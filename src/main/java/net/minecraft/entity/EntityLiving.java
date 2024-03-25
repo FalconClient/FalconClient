@@ -1,32 +1,25 @@
 package net.minecraft.entity;
 
-import java.util.UUID;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.ai.EntityJumpHelper;
-import net.minecraft.entity.ai.EntityLookHelper;
-import net.minecraft.entity.ai.EntityMoveHelper;
-import net.minecraft.entity.ai.EntitySenses;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityGhast;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemBow;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.S1BPacketEntityAttach;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.scoreboard.Team;
+import net.minecraft.src.Config;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumParticleTypes;
@@ -35,6 +28,9 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.optifine.reflect.Reflector;
+
+import java.util.UUID;
 
 public abstract class EntityLiving extends EntityLivingBase
 {
@@ -75,6 +71,8 @@ public abstract class EntityLiving extends EntityLivingBase
     private boolean isLeashed;
     private Entity leashedToEntity;
     private NBTTagCompound leashNBTTag;
+    private UUID teamUuid = null;
+    private String teamUuidString = null;
 
     public EntityLiving(World worldIn)
     {
@@ -150,6 +148,7 @@ public abstract class EntityLiving extends EntityLivingBase
     public void setAttackTarget(EntityLivingBase entitylivingbaseIn)
     {
         this.attackTarget = entitylivingbaseIn;
+        Reflector.callVoid(Reflector.ForgeHooks_onLivingSetAttackTarget, new Object[] {this, entitylivingbaseIn});
     }
 
     /**
@@ -277,11 +276,18 @@ public abstract class EntityLiving extends EntityLivingBase
      */
     public void onUpdate()
     {
-        super.onUpdate();
-
-        if (!this.worldObj.isRemote)
+        if (Config.isSmoothWorld() && this.canSkipUpdate())
         {
-            this.updateLeashedState();
+            this.onUpdateMinimal();
+        }
+        else
+        {
+            super.onUpdate();
+
+            if (!this.worldObj.isRemote)
+            {
+                this.updateLeashedState();
+            }
         }
     }
 
@@ -584,9 +590,24 @@ public abstract class EntityLiving extends EntityLivingBase
      */
     protected void despawnEntity()
     {
+        Object object = null;
+        Object object1 = Reflector.getFieldValue(Reflector.Event_Result_DEFAULT);
+        Object object2 = Reflector.getFieldValue(Reflector.Event_Result_DENY);
+
         if (this.persistenceRequired)
         {
             this.entityAge = 0;
+        }
+        else if ((this.entityAge & 31) == 31 && (object = Reflector.call(Reflector.ForgeEventFactory_canEntityDespawn, new Object[] {this})) != object1)
+        {
+            if (object == object2)
+            {
+                this.entityAge = 0;
+            }
+            else
+            {
+                this.setDead();
+            }
         }
         else
         {
@@ -667,22 +688,22 @@ public abstract class EntityLiving extends EntityLivingBase
     public void faceEntity(Entity entityIn, float p_70625_2_, float p_70625_3_)
     {
         double d0 = entityIn.posX - this.posX;
-        double d2 = entityIn.posZ - this.posZ;
-        double d1;
+        double d1 = entityIn.posZ - this.posZ;
+        double d2;
 
         if (entityIn instanceof EntityLivingBase)
         {
             EntityLivingBase entitylivingbase = (EntityLivingBase)entityIn;
-            d1 = entitylivingbase.posY + (double)entitylivingbase.getEyeHeight() - (this.posY + (double)this.getEyeHeight());
+            d2 = entitylivingbase.posY + (double)entitylivingbase.getEyeHeight() - (this.posY + (double)this.getEyeHeight());
         }
         else
         {
-            d1 = (entityIn.getEntityBoundingBox().minY + entityIn.getEntityBoundingBox().maxY) / 2.0D - (this.posY + (double)this.getEyeHeight());
+            d2 = (entityIn.getEntityBoundingBox().minY + entityIn.getEntityBoundingBox().maxY) / 2.0D - (this.posY + (double)this.getEyeHeight());
         }
 
-        double d3 = (double)MathHelper.sqrt_double(d0 * d0 + d2 * d2);
-        float f = (float)(MathHelper.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;
-        float f1 = (float)(-(MathHelper.atan2(d1, d3) * 180.0D / Math.PI));
+        double d3 = (double)MathHelper.sqrt_double(d0 * d0 + d1 * d1);
+        float f = (float)(MathHelper.atan2(d1, d0) * 180.0D / Math.PI) - 90.0F;
+        float f1 = (float)(-(MathHelper.atan2(d2, d3) * 180.0D / Math.PI));
         this.rotationPitch = this.updateRotation(this.rotationPitch, f1, p_70625_3_);
         this.rotationYaw = this.updateRotation(this.rotationYaw, f, p_70625_2_);
     }
@@ -1266,14 +1287,14 @@ public abstract class EntityLiving extends EntityLivingBase
             }
         }
 
-        if (itemStackIn != null && getArmorPosition(itemStackIn) != i && (i != 4 || !(itemStackIn.getItem() instanceof ItemBlock)))
-        {
-            return false;
-        }
-        else
+        if (itemStackIn == null || getArmorPosition(itemStackIn) == i || i == 4 && itemStackIn.getItem() instanceof ItemBlock)
         {
             this.setCurrentItemOrArmor(i, itemStackIn);
             return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -1299,6 +1320,73 @@ public abstract class EntityLiving extends EntityLivingBase
     public boolean isAIDisabled()
     {
         return this.dataWatcher.getWatchableObjectByte(15) != 0;
+    }
+
+    private boolean canSkipUpdate()
+    {
+        if (this.isChild())
+        {
+            return false;
+        }
+        else if (this.hurtTime > 0)
+        {
+            return false;
+        }
+        else if (this.ticksExisted < 20)
+        {
+            return false;
+        }
+        else
+        {
+            World world = this.getEntityWorld();
+
+            if (world == null)
+            {
+                return false;
+            }
+            else if (world.playerEntities.size() != 1)
+            {
+                return false;
+            }
+            else
+            {
+                Entity entity = (Entity)world.playerEntities.get(0);
+                double d0 = Math.max(Math.abs(this.posX - entity.posX) - 16.0D, 0.0D);
+                double d1 = Math.max(Math.abs(this.posZ - entity.posZ) - 16.0D, 0.0D);
+                double d2 = d0 * d0 + d1 * d1;
+                return !this.isInRangeToRenderDist(d2);
+            }
+        }
+    }
+
+    private void onUpdateMinimal()
+    {
+        ++this.entityAge;
+
+        if (this instanceof EntityMob)
+        {
+            float f = this.getBrightness(1.0F);
+
+            if (f > 0.5F)
+            {
+                this.entityAge += 2;
+            }
+        }
+
+        this.despawnEntity();
+    }
+
+    public Team getTeam()
+    {
+        UUID uuid = this.getUniqueID();
+
+        if (this.teamUuid != uuid)
+        {
+            this.teamUuid = uuid;
+            this.teamUuidString = uuid.toString();
+        }
+
+        return this.worldObj.getScoreboard().getPlayersTeam(this.teamUuidString);
     }
 
     public static enum SpawnPlacementType

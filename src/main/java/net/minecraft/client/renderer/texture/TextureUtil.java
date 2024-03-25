@@ -9,7 +9,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.src.Config;
 import net.minecraft.util.ResourceLocation;
+import net.optifine.Mipmaps;
+import net.optifine.reflect.Reflector;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,6 +27,7 @@ public class TextureUtil
     public static final DynamicTexture missingTexture = new DynamicTexture(16, 16);
     public static final int[] missingTextureData = missingTexture.getTextureData();
     private static final int[] mipmapBuffer;
+    private static int[] dataArray = new int[4194304];
 
     public static int glGenTextures()
     {
@@ -55,7 +59,7 @@ public class TextureUtil
         {
             boolean flag = false;
 
-            for (int i = 0; i < p_147949_2_.length; ++i)
+            for (int i = 0; i < p_147949_2_[0].length; ++i)
             {
                 if (p_147949_2_[0][i] >> 24 == 0)
                 {
@@ -97,52 +101,7 @@ public class TextureUtil
 
     private static int blendColors(int p_147943_0_, int p_147943_1_, int p_147943_2_, int p_147943_3_, boolean p_147943_4_)
     {
-        if (!p_147943_4_)
-        {
-            int i1 = blendColorComponent(p_147943_0_, p_147943_1_, p_147943_2_, p_147943_3_, 24);
-            int j1 = blendColorComponent(p_147943_0_, p_147943_1_, p_147943_2_, p_147943_3_, 16);
-            int k1 = blendColorComponent(p_147943_0_, p_147943_1_, p_147943_2_, p_147943_3_, 8);
-            int l1 = blendColorComponent(p_147943_0_, p_147943_1_, p_147943_2_, p_147943_3_, 0);
-            return i1 << 24 | j1 << 16 | k1 << 8 | l1;
-        }
-        else
-        {
-            mipmapBuffer[0] = p_147943_0_;
-            mipmapBuffer[1] = p_147943_1_;
-            mipmapBuffer[2] = p_147943_2_;
-            mipmapBuffer[3] = p_147943_3_;
-            float f = 0.0F;
-            float f1 = 0.0F;
-            float f2 = 0.0F;
-            float f3 = 0.0F;
-
-            for (int i = 0; i < 4; ++i)
-            {
-                if (mipmapBuffer[i] >> 24 != 0)
-                {
-                    f += (float)Math.pow((double)((float)(mipmapBuffer[i] >> 24 & 255) / 255.0F), 2.2D);
-                    f1 += (float)Math.pow((double)((float)(mipmapBuffer[i] >> 16 & 255) / 255.0F), 2.2D);
-                    f2 += (float)Math.pow((double)((float)(mipmapBuffer[i] >> 8 & 255) / 255.0F), 2.2D);
-                    f3 += (float)Math.pow((double)((float)(mipmapBuffer[i] >> 0 & 255) / 255.0F), 2.2D);
-                }
-            }
-
-            f = f / 4.0F;
-            f1 = f1 / 4.0F;
-            f2 = f2 / 4.0F;
-            f3 = f3 / 4.0F;
-            int i2 = (int)(Math.pow((double)f, 0.45454545454545453D) * 255.0D);
-            int j = (int)(Math.pow((double)f1, 0.45454545454545453D) * 255.0D);
-            int k = (int)(Math.pow((double)f2, 0.45454545454545453D) * 255.0D);
-            int l = (int)(Math.pow((double)f3, 0.45454545454545453D) * 255.0D);
-
-            if (i2 < 96)
-            {
-                i2 = 0;
-            }
-
-            return i2 << 24 | j << 16 | k << 8 | l;
-        }
+        return Mipmaps.alphaBlend(p_147943_0_, p_147943_1_, p_147943_2_, p_147943_3_);
     }
 
     private static int blendColorComponent(int p_147944_0_, int p_147944_1_, int p_147944_2_, int p_147944_3_, int p_147944_4_)
@@ -169,15 +128,15 @@ public class TextureUtil
         int i = 4194304 / p_147947_2_;
         setTextureBlurMipmap(p_147947_6_, p_147947_8_);
         setTextureClamped(p_147947_7_);
-        int l;
+        int j;
 
-        for (int j = 0; j < p_147947_2_ * p_147947_3_; j += p_147947_2_ * l)
+        for (int k = 0; k < p_147947_2_ * p_147947_3_; k += p_147947_2_ * j)
         {
-            int k = j / p_147947_2_;
-            l = Math.min(i, p_147947_3_ - k);
-            int i1 = p_147947_2_ * l;
-            copyToBufferPos(p_147947_1_, j, i1);
-            GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, p_147947_0_, p_147947_4_, p_147947_5_ + k, p_147947_2_, l, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, (IntBuffer)dataBuffer);
+            int l = k / p_147947_2_;
+            j = Math.min(i, p_147947_3_ - l);
+            int i1 = p_147947_2_ * j;
+            copyToBufferPos(p_147947_1_, k, i1);
+            GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, p_147947_0_, p_147947_4_, p_147947_5_ + l, p_147947_2_, j, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, (IntBuffer)dataBuffer);
         }
     }
 
@@ -194,8 +153,18 @@ public class TextureUtil
 
     public static void allocateTextureImpl(int p_180600_0_, int p_180600_1_, int p_180600_2_, int p_180600_3_)
     {
-        deleteTexture(p_180600_0_);
-        bindTexture(p_180600_0_);
+        Object object = TextureUtil.class;
+
+        if (Reflector.SplashScreen.exists())
+        {
+            object = Reflector.SplashScreen.getTargetClass();
+        }
+
+        synchronized (object)
+        {
+            deleteTexture(p_180600_0_);
+            bindTexture(p_180600_0_);
+        }
 
         if (p_180600_1_ >= 0)
         {
@@ -223,7 +192,7 @@ public class TextureUtil
         int i = p_110993_0_.getWidth();
         int j = p_110993_0_.getHeight();
         int k = 4194304 / i;
-        int[] aint = new int[k * i];
+        int[] aint = dataArray;
         setTextureBlurred(p_110993_3_);
         setTextureClamped(p_110993_4_);
 
@@ -238,12 +207,12 @@ public class TextureUtil
         }
     }
 
-    private static void setTextureClamped(boolean p_110997_0_)
+    public static void setTextureClamped(boolean p_110997_0_)
     {
         if (p_110997_0_)
         {
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
         }
         else
         {
@@ -257,7 +226,7 @@ public class TextureUtil
         setTextureBlurMipmap(p_147951_0_, false);
     }
 
-    private static void setTextureBlurMipmap(boolean p_147954_0_, boolean p_147954_1_)
+    public static void setTextureBlurMipmap(boolean p_147954_0_, boolean p_147954_1_)
     {
         if (p_147954_0_)
         {
@@ -266,7 +235,8 @@ public class TextureUtil
         }
         else
         {
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, p_147954_1_ ? GL11.GL_NEAREST_MIPMAP_LINEAR : GL11.GL_NEAREST);
+            int i = Config.getMipmapType();
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, p_147954_1_ ? i : GL11.GL_NEAREST);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
         }
     }
@@ -298,27 +268,42 @@ public class TextureUtil
     public static int[] readImageData(IResourceManager resourceManager, ResourceLocation imageLocation) throws IOException
     {
         BufferedImage bufferedimage = readBufferedImage(resourceManager.getResource(imageLocation).getInputStream());
-        int i = bufferedimage.getWidth();
-        int j = bufferedimage.getHeight();
-        int[] aint = new int[i * j];
-        bufferedimage.getRGB(0, 0, i, j, aint, 0, i);
-        return aint;
+
+        if (bufferedimage == null)
+        {
+            return null;
+        }
+        else
+        {
+            int i = bufferedimage.getWidth();
+            int j = bufferedimage.getHeight();
+            int[] aint = new int[i * j];
+            bufferedimage.getRGB(0, 0, i, j, aint, 0, i);
+            return aint;
+        }
     }
 
     public static BufferedImage readBufferedImage(InputStream imageStream) throws IOException
     {
-        BufferedImage bufferedimage;
-
-        try
+        if (imageStream == null)
         {
-            bufferedimage = ImageIO.read(imageStream);
+            return null;
         }
-        finally
+        else
         {
-            IOUtils.closeQuietly(imageStream);
-        }
+            BufferedImage bufferedimage;
 
-        return bufferedimage;
+            try
+            {
+                bufferedimage = ImageIO.read(imageStream);
+            }
+            finally
+            {
+                IOUtils.closeQuietly(imageStream);
+            }
+
+            return bufferedimage;
+        }
     }
 
     public static int[] updateAnaglyph(int[] p_110985_0_)

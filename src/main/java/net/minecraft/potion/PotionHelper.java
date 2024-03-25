@@ -5,7 +5,9 @@ import com.google.common.collect.Maps;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.src.Config;
 import net.minecraft.util.IntegerCache;
+import net.optifine.CustomColors;
 
 public class PotionHelper
 {
@@ -82,6 +84,11 @@ public class PotionHelper
                 {
                     int j = Potion.potionTypes[potioneffect.getPotionID()].getLiquidColor();
 
+                    if (Config.isCustomColors())
+                    {
+                        j = CustomColors.getPotionColor(potioneffect.getPotionID(), j);
+                    }
+
                     for (int k = 0; k <= potioneffect.getAmplifier(); ++k)
                     {
                         f += (float)(j >> 16 & 255) / 255.0F;
@@ -106,7 +113,7 @@ public class PotionHelper
         }
         else
         {
-            return i;
+            return Config.isCustomColors() ? CustomColors.getPotionColor(0, i) : i;
         }
     }
 
