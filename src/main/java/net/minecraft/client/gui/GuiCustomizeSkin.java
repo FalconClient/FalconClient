@@ -1,8 +1,11 @@
 package net.minecraft.client.gui;
 
-import java.io.IOException;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EnumPlayerModelParts;
+import net.optifine.gui.GuiButtonOF;
+import net.optifine.gui.GuiScreenCapeOF;
+
+import java.io.IOException;
 
 public class GuiCustomizeSkin extends GuiScreen
 {
@@ -37,6 +40,8 @@ public class GuiCustomizeSkin extends GuiScreen
             ++i;
         }
 
+        this.buttonList.add(new GuiButtonOF(210, this.width / 2 - 100, this.height / 6 + 24 * (i >> 1), I18n.format("of.options.skinCustomisation.ofCape", new Object[0])));
+        i = i + 2;
         this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 24 * (i >> 1), I18n.format("gui.done", new Object[0])));
     }
 
@@ -47,6 +52,11 @@ public class GuiCustomizeSkin extends GuiScreen
     {
         if (button.enabled)
         {
+            if (button.id == 210)
+            {
+                this.mc.displayGuiScreen(new GuiScreenCapeOF(this));
+            }
+
             if (button.id == 200)
             {
                 this.mc.gameSettings.saveOptions();

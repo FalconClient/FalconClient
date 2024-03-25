@@ -1,10 +1,11 @@
 package net.minecraft.client.gui;
 
-import java.io.IOException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
+
+import java.io.IOException;
 
 public class GuiControls extends GuiScreen
 {
@@ -78,7 +79,7 @@ public class GuiControls extends GuiScreen
         }
         else if (button.id == 201)
         {
-            for (KeyBinding keybinding : this.mc.gameSettings.keyBindings)
+            for (KeyBinding keybinding : this.mc.gameSettings.mc)
             {
                 keybinding.setKeyCode(keybinding.getKeyCodeDefault());
             }
@@ -161,7 +162,7 @@ public class GuiControls extends GuiScreen
         this.drawCenteredString(this.fontRendererObj, this.screenTitle, this.width / 2, 8, 16777215);
         boolean flag = true;
 
-        for (KeyBinding keybinding : this.options.keyBindings)
+        for (KeyBinding keybinding : this.options.mc)
         {
             if (keybinding.getKeyCode() != keybinding.getKeyCodeDefault())
             {

@@ -40,8 +40,8 @@ public class GuiWinGame extends GuiScreen
 
         if (this.field_146581_h == 0)
         {
-            musicticker.stopMusic();
-            musicticker.playNextMusic(MusicTicker.MusicType.CREDITS);
+            musicticker.func_181557_a();
+            musicticker.func_181558_a(MusicTicker.MusicType.CREDITS);
             soundhandler.resumeSounds();
         }
 

@@ -1,9 +1,7 @@
 package ir.albino.client.account;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import ir.albino.client.AlbinoClient;
-import net.minecraft.client.Minecraft;
+import ir.albino.client.utils.Common;
 import net.minecraft.util.Session;
 
 import java.io.File;
@@ -11,25 +9,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.LogManager;
 
 public class AltManager {
 
-    public Session currentSession;
+    public Session currentSession = new Session("AlbinoPlayer","","","legacy");
     public Map<String, Session> sessions = new HashMap<>();
-
-    @JsonIgnore
-    public static AltManager instance;
-
-    @JsonIgnore
-    public static AltManager getInstance() {
-        return instance;
-    }
-
-    @JsonIgnore
-    public static void setInstance(AltManager instance) {
-        AltManager.instance = instance;
-    }
 
     public void addOfflineSession(String userName, UUID uuid) {
         Session session = new Session(userName, uuid.toString(), "0", Session.Type.LEGACY.name());
@@ -39,7 +23,7 @@ public class AltManager {
     }
 
     public void save() {
-        File file = new File(AlbinoClient.getGamePath(), "users.json");
+        File file = new File(Common.getGamePath(), "users.json");
         try {
             new JsonMapper().writeValue(file, this);
         } catch (IOException e) {

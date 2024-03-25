@@ -1,7 +1,18 @@
 package net.minecraft.client.renderer;
 
-import java.nio.FloatBuffer;
+import net.minecraft.src.Config;
+import net.optifine.SmartAnimations;
+import net.optifine.render.GlAlphaState;
+import net.optifine.render.GlBlendState;
+import net.optifine.shaders.Shaders;
+import net.optifine.util.LockCounter;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL14;
+
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 public class GlStateManager
 {
@@ -20,11 +31,17 @@ public class GlStateManager
     private static GlStateManager.StencilState stencilState = new GlStateManager.StencilState();
     private static GlStateManager.BooleanState normalizeState = new GlStateManager.BooleanState(2977);
     private static int activeTextureUnit = 0;
-    private static GlStateManager.TextureState[] textureState = new GlStateManager.TextureState[8];
+    private static GlStateManager.TextureState[] textureState = new GlStateManager.TextureState[32];
     private static int activeShadeModel = 7425;
     private static GlStateManager.BooleanState rescaleNormalState = new GlStateManager.BooleanState(32826);
     private static GlStateManager.ColorMask colorMaskState = new GlStateManager.ColorMask();
     private static GlStateManager.Color colorState = new GlStateManager.Color();
+    public static boolean clearEnabled = true;
+    private static LockCounter alphaLock = new LockCounter();
+    private static GlAlphaState alphaLockState = new GlAlphaState();
+    private static LockCounter blendLock = new LockCounter();
+    private static GlBlendState blendLockState = new GlBlendState();
+    private static boolean creatingDisplayList = false;
 
     public static void pushAttrib()
     {
@@ -38,21 +55,42 @@ public class GlStateManager
 
     public static void disableAlpha()
     {
-        alphaState.alphaTest.setDisabled();
+        if (alphaLock.isLocked())
+        {
+            alphaLockState.setDisabled();
+        }
+        else
+        {
+            alphaState.alphaTest.setDisabled();
+        }
     }
 
     public static void enableAlpha()
     {
-        alphaState.alphaTest.setEnabled();
+        if (alphaLock.isLocked())
+        {
+            alphaLockState.setEnabled();
+        }
+        else
+        {
+            alphaState.alphaTest.setEnabled();
+        }
     }
 
     public static void alphaFunc(int func, float ref)
     {
-        if (func != alphaState.func || ref != alphaState.ref)
+        if (alphaLock.isLocked())
         {
-            alphaState.func = func;
-            alphaState.ref = ref;
-            GL11.glAlphaFunc(func, ref);
+            alphaLockState.setFuncRef(func, ref);
+        }
+        else
+        {
+            if (func != alphaState.func || ref != alphaState.ref)
+            {
+                alphaState.func = func;
+                alphaState.ref = ref;
+                GL11.glAlphaFunc(func, ref);
+            }
         }
     }
 
@@ -126,33 +164,75 @@ public class GlStateManager
 
     public static void disableBlend()
     {
-        blendState.blend.setDisabled();
+        if (blendLock.isLocked())
+        {
+            blendLockState.setDisabled();
+        }
+        else
+        {
+            blendState.blend.setDisabled();
+        }
     }
 
     public static void enableBlend()
     {
-        blendState.blend.setEnabled();
+        if (blendLock.isLocked())
+        {
+            blendLockState.setEnabled();
+        }
+        else
+        {
+            blendState.blend.setEnabled();
+        }
     }
 
     public static void blendFunc(int srcFactor, int dstFactor)
     {
-        if (srcFactor != blendState.srcFactor || dstFactor != blendState.dstFactor)
+        if (blendLock.isLocked())
         {
-            blendState.srcFactor = srcFactor;
-            blendState.dstFactor = dstFactor;
-            GL11.glBlendFunc(srcFactor, dstFactor);
+            blendLockState.setFactors(srcFactor, dstFactor);
+        }
+        else
+        {
+            if (srcFactor != blendState.srcFactor || dstFactor != blendState.dstFactor || srcFactor != blendState.srcFactorAlpha || dstFactor != blendState.dstFactorAlpha)
+            {
+                blendState.srcFactor = srcFactor;
+                blendState.dstFactor = dstFactor;
+                blendState.srcFactorAlpha = srcFactor;
+                blendState.dstFactorAlpha = dstFactor;
+
+                if (Config.isShaders())
+                {
+                    Shaders.uniform_blendFunc.setValue(srcFactor, dstFactor, srcFactor, dstFactor);
+                }
+
+                GL11.glBlendFunc(srcFactor, dstFactor);
+            }
         }
     }
 
     public static void tryBlendFuncSeparate(int srcFactor, int dstFactor, int srcFactorAlpha, int dstFactorAlpha)
     {
-        if (srcFactor != blendState.srcFactor || dstFactor != blendState.dstFactor || srcFactorAlpha != blendState.srcFactorAlpha || dstFactorAlpha != blendState.dstFactorAlpha)
+        if (blendLock.isLocked())
         {
-            blendState.srcFactor = srcFactor;
-            blendState.dstFactor = dstFactor;
-            blendState.srcFactorAlpha = srcFactorAlpha;
-            blendState.dstFactorAlpha = dstFactorAlpha;
-            OpenGlHelper.glBlendFunc(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+            blendLockState.setFactors(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+        }
+        else
+        {
+            if (srcFactor != blendState.srcFactor || dstFactor != blendState.dstFactor || srcFactorAlpha != blendState.srcFactorAlpha || dstFactorAlpha != blendState.dstFactorAlpha)
+            {
+                blendState.srcFactor = srcFactor;
+                blendState.dstFactor = dstFactor;
+                blendState.srcFactorAlpha = srcFactorAlpha;
+                blendState.dstFactorAlpha = dstFactorAlpha;
+
+                if (Config.isShaders())
+                {
+                    Shaders.uniform_blendFunc.setValue(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+                }
+
+                OpenGlHelper.glBlendFunc(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+            }
         }
     }
 
@@ -172,15 +252,30 @@ public class GlStateManager
         {
             fogState.mode = param;
             GL11.glFogi(GL11.GL_FOG_MODE, param);
+
+            if (Config.isShaders())
+            {
+                Shaders.setFogMode(param);
+            }
         }
     }
 
     public static void setFogDensity(float param)
     {
+        if (param < 0.0F)
+        {
+            param = 0.0F;
+        }
+
         if (param != fogState.density)
         {
             fogState.density = param;
             GL11.glFogf(GL11.GL_FOG_DENSITY, param);
+
+            if (Config.isShaders())
+            {
+                Shaders.setFogDensity(param);
+            }
         }
     }
 
@@ -200,6 +295,16 @@ public class GlStateManager
             fogState.end = param;
             GL11.glFogf(GL11.GL_FOG_END, param);
         }
+    }
+
+    public static void glFog(int p_glFog_0_, FloatBuffer p_glFog_1_)
+    {
+        GL11.glFog(p_glFog_0_, p_glFog_1_);
+    }
+
+    public static void glFogi(int p_glFogi_0_, int p_glFogi_1_)
+    {
+        GL11.glFogi(p_glFogi_0_, p_glFogi_1_);
     }
 
     public static void enableCull()
@@ -333,13 +438,16 @@ public class GlStateManager
 
     public static void deleteTexture(int texture)
     {
-        GL11.glDeleteTextures(texture);
-
-        for (GlStateManager.TextureState glstatemanager$texturestate : textureState)
+        if (texture != 0)
         {
-            if (glstatemanager$texturestate.textureName == texture)
+            GL11.glDeleteTextures(texture);
+
+            for (GlStateManager.TextureState glstatemanager$texturestate : textureState)
             {
-                glstatemanager$texturestate.textureName = -1;
+                if (glstatemanager$texturestate.textureName == texture)
+                {
+                    glstatemanager$texturestate.textureName = 0;
+                }
             }
         }
     }
@@ -350,6 +458,11 @@ public class GlStateManager
         {
             textureState[activeTextureUnit].textureName = texture;
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
+
+            if (SmartAnimations.isActive())
+            {
+                SmartAnimations.textureRendered(texture);
+            }
         }
     }
 
@@ -422,7 +535,10 @@ public class GlStateManager
 
     public static void clear(int mask)
     {
-        GL11.glClear(mask);
+        if (clearEnabled)
+        {
+            GL11.glClear(mask);
+        }
     }
 
     public static void matrixMode(int mode)
@@ -507,9 +623,351 @@ public class GlStateManager
         colorState.red = colorState.green = colorState.blue = colorState.alpha = -1.0F;
     }
 
+    public static void glNormalPointer(int p_glNormalPointer_0_, int p_glNormalPointer_1_, ByteBuffer p_glNormalPointer_2_)
+    {
+        GL11.glNormalPointer(p_glNormalPointer_0_, p_glNormalPointer_1_, p_glNormalPointer_2_);
+    }
+
+    public static void glTexCoordPointer(int p_glTexCoordPointer_0_, int p_glTexCoordPointer_1_, int p_glTexCoordPointer_2_, int p_glTexCoordPointer_3_)
+    {
+        GL11.glTexCoordPointer(p_glTexCoordPointer_0_, p_glTexCoordPointer_1_, p_glTexCoordPointer_2_, (long)p_glTexCoordPointer_3_);
+    }
+
+    public static void glTexCoordPointer(int p_glTexCoordPointer_0_, int p_glTexCoordPointer_1_, int p_glTexCoordPointer_2_, ByteBuffer p_glTexCoordPointer_3_)
+    {
+        GL11.glTexCoordPointer(p_glTexCoordPointer_0_, p_glTexCoordPointer_1_, p_glTexCoordPointer_2_, p_glTexCoordPointer_3_);
+    }
+
+    public static void glVertexPointer(int p_glVertexPointer_0_, int p_glVertexPointer_1_, int p_glVertexPointer_2_, int p_glVertexPointer_3_)
+    {
+        GL11.glVertexPointer(p_glVertexPointer_0_, p_glVertexPointer_1_, p_glVertexPointer_2_, (long)p_glVertexPointer_3_);
+    }
+
+    public static void glVertexPointer(int p_glVertexPointer_0_, int p_glVertexPointer_1_, int p_glVertexPointer_2_, ByteBuffer p_glVertexPointer_3_)
+    {
+        GL11.glVertexPointer(p_glVertexPointer_0_, p_glVertexPointer_1_, p_glVertexPointer_2_, p_glVertexPointer_3_);
+    }
+
+    public static void glColorPointer(int p_glColorPointer_0_, int p_glColorPointer_1_, int p_glColorPointer_2_, int p_glColorPointer_3_)
+    {
+        GL11.glColorPointer(p_glColorPointer_0_, p_glColorPointer_1_, p_glColorPointer_2_, (long)p_glColorPointer_3_);
+    }
+
+    public static void glColorPointer(int p_glColorPointer_0_, int p_glColorPointer_1_, int p_glColorPointer_2_, ByteBuffer p_glColorPointer_3_)
+    {
+        GL11.glColorPointer(p_glColorPointer_0_, p_glColorPointer_1_, p_glColorPointer_2_, p_glColorPointer_3_);
+    }
+
+    public static void glDisableClientState(int p_glDisableClientState_0_)
+    {
+        GL11.glDisableClientState(p_glDisableClientState_0_);
+    }
+
+    public static void glEnableClientState(int p_glEnableClientState_0_)
+    {
+        GL11.glEnableClientState(p_glEnableClientState_0_);
+    }
+
+    public static void glBegin(int p_glBegin_0_)
+    {
+        GL11.glBegin(p_glBegin_0_);
+    }
+
+    public static void glEnd()
+    {
+        GL11.glEnd();
+    }
+
+    public static void glDrawArrays(int p_glDrawArrays_0_, int p_glDrawArrays_1_, int p_glDrawArrays_2_)
+    {
+        GL11.glDrawArrays(p_glDrawArrays_0_, p_glDrawArrays_1_, p_glDrawArrays_2_);
+
+        if (Config.isShaders() && !creatingDisplayList)
+        {
+            int i = Shaders.activeProgram.getCountInstances();
+
+            if (i > 1)
+            {
+                for (int j = 1; j < i; ++j)
+                {
+                    Shaders.uniform_instanceId.setValue(j);
+                    GL11.glDrawArrays(p_glDrawArrays_0_, p_glDrawArrays_1_, p_glDrawArrays_2_);
+                }
+
+                Shaders.uniform_instanceId.setValue(0);
+            }
+        }
+    }
+
     public static void callList(int list)
     {
         GL11.glCallList(list);
+
+        if (Config.isShaders() && !creatingDisplayList)
+        {
+            int i = Shaders.activeProgram.getCountInstances();
+
+            if (i > 1)
+            {
+                for (int j = 1; j < i; ++j)
+                {
+                    Shaders.uniform_instanceId.setValue(j);
+                    GL11.glCallList(list);
+                }
+
+                Shaders.uniform_instanceId.setValue(0);
+            }
+        }
+    }
+
+    public static void callLists(IntBuffer p_callLists_0_)
+    {
+        GL11.glCallLists(p_callLists_0_);
+
+        if (Config.isShaders() && !creatingDisplayList)
+        {
+            int i = Shaders.activeProgram.getCountInstances();
+
+            if (i > 1)
+            {
+                for (int j = 1; j < i; ++j)
+                {
+                    Shaders.uniform_instanceId.setValue(j);
+                    GL11.glCallLists(p_callLists_0_);
+                }
+
+                Shaders.uniform_instanceId.setValue(0);
+            }
+        }
+    }
+
+    public static void glDeleteLists(int p_glDeleteLists_0_, int p_glDeleteLists_1_)
+    {
+        GL11.glDeleteLists(p_glDeleteLists_0_, p_glDeleteLists_1_);
+    }
+
+    public static void glNewList(int p_glNewList_0_, int p_glNewList_1_)
+    {
+        GL11.glNewList(p_glNewList_0_, p_glNewList_1_);
+        creatingDisplayList = true;
+    }
+
+    public static void glEndList()
+    {
+        GL11.glEndList();
+        creatingDisplayList = false;
+    }
+
+    public static int glGetError()
+    {
+        return GL11.glGetError();
+    }
+
+    public static void glTexImage2D(int p_glTexImage2D_0_, int p_glTexImage2D_1_, int p_glTexImage2D_2_, int p_glTexImage2D_3_, int p_glTexImage2D_4_, int p_glTexImage2D_5_, int p_glTexImage2D_6_, int p_glTexImage2D_7_, IntBuffer p_glTexImage2D_8_)
+    {
+        GL11.glTexImage2D(p_glTexImage2D_0_, p_glTexImage2D_1_, p_glTexImage2D_2_, p_glTexImage2D_3_, p_glTexImage2D_4_, p_glTexImage2D_5_, p_glTexImage2D_6_, p_glTexImage2D_7_, p_glTexImage2D_8_);
+    }
+
+    public static void glTexSubImage2D(int p_glTexSubImage2D_0_, int p_glTexSubImage2D_1_, int p_glTexSubImage2D_2_, int p_glTexSubImage2D_3_, int p_glTexSubImage2D_4_, int p_glTexSubImage2D_5_, int p_glTexSubImage2D_6_, int p_glTexSubImage2D_7_, IntBuffer p_glTexSubImage2D_8_)
+    {
+        GL11.glTexSubImage2D(p_glTexSubImage2D_0_, p_glTexSubImage2D_1_, p_glTexSubImage2D_2_, p_glTexSubImage2D_3_, p_glTexSubImage2D_4_, p_glTexSubImage2D_5_, p_glTexSubImage2D_6_, p_glTexSubImage2D_7_, p_glTexSubImage2D_8_);
+    }
+
+    public static void glCopyTexSubImage2D(int p_glCopyTexSubImage2D_0_, int p_glCopyTexSubImage2D_1_, int p_glCopyTexSubImage2D_2_, int p_glCopyTexSubImage2D_3_, int p_glCopyTexSubImage2D_4_, int p_glCopyTexSubImage2D_5_, int p_glCopyTexSubImage2D_6_, int p_glCopyTexSubImage2D_7_)
+    {
+        GL11.glCopyTexSubImage2D(p_glCopyTexSubImage2D_0_, p_glCopyTexSubImage2D_1_, p_glCopyTexSubImage2D_2_, p_glCopyTexSubImage2D_3_, p_glCopyTexSubImage2D_4_, p_glCopyTexSubImage2D_5_, p_glCopyTexSubImage2D_6_, p_glCopyTexSubImage2D_7_);
+    }
+
+    public static void glGetTexImage(int p_glGetTexImage_0_, int p_glGetTexImage_1_, int p_glGetTexImage_2_, int p_glGetTexImage_3_, IntBuffer p_glGetTexImage_4_)
+    {
+        GL11.glGetTexImage(p_glGetTexImage_0_, p_glGetTexImage_1_, p_glGetTexImage_2_, p_glGetTexImage_3_, p_glGetTexImage_4_);
+    }
+
+    public static void glTexParameterf(int p_glTexParameterf_0_, int p_glTexParameterf_1_, float p_glTexParameterf_2_)
+    {
+        GL11.glTexParameterf(p_glTexParameterf_0_, p_glTexParameterf_1_, p_glTexParameterf_2_);
+    }
+
+    public static void glTexParameteri(int p_glTexParameteri_0_, int p_glTexParameteri_1_, int p_glTexParameteri_2_)
+    {
+        GL11.glTexParameteri(p_glTexParameteri_0_, p_glTexParameteri_1_, p_glTexParameteri_2_);
+    }
+
+    public static int glGetTexLevelParameteri(int p_glGetTexLevelParameteri_0_, int p_glGetTexLevelParameteri_1_, int p_glGetTexLevelParameteri_2_)
+    {
+        return GL11.glGetTexLevelParameteri(p_glGetTexLevelParameteri_0_, p_glGetTexLevelParameteri_1_, p_glGetTexLevelParameteri_2_);
+    }
+
+    public static int getActiveTextureUnit()
+    {
+        return OpenGlHelper.defaultTexUnit + activeTextureUnit;
+    }
+
+    public static void bindCurrentTexture()
+    {
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureState[activeTextureUnit].textureName);
+    }
+
+    public static int getBoundTexture()
+    {
+        return textureState[activeTextureUnit].textureName;
+    }
+
+    public static void checkBoundTexture()
+    {
+        if (Config.isMinecraftThread())
+        {
+            int i = GL11.glGetInteger(GL13.GL_ACTIVE_TEXTURE);
+            int j = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
+            int k = getActiveTextureUnit();
+            int l = getBoundTexture();
+
+            if (l > 0)
+            {
+                if (i != k || j != l)
+                {
+                    Config.dbg("checkTexture: act: " + k + ", glAct: " + i + ", tex: " + l + ", glTex: " + j);
+                }
+            }
+        }
+    }
+
+    public static void deleteTextures(IntBuffer p_deleteTextures_0_)
+    {
+        p_deleteTextures_0_.rewind();
+
+        while (p_deleteTextures_0_.position() < p_deleteTextures_0_.limit())
+        {
+            int i = p_deleteTextures_0_.get();
+            deleteTexture(i);
+        }
+
+        p_deleteTextures_0_.rewind();
+    }
+
+    public static boolean isFogEnabled()
+    {
+        return fogState.fog.currentState;
+    }
+
+    public static void setFogEnabled(boolean p_setFogEnabled_0_)
+    {
+        fogState.fog.setState(p_setFogEnabled_0_);
+    }
+
+    public static void lockAlpha(GlAlphaState p_lockAlpha_0_)
+    {
+        if (!alphaLock.isLocked())
+        {
+            getAlphaState(alphaLockState);
+            setAlphaState(p_lockAlpha_0_);
+            alphaLock.lock();
+        }
+    }
+
+    public static void unlockAlpha()
+    {
+        if (alphaLock.unlock())
+        {
+            setAlphaState(alphaLockState);
+        }
+    }
+
+    public static void getAlphaState(GlAlphaState p_getAlphaState_0_)
+    {
+        if (alphaLock.isLocked())
+        {
+            p_getAlphaState_0_.setState(alphaLockState);
+        }
+        else
+        {
+            p_getAlphaState_0_.setState(alphaState.alphaTest.currentState, alphaState.func, alphaState.ref);
+        }
+    }
+
+    public static void setAlphaState(GlAlphaState p_setAlphaState_0_)
+    {
+        if (alphaLock.isLocked())
+        {
+            alphaLockState.setState(p_setAlphaState_0_);
+        }
+        else
+        {
+            alphaState.alphaTest.setState(p_setAlphaState_0_.isEnabled());
+            alphaFunc(p_setAlphaState_0_.getFunc(), p_setAlphaState_0_.getRef());
+        }
+    }
+
+    public static void lockBlend(GlBlendState p_lockBlend_0_)
+    {
+        if (!blendLock.isLocked())
+        {
+            getBlendState(blendLockState);
+            setBlendState(p_lockBlend_0_);
+            blendLock.lock();
+        }
+    }
+
+    public static void unlockBlend()
+    {
+        if (blendLock.unlock())
+        {
+            setBlendState(blendLockState);
+        }
+    }
+
+    public static void getBlendState(GlBlendState p_getBlendState_0_)
+    {
+        if (blendLock.isLocked())
+        {
+            p_getBlendState_0_.setState(blendLockState);
+        }
+        else
+        {
+            p_getBlendState_0_.setState(blendState.blend.currentState, blendState.srcFactor, blendState.dstFactor, blendState.srcFactorAlpha, blendState.dstFactorAlpha);
+        }
+    }
+
+    public static void setBlendState(GlBlendState p_setBlendState_0_)
+    {
+        if (blendLock.isLocked())
+        {
+            blendLockState.setState(p_setBlendState_0_);
+        }
+        else
+        {
+            blendState.blend.setState(p_setBlendState_0_.isEnabled());
+
+            if (!p_setBlendState_0_.isSeparate())
+            {
+                blendFunc(p_setBlendState_0_.getSrcFactor(), p_setBlendState_0_.getDstFactor());
+            }
+            else
+            {
+                tryBlendFuncSeparate(p_setBlendState_0_.getSrcFactor(), p_setBlendState_0_.getDstFactor(), p_setBlendState_0_.getSrcFactorAlpha(), p_setBlendState_0_.getDstFactorAlpha());
+            }
+        }
+    }
+
+    public static void glMultiDrawArrays(int p_glMultiDrawArrays_0_, IntBuffer p_glMultiDrawArrays_1_, IntBuffer p_glMultiDrawArrays_2_)
+    {
+        GL14.glMultiDrawArrays(p_glMultiDrawArrays_0_, p_glMultiDrawArrays_1_, p_glMultiDrawArrays_2_);
+
+        if (Config.isShaders() && !creatingDisplayList)
+        {
+            int i = Shaders.activeProgram.getCountInstances();
+
+            if (i > 1)
+            {
+                for (int j = 1; j < i; ++j)
+                {
+                    Shaders.uniform_instanceId.setValue(j);
+                    GL14.glMultiDrawArrays(p_glMultiDrawArrays_0_, p_glMultiDrawArrays_1_, p_glMultiDrawArrays_2_);
+                }
+
+                Shaders.uniform_instanceId.setValue(0);
+            }
+        }
     }
 
     static
@@ -519,7 +977,7 @@ public class GlStateManager
             lightState[i] = new GlStateManager.BooleanState(16384 + i);
         }
 
-        for (int j = 0; j < 8; ++j)
+        for (int j = 0; j < textureState.length; ++j)
         {
             textureState[j] = new GlStateManager.TextureState();
         }

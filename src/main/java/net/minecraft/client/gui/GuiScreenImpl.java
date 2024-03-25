@@ -1,5 +1,0 @@
-package net.minecraft.client.gui;
-
-public class GuiScreenImpl extends GuiScreen{
-
-}

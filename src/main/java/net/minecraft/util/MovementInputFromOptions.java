@@ -16,28 +16,28 @@ public class MovementInputFromOptions extends MovementInput
         this.moveStrafe = 0.0F;
         this.moveForward = 0.0F;
 
-        if (this.gameSettings.keyBindForward.isKeyDown())
+        if (this.gameSettings.keyBindLeft.isKeyDown())
         {
             ++this.moveForward;
         }
 
-        if (this.gameSettings.keyBindBack.isKeyDown())
+        if (this.gameSettings.keyBindRight.isKeyDown())
         {
             --this.moveForward;
         }
 
-        if (this.gameSettings.keyBindLeft.isKeyDown())
+        if (this.gameSettings.keyBindBack.isKeyDown())
         {
             ++this.moveStrafe;
         }
 
-        if (this.gameSettings.keyBindRight.isKeyDown())
+        if (this.gameSettings.keyBindJump.isKeyDown())
         {
             --this.moveStrafe;
         }
 
-        this.jump = this.gameSettings.keyBindJump.isKeyDown();
-        this.sneak = this.gameSettings.keyBindSneak.isKeyDown();
+        this.jump = this.gameSettings.keyBindSneak.isKeyDown();
+        this.sneak = this.gameSettings.keyBindSprint.isKeyDown();
 
         if (this.sneak)
         {

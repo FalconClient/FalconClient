@@ -9,6 +9,11 @@ import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.src.Config;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ISmartItemModel;
+import net.optifine.CustomItems;
+import net.optifine.reflect.Reflector;
 
 public class ItemModelMesher
 {
@@ -47,9 +52,19 @@ public class ItemModelMesher
             }
         }
 
+        if (Reflector.ForgeHooksClient.exists() && ibakedmodel instanceof ISmartItemModel)
+        {
+            ibakedmodel = ((ISmartItemModel)ibakedmodel).handleItemState(stack);
+        }
+
         if (ibakedmodel == null)
         {
             ibakedmodel = this.modelManager.getMissingModel();
+        }
+
+        if (Config.isCustomItems())
+        {
+            ibakedmodel = CustomItems.getCustomItemModel(stack, ibakedmodel, (ResourceLocation)null, true);
         }
 
         return ibakedmodel;

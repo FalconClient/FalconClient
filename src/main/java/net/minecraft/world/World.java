@@ -69,7 +69,7 @@ public abstract class World implements IBlockAccess
     private final List<TileEntity> tileEntitiesToBeRemoved = Lists.<TileEntity>newArrayList();
     public final List<EntityPlayer> playerEntities = Lists.<EntityPlayer>newArrayList();
     public final List<Entity> weatherEffects = Lists.<Entity>newArrayList();
-    protected final IntHashMap<Entity> entitiesById = new IntHashMap<>(); // Added type inference
+    protected final IntHashMap<Entity> entitiesById = new IntHashMap();
     private long cloudColour = 16777215L;
 
     /** How much light is subtracted from full daylight */

@@ -9,6 +9,7 @@ public class ChunkCoordIntPair
 
     /** The Z position of this Chunk Coordinate Pair */
     public final int chunkZPos;
+    private int cachedHashCode = 0;
 
     public ChunkCoordIntPair(int x, int z)
     {
@@ -26,9 +27,14 @@ public class ChunkCoordIntPair
 
     public int hashCode()
     {
-        int i = 1664525 * this.chunkXPos + 1013904223;
-        int j = 1664525 * (this.chunkZPos ^ -559038737) + 1013904223;
-        return i ^ j;
+        if (this.cachedHashCode == 0)
+        {
+            int i = 1664525 * this.chunkXPos + 1013904223;
+            int j = 1664525 * (this.chunkZPos ^ -559038737) + 1013904223;
+            this.cachedHashCode = i ^ j;
+        }
+
+        return this.cachedHashCode;
     }
 
     public boolean equals(Object p_equals_1_)

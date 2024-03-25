@@ -1,5 +1,7 @@
 package net.minecraft.client.renderer;
 
+import net.optifine.SmartAnimations;
+
 public class Tessellator
 {
     private WorldRenderer worldRenderer;
@@ -23,6 +25,11 @@ public class Tessellator
      */
     public void draw()
     {
+        if (this.worldRenderer.animatedSprites != null)
+        {
+            SmartAnimations.spritesRendered(this.worldRenderer.animatedSprites);
+        }
+
         this.worldRenderer.finishDrawing();
         this.vboUploader.draw(this.worldRenderer);
     }

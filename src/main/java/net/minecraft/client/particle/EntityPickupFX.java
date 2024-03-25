@@ -6,7 +6,10 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.src.Config;
 import net.minecraft.world.World;
+import net.optifine.shaders.Program;
+import net.optifine.shaders.Shaders;
 
 public class EntityPickupFX extends EntityFX
 {
@@ -31,6 +34,14 @@ public class EntityPickupFX extends EntityFX
      */
     public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
     {
+        Program program = null;
+
+        if (Config.isShaders())
+        {
+            program = Shaders.activeProgram;
+            Shaders.nextEntity(this.field_174840_a);
+        }
+
         float f = ((float)this.age + partialTicks) / (float)this.maxAge;
         f = f * f;
         double d0 = this.field_174840_a.posX;
@@ -51,6 +62,12 @@ public class EntityPickupFX extends EntityFX
         d7 = d7 - interpPosY;
         d8 = d8 - interpPosZ;
         this.field_174842_aB.renderEntityWithPosYaw(this.field_174840_a, (double)((float)d6), (double)((float)d7), (double)((float)d8), this.field_174840_a.rotationYaw, partialTicks);
+
+        if (Config.isShaders())
+        {
+            Shaders.setEntityId((Entity)null);
+            Shaders.useProgram(program);
+        }
     }
 
     /**

@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.src.Config;
 import net.minecraft.util.ResourceLocation;
+import net.optifine.shaders.ShadersTex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,10 +17,16 @@ public class LayeredTexture extends AbstractTexture
 {
     private static final Logger logger = LogManager.getLogger();
     public final List<String> layeredTextureNames;
+    private ResourceLocation textureLocation;
 
     public LayeredTexture(String... textureNames)
     {
         this.layeredTextureNames = Lists.newArrayList(textureNames);
+
+        if (textureNames.length > 0 && textureNames[0] != null)
+        {
+            this.textureLocation = new ResourceLocation(textureNames[0]);
+        }
     }
 
     public void loadTexture(IResourceManager resourceManager) throws IOException
@@ -50,6 +58,13 @@ public class LayeredTexture extends AbstractTexture
             return;
         }
 
-        TextureUtil.uploadTextureImage(this.getGlTextureId(), bufferedimage);
+        if (Config.isShaders())
+        {
+            ShadersTex.loadSimpleTexture(this.getGlTextureId(), bufferedimage, false, false, resourceManager, this.textureLocation, this.getMultiTexID());
+        }
+        else
+        {
+            TextureUtil.uploadTextureImage(this.getGlTextureId(), bufferedimage);
+        }
     }
 }

@@ -1,23 +1,22 @@
 package net.minecraft.crash;
 
 import com.google.common.collect.Lists;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+import net.minecraft.util.ReportedException;
+import net.minecraft.world.gen.layer.IntCache;
+import net.optifine.CrashReporter;
+import net.optifine.reflect.Reflector;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
-import net.minecraft.util.ReportedException;
-import net.minecraft.world.gen.layer.IntCache;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class CrashReport
 {
@@ -39,6 +38,7 @@ public class CrashReport
     /** Is true when the current category is the first in the crash report */
     private boolean firstCategoryInCrashReport = true;
     private StackTraceElement[] stacktrace = new StackTraceElement[0];
+    private boolean reported = false;
 
     public CrashReport(String descriptionIn, Throwable causeThrowable)
     {
@@ -127,6 +127,12 @@ public class CrashReport
                 return IntCache.getCacheSizes();
             }
         });
+
+        if (Reflector.FMLCommonHandler_enhanceCrashReport.exists())
+        {
+            Object object = Reflector.call(Reflector.FMLCommonHandler_instance, new Object[0]);
+            Reflector.callString(object, Reflector.FMLCommonHandler_enhanceCrashReport, new Object[] {this, this.theReportCategory});
+        }
     }
 
     /**
@@ -152,7 +158,7 @@ public class CrashReport
     {
         if ((this.stacktrace == null || this.stacktrace.length <= 0) && this.crashReportSections.size() > 0)
         {
-            this.stacktrace = (StackTraceElement[])ArrayUtils.subarray(((CrashReportCategory)this.crashReportSections.get(0)).getStackTrace(), 0, 1);
+            this.stacktrace = (StackTraceElement[])((StackTraceElement[])ArrayUtils.subarray(((CrashReportCategory)this.crashReportSections.get(0)).getStackTrace(), 0, 1));
         }
 
         if (this.stacktrace != null && this.stacktrace.length > 0)
@@ -228,8 +234,16 @@ public class CrashReport
      */
     public String getCompleteReport()
     {
+        if (!this.reported)
+        {
+            this.reported = true;
+            CrashReporter.onCrashReport(this, this.theReportCategory);
+        }
+
         StringBuilder stringbuilder = new StringBuilder();
         stringbuilder.append("---- Minecraft Crash Report ----\n");
+        Reflector.call(Reflector.BlamingTransformer_onCrash, new Object[] {stringbuilder});
+        Reflector.call(Reflector.CoreModManager_onCrash, new Object[] {stringbuilder});
         stringbuilder.append("// ");
         stringbuilder.append(getWittyComment());
         stringbuilder.append("\n\n");

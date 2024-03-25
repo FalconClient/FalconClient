@@ -1,10 +1,17 @@
 package net.minecraft.client.renderer;
 
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.client.renderer.chunk.IRenderChunkFactory;
 import net.minecraft.client.renderer.chunk.RenderChunk;
+import net.minecraft.src.Config;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
+import net.optifine.render.VboRegion;
 
 public class ViewFrustum
 {
@@ -14,6 +21,7 @@ public class ViewFrustum
     protected int countChunksX;
     protected int countChunksZ;
     public RenderChunk[] renderChunks;
+    private Map<ChunkCoordIntPair, VboRegion[]> mapVboRegions = new HashMap();
 
     public ViewFrustum(World worldIn, int renderDistanceChunks, RenderGlobal p_i46246_3_, IRenderChunkFactory renderChunkFactory)
     {
@@ -38,7 +46,25 @@ public class ViewFrustum
                     int j1 = (i1 * this.countChunksY + l) * this.countChunksX + k;
                     BlockPos blockpos = new BlockPos(k * 16, l * 16, i1 * 16);
                     this.renderChunks[j1] = renderChunkFactory.makeRenderChunk(this.world, this.renderGlobal, blockpos, j++);
+
+                    if (Config.isVbo() && Config.isRenderRegions())
+                    {
+                        this.updateVboRegion(this.renderChunks[j1]);
+                    }
                 }
+            }
+        }
+
+        for (int k1 = 0; k1 < this.renderChunks.length; ++k1)
+        {
+            RenderChunk renderchunk1 = this.renderChunks[k1];
+
+            for (int l1 = 0; l1 < EnumFacing.VALUES.length; ++l1)
+            {
+                EnumFacing enumfacing = EnumFacing.VALUES[l1];
+                BlockPos blockpos1 = renderchunk1.getBlockPosOffset16(enumfacing);
+                RenderChunk renderchunk = this.getRenderChunk(blockpos1);
+                renderchunk1.setRenderChunkNeighbour(enumfacing, renderchunk);
             }
         }
     }
@@ -49,6 +75,8 @@ public class ViewFrustum
         {
             renderchunk.deleteGlResources();
         }
+
+        this.deleteVboRegions();
     }
 
     protected void setCountChunksXYZ(int renderDistanceChunks)
@@ -77,11 +105,16 @@ public class ViewFrustum
                 {
                     int i2 = l1 * 16;
                     RenderChunk renderchunk = this.renderChunks[(j1 * this.countChunksY + l1) * this.countChunksX + l];
-                    BlockPos blockpos = new BlockPos(i1, i2, k1);
+                    BlockPos blockpos = renderchunk.getPosition();
 
-                    if (!blockpos.equals(renderchunk.getPosition()))
+                    if (blockpos.getX() != i1 || blockpos.getY() != i2 || blockpos.getZ() != k1)
                     {
-                        renderchunk.setPosition(blockpos);
+                        BlockPos blockpos1 = new BlockPos(i1, i2, k1);
+
+                        if (!blockpos1.equals(renderchunk.getPosition()))
+                        {
+                            renderchunk.setPosition(blockpos1);
+                        }
                     }
                 }
             }
@@ -145,11 +178,11 @@ public class ViewFrustum
         }
     }
 
-    protected RenderChunk getRenderChunk(BlockPos pos)
+    public RenderChunk getRenderChunk(BlockPos pos)
     {
-        int i = MathHelper.bucketInt(pos.getX(), 16);
-        int j = MathHelper.bucketInt(pos.getY(), 16);
-        int k = MathHelper.bucketInt(pos.getZ(), 16);
+        int i = pos.getX() >> 4;
+        int j = pos.getY() >> 4;
+        int k = pos.getZ() >> 4;
 
         if (j >= 0 && j < this.countChunksY)
         {
@@ -174,5 +207,59 @@ public class ViewFrustum
         {
             return null;
         }
+    }
+
+    private void updateVboRegion(RenderChunk p_updateVboRegion_1_)
+    {
+        BlockPos blockpos = p_updateVboRegion_1_.getPosition();
+        int i = blockpos.getX() >> 8 << 8;
+        int j = blockpos.getZ() >> 8 << 8;
+        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i, j);
+        EnumWorldBlockLayer[] aenumworldblocklayer = RenderChunk.ENUM_WORLD_BLOCK_LAYERS;
+        VboRegion[] avboregion = (VboRegion[])this.mapVboRegions.get(chunkcoordintpair);
+
+        if (avboregion == null)
+        {
+            avboregion = new VboRegion[aenumworldblocklayer.length];
+
+            for (int k = 0; k < aenumworldblocklayer.length; ++k)
+            {
+                avboregion[k] = new VboRegion(aenumworldblocklayer[k]);
+            }
+
+            this.mapVboRegions.put(chunkcoordintpair, avboregion);
+        }
+
+        for (int l = 0; l < aenumworldblocklayer.length; ++l)
+        {
+            VboRegion vboregion = avboregion[l];
+
+            if (vboregion != null)
+            {
+                p_updateVboRegion_1_.getVertexBufferByLayer(l).setVboRegion(vboregion);
+            }
+        }
+    }
+
+    public void deleteVboRegions()
+    {
+        for (ChunkCoordIntPair chunkcoordintpair : this.mapVboRegions.keySet())
+        {
+            VboRegion[] avboregion = (VboRegion[])this.mapVboRegions.get(chunkcoordintpair);
+
+            for (int i = 0; i < avboregion.length; ++i)
+            {
+                VboRegion vboregion = avboregion[i];
+
+                if (vboregion != null)
+                {
+                    vboregion.deleteGlBuffers();
+                }
+
+                avboregion[i] = null;
+            }
+        }
+
+        this.mapVboRegions.clear();
     }
 }

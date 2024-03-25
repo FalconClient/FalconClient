@@ -57,7 +57,7 @@ public class ResourcePackRepository
     private final ReentrantLock lock = new ReentrantLock();
     private ListenableFuture<Object> downloadingPacks;
     private List<ResourcePackRepository.Entry> repositoryEntriesAll = Lists.<ResourcePackRepository.Entry>newArrayList();
-    private List<ResourcePackRepository.Entry> repositoryEntries = Lists.<ResourcePackRepository.Entry>newArrayList();
+    public List<ResourcePackRepository.Entry> repositoryEntries = Lists.<ResourcePackRepository.Entry>newArrayList();
 
     public ResourcePackRepository(File dirResourcepacksIn, File dirServerResourcepacksIn, IResourcePack rprDefaultResourcePackIn, IMetadataSerializer rprMetadataSerializerIn, GameSettings settings)
     {
@@ -125,7 +125,7 @@ public class ResourcePackRepository
                     resourcepackrepository$entry.updateResourcePack();
                     list.add(resourcepackrepository$entry);
                 }
-                catch (Exception var6)
+                catch (Exception var61)
                 {
                     list.remove(resourcepackrepository$entry);
                 }
@@ -200,8 +200,9 @@ public class ResourcePackRepository
 
                     if (s1.equals(hash))
                     {
-                        ListenableFuture listenablefuture1 = this.setResourcePackInstance(file1);
-                        return listenablefuture1;
+                        ListenableFuture listenablefuture2 = this.setResourcePackInstance(file1);
+                        ListenableFuture listenablefuture3 = listenablefuture2;
+                        return listenablefuture3;
                     }
 
                     logger.warn("File " + file1 + " had wrong hash (expected " + hash + ", found " + s1 + "). Deleting it.");
@@ -240,7 +241,8 @@ public class ResourcePackRepository
                 }
             });
             ListenableFuture listenablefuture = this.downloadingPacks;
-            return listenablefuture;
+            ListenableFuture listenablefuture11 = listenablefuture;
+            return listenablefuture11;
         }
         finally
         {

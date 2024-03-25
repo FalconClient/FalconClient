@@ -40,6 +40,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IRegistry;
 import net.minecraft.util.RegistrySimple;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ITransformation;
+import net.minecraftforge.client.model.TRSRTransformation;
+import net.minecraftforge.fml.common.registry.RegistryDelegate;
+import net.optifine.CustomItems;
+import net.optifine.reflect.Reflector;
+import net.optifine.util.StrUtils;
+import net.optifine.util.TextureUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,6 +74,7 @@ public class ModelBakery
     private Map<String, ResourceLocation> itemLocations = Maps.<String, ResourceLocation>newLinkedHashMap();
     private final Map<ResourceLocation, ModelBlockDefinition> blockDefinitions = Maps.<ResourceLocation, ModelBlockDefinition>newHashMap();
     private Map<Item, List<String>> variantNames = Maps.<Item, List<String>>newIdentityHashMap();
+    private static Map<RegistryDelegate<Item>, Set<String>> customVariantNames = Maps.<RegistryDelegate<Item>, Set<String>>newHashMap();
 
     public ModelBakery(IResourceManager p_i46085_1_, TextureMap p_i46085_2_, BlockModelShapes p_i46085_3_)
     {
@@ -109,14 +117,14 @@ public class ModelBakery
                 {
                     this.registerVariant(modelblockdefinition, modelresourcelocation);
                 }
-                catch (Exception var6)
+                catch (Exception exception)
                 {
-                    LOGGER.warn("Unable to load variant: " + modelresourcelocation.getVariant() + " from " + modelresourcelocation);
+                    LOGGER.warn((String)("Unable to load variant: " + modelresourcelocation.getVariant() + " from " + modelresourcelocation), (Throwable)exception);
                 }
             }
-            catch (Exception exception)
+            catch (Exception exception1)
             {
-                LOGGER.warn((String)("Unable to load definition " + modelresourcelocation), (Throwable)exception);
+                LOGGER.warn((String)("Unable to load definition " + modelresourcelocation), (Throwable)exception1);
             }
         }
     }
@@ -236,30 +244,48 @@ public class ModelBakery
             }
             else
             {
-                IResource iresource = this.resourceManager.getResource(this.getModelLocation(p_177594_1_));
+                p_177594_1_ = this.getModelLocation(p_177594_1_);
+                IResource iresource = this.resourceManager.getResource(p_177594_1_);
                 reader = new InputStreamReader(iresource.getInputStream(), Charsets.UTF_8);
             }
 
-            ModelBlock modelblock1;
+            ModelBlock modelblock;
 
             try
             {
-                ModelBlock modelblock = ModelBlock.deserialize(reader);
-                modelblock.name = p_177594_1_.toString();
-                modelblock1 = modelblock;
+                ModelBlock modelblock1 = ModelBlock.deserialize(reader);
+                modelblock1.name = p_177594_1_.toString();
+                modelblock = modelblock1;
+                String s3 = TextureUtils.getBasePath(p_177594_1_.getResourcePath());
+                fixModelLocations(modelblock1, s3);
             }
             finally
             {
                 reader.close();
             }
 
-            return modelblock1;
+            return modelblock;
         }
     }
 
     private ResourceLocation getModelLocation(ResourceLocation p_177580_1_)
     {
-        return new ResourceLocation(p_177580_1_.getResourceDomain(), "models/" + p_177580_1_.getResourcePath() + ".json");
+        ResourceLocation resourcelocation = p_177580_1_;
+        String s = p_177580_1_.getResourcePath();
+
+        if (!s.startsWith("mcpatcher") && !s.startsWith("optifine"))
+        {
+            return new ResourceLocation(p_177580_1_.getResourceDomain(), "models/" + p_177580_1_.getResourcePath() + ".json");
+        }
+        else
+        {
+            if (!s.endsWith(".json"))
+            {
+                resourcelocation = new ResourceLocation(p_177580_1_.getResourceDomain(), s + ".json");
+            }
+
+            return resourcelocation;
+        }
     }
 
     private void loadItemModels()
@@ -289,8 +315,28 @@ public class ModelBakery
         }
     }
 
+    public void loadItemModel(String p_loadItemModel_1_, ResourceLocation p_loadItemModel_2_, ResourceLocation p_loadItemModel_3_)
+    {
+        this.itemLocations.put(p_loadItemModel_1_, p_loadItemModel_2_);
+
+        if (this.models.get(p_loadItemModel_2_) == null)
+        {
+            try
+            {
+                ModelBlock modelblock = this.loadModel(p_loadItemModel_2_);
+                this.models.put(p_loadItemModel_2_, modelblock);
+            }
+            catch (Exception exception)
+            {
+                LOGGER.warn("Unable to load item model: \'{}\' for item: \'{}\'", new Object[] {p_loadItemModel_2_, p_loadItemModel_3_});
+                LOGGER.warn(exception.getClass().getName() + ": " + exception.getMessage());
+            }
+        }
+    }
+
     private void registerVariantNames()
     {
+        this.variantNames.clear();
         this.variantNames.put(Item.getItemFromBlock(Blocks.stone), Lists.newArrayList(new String[] {"stone", "granite", "granite_smooth", "diorite", "diorite_smooth", "andesite", "andesite_smooth"}));
         this.variantNames.put(Item.getItemFromBlock(Blocks.dirt), Lists.newArrayList(new String[] {"dirt", "coarse_dirt", "podzol"}));
         this.variantNames.put(Item.getItemFromBlock(Blocks.planks), Lists.newArrayList(new String[] {"oak_planks", "spruce_planks", "birch_planks", "jungle_planks", "acacia_planks", "dark_oak_planks"}));
@@ -333,6 +379,14 @@ public class ModelBakery
         this.variantNames.put(Item.getItemFromBlock(Blocks.oak_fence_gate), Lists.newArrayList(new String[] {"oak_fence_gate"}));
         this.variantNames.put(Item.getItemFromBlock(Blocks.oak_fence), Lists.newArrayList(new String[] {"oak_fence"}));
         this.variantNames.put(Items.oak_door, Lists.newArrayList(new String[] {"oak_door"}));
+
+        for (Entry<RegistryDelegate<Item>, Set<String>> entry : customVariantNames.entrySet())
+        {
+            this.variantNames.put((Item) ((RegistryDelegate)entry.getKey()).get(), Lists.newArrayList(((Set)entry.getValue()).iterator()));
+        }
+
+        CustomItems.update();
+        CustomItems.loadModels(this);
     }
 
     private List<String> getVariantNames(Item p_177596_1_)
@@ -350,6 +404,12 @@ public class ModelBakery
     private ResourceLocation getItemLocation(String p_177583_1_)
     {
         ResourceLocation resourcelocation = new ResourceLocation(p_177583_1_);
+
+        if (Reflector.ForgeHooksClient.exists())
+        {
+            resourcelocation = new ResourceLocation(p_177583_1_.replaceAll("#.*", ""));
+        }
+
         return new ResourceLocation(resourcelocation.getResourceDomain(), "item/" + resourcelocation.getResourcePath());
     }
 
@@ -393,6 +453,12 @@ public class ModelBakery
         {
             ResourceLocation resourcelocation = (ResourceLocation)entry.getValue();
             ModelResourceLocation modelresourcelocation1 = new ModelResourceLocation((String)entry.getKey(), "inventory");
+
+            if (Reflector.ModelLoader_getInventoryVariant.exists())
+            {
+                modelresourcelocation1 = (ModelResourceLocation)Reflector.call(Reflector.ModelLoader_getInventoryVariant, new Object[] {entry.getKey()});
+            }
+
             ModelBlock modelblock1 = (ModelBlock)this.models.get(resourcelocation);
 
             if (modelblock1 != null && modelblock1.isResolved())
@@ -448,25 +514,36 @@ public class ModelBakery
         return set;
     }
 
-    private IBakedModel bakeModel(ModelBlock modelBlockIn, ModelRotation modelRotationIn, boolean uvLocked)
+    public IBakedModel bakeModel(ModelBlock modelBlockIn, ModelRotation modelRotationIn, boolean uvLocked)
     {
-        TextureAtlasSprite textureatlassprite = (TextureAtlasSprite)this.sprites.get(new ResourceLocation(modelBlockIn.resolveTextureName("particle")));
-        SimpleBakedModel.Builder simplebakedmodel$builder = (new SimpleBakedModel.Builder(modelBlockIn)).setTexture(textureatlassprite);
+        return this.bakeModel(modelBlockIn, (ITransformation)modelRotationIn, uvLocked);
+    }
 
-        for (BlockPart blockpart : modelBlockIn.getElements())
+    protected IBakedModel bakeModel(ModelBlock p_bakeModel_1_, ITransformation p_bakeModel_2_, boolean p_bakeModel_3_)
+    {
+        TextureAtlasSprite textureatlassprite = this.sprites.get(new ResourceLocation(p_bakeModel_1_.resolveTextureName("particle")));
+        SimpleBakedModel.Builder simplebakedmodel$builder = (new SimpleBakedModel.Builder(p_bakeModel_1_)).setTexture(textureatlassprite);
+
+        for (BlockPart blockpart : p_bakeModel_1_.getElements())
         {
             for (EnumFacing enumfacing : blockpart.mapFaces.keySet())
             {
-                BlockPartFace blockpartface = (BlockPartFace)blockpart.mapFaces.get(enumfacing);
-                TextureAtlasSprite textureatlassprite1 = (TextureAtlasSprite)this.sprites.get(new ResourceLocation(modelBlockIn.resolveTextureName(blockpartface.texture)));
+                BlockPartFace blockpartface = blockpart.mapFaces.get(enumfacing);
+                TextureAtlasSprite textureatlassprite1 = this.sprites.get(new ResourceLocation(p_bakeModel_1_.resolveTextureName(blockpartface.texture)));
+                boolean flag = true;
 
-                if (blockpartface.cullFace == null)
+                if (Reflector.ForgeHooksClient.exists())
                 {
-                    simplebakedmodel$builder.addGeneralQuad(this.makeBakedQuad(blockpart, blockpartface, textureatlassprite1, enumfacing, modelRotationIn, uvLocked));
+                    flag = TRSRTransformation.isInteger(p_bakeModel_2_.getMatrix());
+                }
+
+                if (blockpartface.cullFace != null && flag)
+                {
+                    simplebakedmodel$builder.addFaceQuad(p_bakeModel_2_.rotate(blockpartface.cullFace), this.makeBakedQuad(blockpart, blockpartface, textureatlassprite1, enumfacing, p_bakeModel_2_, p_bakeModel_3_));
                 }
                 else
                 {
-                    simplebakedmodel$builder.addFaceQuad(modelRotationIn.rotateFace(blockpartface.cullFace), this.makeBakedQuad(blockpart, blockpartface, textureatlassprite1, enumfacing, modelRotationIn, uvLocked));
+                    simplebakedmodel$builder.addGeneralQuad(this.makeBakedQuad(blockpart, blockpartface, textureatlassprite1, enumfacing, p_bakeModel_2_, p_bakeModel_3_));
                 }
             }
         }
@@ -476,7 +553,12 @@ public class ModelBakery
 
     private BakedQuad makeBakedQuad(BlockPart p_177589_1_, BlockPartFace p_177589_2_, TextureAtlasSprite p_177589_3_, EnumFacing p_177589_4_, ModelRotation p_177589_5_, boolean p_177589_6_)
     {
-        return this.faceBakery.makeBakedQuad(p_177589_1_.positionFrom, p_177589_1_.positionTo, p_177589_2_, p_177589_3_, p_177589_4_, p_177589_5_, p_177589_1_.partRotation, p_177589_6_, p_177589_1_.shade);
+        return Reflector.ForgeHooksClient.exists() ? this.makeBakedQuad(p_177589_1_, p_177589_2_, p_177589_3_, p_177589_4_, p_177589_5_, p_177589_6_) : this.faceBakery.makeBakedQuad(p_177589_1_.positionFrom, p_177589_1_.positionTo, p_177589_2_, p_177589_3_, p_177589_4_, p_177589_5_, p_177589_1_.partRotation, p_177589_6_, p_177589_1_.shade);
+    }
+
+    protected BakedQuad makeBakedQuad(BlockPart p_makeBakedQuad_1_, BlockPartFace p_makeBakedQuad_2_, TextureAtlasSprite p_makeBakedQuad_3_, EnumFacing p_makeBakedQuad_4_, ITransformation p_makeBakedQuad_5_, boolean p_makeBakedQuad_6_)
+    {
+        return this.faceBakery.makeBakedQuad(p_makeBakedQuad_1_.positionFrom, p_makeBakedQuad_1_.positionTo, p_makeBakedQuad_2_, p_makeBakedQuad_3_, p_makeBakedQuad_4_, p_makeBakedQuad_5_, p_makeBakedQuad_1_.partRotation, p_makeBakedQuad_6_, p_makeBakedQuad_1_.shade);
     }
 
     private void loadModelsCheck()
@@ -527,9 +609,9 @@ public class ModelBakery
                     deque.add(resourcelocation3);
                 }
             }
-            catch (Exception exception)
+            catch (Exception var6)
             {
-                LOGGER.warn((String)("In parent chain: " + JOINER.join(this.getParentPath(resourcelocation2)) + "; unable to load model: \'" + resourcelocation2 + "\'"), (Throwable)exception);
+                LOGGER.warn("In parent chain: " + JOINER.join(this.getParentPath(resourcelocation2)) + "; unable to load model: \'" + resourcelocation2 + "\'");
             }
 
             set.add(resourcelocation2);
@@ -709,6 +791,103 @@ public class ModelBakery
     private ModelBlock makeItemModel(ModelBlock p_177582_1_)
     {
         return this.itemModelGenerator.makeItemModel(this.textureMap, p_177582_1_);
+    }
+
+    public ModelBlock getModelBlock(ResourceLocation p_getModelBlock_1_)
+    {
+        ModelBlock modelblock = (ModelBlock)this.models.get(p_getModelBlock_1_);
+        return modelblock;
+    }
+
+    public static void fixModelLocations(ModelBlock p_fixModelLocations_0_, String p_fixModelLocations_1_)
+    {
+        ResourceLocation resourcelocation = fixModelLocation(p_fixModelLocations_0_.getParentLocation(), p_fixModelLocations_1_);
+
+        if (resourcelocation != p_fixModelLocations_0_.getParentLocation())
+        {
+            Reflector.setFieldValue(p_fixModelLocations_0_, Reflector.ModelBlock_parentLocation, resourcelocation);
+        }
+
+        Map<String, String> map = (Map)Reflector.getFieldValue(p_fixModelLocations_0_, Reflector.ModelBlock_textures);
+
+        if (map != null)
+        {
+            for (Entry<String, String> entry : map.entrySet())
+            {
+                String s = (String)entry.getValue();
+                String s1 = fixResourcePath(s, p_fixModelLocations_1_);
+
+                if (s1 != s)
+                {
+                    entry.setValue(s1);
+                }
+            }
+        }
+    }
+
+    public static ResourceLocation fixModelLocation(ResourceLocation p_fixModelLocation_0_, String p_fixModelLocation_1_)
+    {
+        if (p_fixModelLocation_0_ != null && p_fixModelLocation_1_ != null)
+        {
+            if (!p_fixModelLocation_0_.getResourceDomain().equals("minecraft"))
+            {
+                return p_fixModelLocation_0_;
+            }
+            else
+            {
+                String s = p_fixModelLocation_0_.getResourcePath();
+                String s1 = fixResourcePath(s, p_fixModelLocation_1_);
+
+                if (s1 != s)
+                {
+                    p_fixModelLocation_0_ = new ResourceLocation(p_fixModelLocation_0_.getResourceDomain(), s1);
+                }
+
+                return p_fixModelLocation_0_;
+            }
+        }
+        else
+        {
+            return p_fixModelLocation_0_;
+        }
+    }
+
+    private static String fixResourcePath(String p_fixResourcePath_0_, String p_fixResourcePath_1_)
+    {
+        p_fixResourcePath_0_ = TextureUtils.fixResourcePath(p_fixResourcePath_0_, p_fixResourcePath_1_);
+        p_fixResourcePath_0_ = StrUtils.removeSuffix(p_fixResourcePath_0_, ".json");
+        p_fixResourcePath_0_ = StrUtils.removeSuffix(p_fixResourcePath_0_, ".png");
+        return p_fixResourcePath_0_;
+    }
+
+    @Deprecated
+    public static void addVariantName(Item p_addVariantName_0_, String... p_addVariantName_1_)
+    {
+        RegistryDelegate registrydelegate = (RegistryDelegate)Reflector.getFieldValue(p_addVariantName_0_, Reflector.ForgeItem_delegate);
+
+        if (customVariantNames.containsKey(registrydelegate))
+        {
+            ((Set)customVariantNames.get(registrydelegate)).addAll(Lists.newArrayList(p_addVariantName_1_));
+        }
+        else
+        {
+            customVariantNames.put(registrydelegate, Sets.newHashSet(p_addVariantName_1_));
+        }
+    }
+
+    public static <T extends ResourceLocation> void registerItemVariants(Item p_registerItemVariants_0_, T... p_registerItemVariants_1_)
+    {
+        RegistryDelegate registrydelegate = (RegistryDelegate)Reflector.getFieldValue(p_registerItemVariants_0_, Reflector.ForgeItem_delegate);
+
+        if (!customVariantNames.containsKey(registrydelegate))
+        {
+            customVariantNames.put(registrydelegate, Sets.<String>newHashSet());
+        }
+
+        for (ResourceLocation resourcelocation : p_registerItemVariants_1_)
+        {
+            ((Set)customVariantNames.get(registrydelegate)).add(resourcelocation.toString());
+        }
     }
 
     static

@@ -19,7 +19,7 @@ public class LanguageManager implements IResourceManagerReloadListener
     private final IMetadataSerializer theMetadataSerializer;
     private String currentLanguage;
     protected static final Locale currentLocale = new Locale();
-    private Map<String, Language> languageMap = Maps.newHashMap();
+    private Map<String, Language> languageMap = Maps.<String, Language>newHashMap();
 
     public LanguageManager(IMetadataSerializer theMetadataSerializerIn, String currentLanguageIn)
     {
@@ -49,16 +49,20 @@ public class LanguageManager implements IResourceManagerReloadListener
                     }
                 }
             }
-            catch (RuntimeException | IOException runtimeexception)
+            catch (RuntimeException runtimeexception)
             {
-                logger.warn("Unable to parse metadata section of resourcepack: " + iresourcepack.getPackName(), runtimeexception);
+                logger.warn((String)("Unable to parse metadata section of resourcepack: " + iresourcepack.getPackName()), (Throwable)runtimeexception);
+            }
+            catch (IOException ioexception)
+            {
+                logger.warn((String)("Unable to parse metadata section of resourcepack: " + iresourcepack.getPackName()), (Throwable)ioexception);
             }
         }
     }
 
     public void onResourceManagerReload(IResourceManager resourceManager)
     {
-        List<String> list = Lists.newArrayList("en_US");
+        List<String> list = Lists.newArrayList(new String[] {"en_US"});
 
         if (!"en_US".equals(this.currentLanguage))
         {

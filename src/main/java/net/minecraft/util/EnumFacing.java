@@ -3,6 +3,7 @@ package net.minecraft.util;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
@@ -32,7 +33,7 @@ public enum EnumFacing implements IStringSerializable
     private final Vec3i directionVec;
 
     /** All facings in D-U-N-S-W-E order */
-    private static final EnumFacing[] VALUES = new EnumFacing[6];
+    public static final EnumFacing[] VALUES = new EnumFacing[6];
 
     /** All Facings with horizontal axis in order S-W-N-E */
     private static final EnumFacing[] HORIZONTALS = new EnumFacing[4];
@@ -78,7 +79,7 @@ public enum EnumFacing implements IStringSerializable
      */
     public EnumFacing getOpposite()
     {
-        return getFront(this.opposite);
+        return VALUES[this.opposite];
     }
 
     /**

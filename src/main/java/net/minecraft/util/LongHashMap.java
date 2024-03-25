@@ -31,7 +31,7 @@ public class LongHashMap<V>
      */
     private static int getHashedKey(long originalKey)
     {
-        return hash((int)(originalKey ^ originalKey >>> 32));
+        return (int)(originalKey ^ originalKey >>> 27);
     }
 
     /**
@@ -71,7 +71,7 @@ public class LongHashMap<V>
             }
         }
 
-        return (V)null;
+        return (V)((Object)null);
     }
 
     public boolean containsItem(long p_76161_1_)
@@ -133,7 +133,9 @@ public class LongHashMap<V>
             this.copyHashTableTo(entry1);
             this.hashArray = entry1;
             this.mask = this.hashArray.length - 1;
-            this.capacity = (int)((float)p_76153_1_ * this.percentUseable);
+            float f = (float)p_76153_1_;
+            this.getClass();
+            this.capacity = (int)(f * 0.75F);
         }
     }
 
@@ -226,6 +228,21 @@ public class LongHashMap<V>
         {
             this.resizeTable(2 * this.hashArray.length);
         }
+    }
+
+    public double getKeyDistribution()
+    {
+        int i = 0;
+
+        for (int j = 0; j < this.hashArray.length; ++j)
+        {
+            if (this.hashArray[j] != null)
+            {
+                ++i;
+            }
+        }
+
+        return 1.0D * (double)i / (double)this.numHashElements;
     }
 
     static class Entry<V>

@@ -1,11 +1,13 @@
 package net.minecraft.client.renderer.chunk;
 
 import com.google.common.collect.Lists;
-import java.util.List;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
+
+import java.util.BitSet;
+import java.util.List;
 
 public class CompiledChunk
 {
@@ -23,13 +25,18 @@ public class CompiledChunk
         {
             return false;
         }
+        public void setAnimatedSprites(EnumWorldBlockLayer p_setAnimatedSprites_1_, BitSet p_setAnimatedSprites_2_)
+        {
+            throw new UnsupportedOperationException();
+        }
     };
-    private final boolean[] layersUsed = new boolean[EnumWorldBlockLayer.values().length];
-    private final boolean[] layersStarted = new boolean[EnumWorldBlockLayer.values().length];
+    private final boolean[] layersUsed = new boolean[RenderChunk.ENUM_WORLD_BLOCK_LAYERS.length];
+    private final boolean[] layersStarted = new boolean[RenderChunk.ENUM_WORLD_BLOCK_LAYERS.length];
     private boolean empty = true;
     private final List<TileEntity> tileEntities = Lists.<TileEntity>newArrayList();
     private SetVisibility setVisibility = new SetVisibility();
     private WorldRenderer.State state;
+    private BitSet[] animatedSprites = new BitSet[RenderChunk.ENUM_WORLD_BLOCK_LAYERS.length];
 
     public boolean isEmpty()
     {
@@ -85,5 +92,15 @@ public class CompiledChunk
     public void setState(WorldRenderer.State stateIn)
     {
         this.state = stateIn;
+    }
+
+    public BitSet getAnimatedSprites(EnumWorldBlockLayer p_getAnimatedSprites_1_)
+    {
+        return this.animatedSprites[p_getAnimatedSprites_1_.ordinal()];
+    }
+
+    public void setAnimatedSprites(EnumWorldBlockLayer p_setAnimatedSprites_1_, BitSet p_setAnimatedSprites_2_)
+    {
+        this.animatedSprites[p_setAnimatedSprites_1_.ordinal()] = p_setAnimatedSprites_2_;
     }
 }

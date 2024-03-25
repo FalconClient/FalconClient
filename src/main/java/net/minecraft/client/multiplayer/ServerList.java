@@ -16,11 +16,12 @@ public class ServerList
 
     /** The Minecraft instance. */
     private final Minecraft mc;
-    protected final List<ServerData> servers = Lists.newArrayList();
+    protected final List<ServerData> servers = Lists.<ServerData>newArrayList();
 
     public ServerList(Minecraft mcIn)
     {
         this.mc = mcIn;
+        this.loadServerList();
     }
 
     /**
@@ -82,7 +83,7 @@ public class ServerList
      */
     public ServerData getServerData(int index)
     {
-        return this.servers.get(index);
+        return (ServerData)this.servers.get(index);
     }
 
     /**

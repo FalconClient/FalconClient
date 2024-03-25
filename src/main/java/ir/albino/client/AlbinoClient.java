@@ -1,50 +1,51 @@
 package ir.albino.client;
 
-import com.cosium.matrix_communication_client.MatrixResources;
 import ir.albino.client.account.AltManager;
+import ir.albino.client.event.EventManager;
 import ir.albino.client.gui.font.AlbinoFontRenderer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.Matrix4f;
-import org.apache.commons.lang3.SystemUtils;
+import lombok.Getter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
-import java.io.File;
 
 public class AlbinoClient {
+
+
+    @Getter
+    public String NAME = "Albino";
+    @Getter
+    public String VERSION = "1.0";
+    @Getter
+    private final Logger logger = LogManager.getLogger(AlbinoClient.class);
+
+    public static AlbinoClient getInstance = new AlbinoClient();
     public AlbinoFontRenderer fontRenderer;
     public AltManager altManager;
 
-    public void initializeFontRenderer() {
+    public EventManager eventManager;
 
+
+    public void start() {
+        logger.info(String.format("Loading %s %s", NAME, VERSION));
+        this.eventManager = new EventManager();
         this.fontRenderer = new AlbinoFontRenderer("vazir", 20, Font.PLAIN, true, false);
+        this.altManager = new AltManager();
     }
 
-    public AlbinoClient(AltManager manager) {
-        this.altManager = manager;
+    public void shutDown() {
+
     }
 
-    public static String prePerform() {
-        File gamePath = getGamePath();
-        if (!gamePath.exists()) {
-            gamePath.mkdirs();
-            File nativePath = new File(gamePath, "natives");
-            nativePath.mkdir();
-            if (SystemUtils.IS_OS_WINDOWS) {
 
-            } else {
-
-            }
-            System.out.println(String.format("Created the game folder in %s", gamePath));
-        }
-        return "";
-    }
-
-    public static File getGamePath() {
-        String OS = System.getProperty("os.name").toUpperCase();
-        if (SystemUtils.IS_OS_WINDOWS)
-            return new File(System.getenv("APPDATA") + "/AlbinoClient/");
-        else {
-            return new File("~/AlbinoClient/");
-        }
-    }
+//    public String prePerform() {
+//        File gamePath = Common.getGamePath();
+//        if (!gamePath.exists()) {
+//            gamePath.mkdirs();
+//            File nativePath = new File(gamePath, "natives");
+//            nativePath.mkdir();
+//            System.out.println(String.format("Created the game folder in %s", gamePath));
+//        }
+//        return "";
+//    }
 }

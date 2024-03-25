@@ -4,19 +4,19 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import java.util.AbstractSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import net.optifine.util.IteratorCache;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassInheritanceMultiMap<T> extends AbstractSet<T>
 {
-    private static final Set < Class<? >> field_181158_a = Sets. < Class<? >> newHashSet();
+    private static final Set < Class<? >> field_181158_a = Collections. < Class<? >> newSetFromMap(new ConcurrentHashMap());
     private final Map < Class<?>, List<T >> map = Maps. < Class<?>, List<T >> newHashMap();
     private final Set < Class<? >> knownKeys = Sets. < Class<? >> newIdentityHashSet();
     private final Class<T> baseClass;
     private final List<T> values = Lists.<T>newArrayList();
+    public boolean empty;
 
     public ClassInheritanceMultiMap(Class<T> baseClassIn)
     {
@@ -28,14 +28,19 @@ public class ClassInheritanceMultiMap<T> extends AbstractSet<T>
         {
             this.createLookup(oclass);
         }
+
+        this.empty = this.values.size() == 0;
     }
 
     protected void createLookup(Class<?> clazz)
     {
         field_181158_a.add(clazz);
+        int i = this.values.size();
 
-        for (T t : this.values)
+        for (int j = 0; j < i; ++j)
         {
+            T t = this.values.get(j);
+
             if (clazz.isAssignableFrom(t.getClass()))
             {
                 this.addForClass(t, clazz);
@@ -72,6 +77,7 @@ public class ClassInheritanceMultiMap<T> extends AbstractSet<T>
             }
         }
 
+        this.empty = this.values.size() == 0;
         return true;
     }
 
@@ -87,6 +93,8 @@ public class ClassInheritanceMultiMap<T> extends AbstractSet<T>
         {
             list.add(value);
         }
+
+        this.empty = this.values.size() == 0;
     }
 
     public boolean remove(Object p_remove_1_)
@@ -107,6 +115,7 @@ public class ClassInheritanceMultiMap<T> extends AbstractSet<T>
             }
         }
 
+        this.empty = this.values.size() == 0;
         return flag;
     }
 
@@ -138,11 +147,16 @@ public class ClassInheritanceMultiMap<T> extends AbstractSet<T>
 
     public Iterator<T> iterator()
     {
-        return this.values.isEmpty() ? Iterators.<T>emptyIterator() : Iterators.unmodifiableIterator(this.values.iterator());
+        return (Iterator<T>)(this.values.isEmpty() ? Iterators.emptyIterator() : IteratorCache.getReadOnly(this.values));
     }
 
     public int size()
     {
         return this.values.size();
+    }
+
+    public boolean isEmpty()
+    {
+        return this.empty;
     }
 }

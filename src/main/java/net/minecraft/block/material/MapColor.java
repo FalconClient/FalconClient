@@ -44,7 +44,7 @@ public class MapColor
     public static final MapColor netherrackColor = new MapColor(35, 7340544);
 
     /** Holds the color in RGB value that will be rendered on maps. */
-    public final int colorValue;
+    public int colorValue;
 
     /** Holds the index of the color used on map. */
     public final int colorIndex;
