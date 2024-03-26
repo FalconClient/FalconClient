@@ -65,7 +65,9 @@
 **ضمنا اگه یک دونه استار هم به این ریپو بدید خیلی کمک بزرگی کردید :)
 **
 ## Credits
-- **Mmd4J** Developer
+- **Mmd4J** Client Developer
+- **KernelPanic** Client Developer
+- **mehran1022** Client Developer
 - **Amir Enderman** UI/ResourcePack Artist
 - **Amrya** UI Artist
 - **Mackhoude & Steve8Dream & Nepton** Discord Developer
