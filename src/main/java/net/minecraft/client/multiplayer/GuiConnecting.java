@@ -65,7 +65,7 @@ public class GuiConnecting extends GuiScreen
                     }
 
                     ConnectionEvent event = new ConnectionEvent(ip,port);
-                    AlbinoClient.getInstance.eventManager.post(event);
+                    AlbinoClient.instance.eventManager.post(event);
 
                     if(event.isCancelled())
                         return;

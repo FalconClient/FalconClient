@@ -36,11 +36,6 @@ public class CFont
     public DynamicTexture setupTexture(Font font, boolean antiAlias, boolean fractionalMetrics, CharData[] chars)
     {
         BufferedImage img = generateFontImage(font, antiAlias, fractionalMetrics, chars);
-        try {
-            ImageIO.write(img,"png",new File("test.png"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         try
         {
             return new DynamicTexture(img);

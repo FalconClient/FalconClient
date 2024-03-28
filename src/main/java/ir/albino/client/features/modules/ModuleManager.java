@@ -7,8 +7,6 @@ import ir.albino.client.AlbinoClient;
 import lombok.SneakyThrows;
 import lombok.val;
 
-import java.util.Optional;
-
 public class ModuleManager {
 
     @SneakyThrows
@@ -29,15 +27,15 @@ public class ModuleManager {
 
                 module.onInit();
 
-                AlbinoClient.getInstance.getLogger().info(String.format("Module Loaded %s - %s", annotation.Module(), annotation.Version()));
-                AlbinoClient.getInstance.modules.add(module);
+                AlbinoClient.instance.getLogger().info(String.format("Module Loaded %s - %s", annotation.Module(), annotation.Version()));
+                AlbinoClient.instance.modules.add(module);
 
             }
         }
     }
 
     public Module getModuleByName(String name) {
-        val module = AlbinoClient.getInstance.modules.stream().filter(m -> m.getName().equalsIgnoreCase(name)).findFirst();
+        val module = AlbinoClient.instance.modules.stream().filter(m -> m.getName().equalsIgnoreCase(name)).findFirst();
         return module.orElse(null);
     }
 }

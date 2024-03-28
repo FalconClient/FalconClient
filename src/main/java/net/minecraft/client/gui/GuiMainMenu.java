@@ -469,7 +469,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
                 this.mc.getTextureManager().bindTexture(aresourcelocation[l]);
                 worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
                 int i1 = 255 / (k + 1);
-                float f3 = 0.0F;
                 worldrenderer.pos(-1.0D, -1.0D, 1.0D).tex(0.0D, 0.0D).color(255, 255, 255, i1).endVertex();
                 worldrenderer.pos(1.0D, -1.0D, 1.0D).tex(1.0D, 0.0D).color(255, 255, 255, i1).endVertex();
                 worldrenderer.pos(1.0D, 1.0D, 1.0D).tex(1.0D, 1.0D).color(255, 255, 255, i1).endVertex();

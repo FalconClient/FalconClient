@@ -4,7 +4,6 @@ import ir.albino.client.AlbinoClient;
 import ir.albino.client.features.ui.MainMenu;
 import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.gui.achievement.GuiStats;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.realms.RealmsBridge;
 
@@ -21,25 +20,25 @@ public class GuiIngameMenu extends GuiScreen
      */
     public void initGui()
     {
-        AlbinoClient.getInstance.moduleManager.getModuleByName("Fps").toggle();
+        AlbinoClient.instance.moduleManager.getModuleByName("Fps").toggle();
 
         this.field_146445_a = 0;
         this.buttonList.clear();
         int i = -16;
         int j = 98;
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + i, I18n.format("menu.returnToMenu", new Object[0])));
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + i, I18n.format("menu.returnToMenu")));
 
         if (!this.mc.isIntegratedServerRunning())
         {
-            ((GuiButton)this.buttonList.get(0)).displayString = I18n.format("menu.disconnect", new Object[0]);
+            this.buttonList.get(0).displayString = I18n.format("menu.disconnect");
         }
 
-        this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 4 + 24 + i, I18n.format("menu.returnToGame", new Object[0])));
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + i, 98, 20, I18n.format("menu.options", new Object[0])));
+        this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 4 + 24 + i, I18n.format("menu.returnToGame")));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + i, 98, 20, I18n.format("menu.options")));
         GuiButton guibutton;
-        this.buttonList.add(guibutton = new GuiButton(7, this.width / 2 + 2, this.height / 4 + 96 + i, 98, 20, I18n.format("menu.shareToLan", new Object[0])));
-        this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 48 + i, 98, 20, I18n.format("gui.achievements", new Object[0])));
-        this.buttonList.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + i, 98, 20, I18n.format("gui.stats", new Object[0])));
+        this.buttonList.add(guibutton = new GuiButton(7, this.width / 2 + 2, this.height / 4 + 96 + i, 98, 20, I18n.format("menu.shareToLan")));
+        this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 48 + i, 98, 20, I18n.format("gui.achievements")));
+        this.buttonList.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + i, 98, 20, I18n.format("gui.stats")));
         guibutton.enabled = this.mc.isSingleplayer() && !this.mc.getIntegratedServer().getPublic();
     }
 
@@ -59,7 +58,7 @@ public class GuiIngameMenu extends GuiScreen
                 boolean flag1 = this.mc.isConnectedToRealms();
                 button.enabled = false;
                 this.mc.theWorld.sendQuittingDisconnectingPacket();
-                this.mc.loadWorld((WorldClient)null);
+                this.mc.loadWorld(null);
 
                 if (flag)
                 {
@@ -81,7 +80,7 @@ public class GuiIngameMenu extends GuiScreen
                 break;
 
             case 4:
-                this.mc.displayGuiScreen((GuiScreen)null);
+                this.mc.displayGuiScreen(null);
                 this.mc.setIngameFocus();
                 break;
 
@@ -113,7 +112,7 @@ public class GuiIngameMenu extends GuiScreen
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, I18n.format("menu.game", new Object[0]), this.width / 2, 40, 16777215);
+        this.drawCenteredString(this.fontRendererObj, I18n.format("menu.game"), this.width / 2, 40, 16777215);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 }

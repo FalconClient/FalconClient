@@ -2,7 +2,6 @@ package ir.albino.client.features.modules;
 
 import ir.albino.client.AlbinoClient;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
@@ -35,10 +34,10 @@ public class Module {
 
         if (enabled) {
             onEnable();
-            AlbinoClient.getInstance.eventManager.register(this);
+            AlbinoClient.instance.eventManager.register(this);
         } else {
             onDisable();
-            AlbinoClient.getInstance.eventManager.unregister(this);
+            AlbinoClient.instance.eventManager.unregister(this);
         }
     }
 

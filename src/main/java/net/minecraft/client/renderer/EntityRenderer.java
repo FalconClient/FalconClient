@@ -1886,7 +1886,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         this.mc.mcProfiler.endStartSection("hand");
 
         Render3DEvent event = new Render3DEvent(partialTicks);
-        AlbinoClient.getInstance.eventManager.post(event);
+        AlbinoClient.instance.eventManager.post(event);
 
         if (this.renderHand && !Shaders.isShadowPass)
         {

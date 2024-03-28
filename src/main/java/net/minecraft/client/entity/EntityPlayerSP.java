@@ -2,7 +2,6 @@ package net.minecraft.client.entity;
 
 import ir.albino.client.AlbinoClient;
 import ir.albino.client.event.impl.PlayerChatEvent;
-import ir.albino.client.event.impl.ServerChatEvent;
 import ir.albino.client.event.impl.UpdateEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
@@ -167,7 +166,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     {
 
         UpdateEvent event = new UpdateEvent();
-        AlbinoClient.getInstance.eventManager.post(event);
+        AlbinoClient.instance.eventManager.post(event);
 
 
         boolean flag = this.isSprinting();
@@ -278,7 +277,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     public void sendChatMessage(String message)
     {
         PlayerChatEvent event = new PlayerChatEvent(message);
-        AlbinoClient.getInstance.eventManager.post(event);
+        AlbinoClient.instance.eventManager.post(event);
         if(event.isCancelled())
             return;
 

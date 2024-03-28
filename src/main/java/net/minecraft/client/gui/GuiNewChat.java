@@ -137,7 +137,7 @@ public class GuiNewChat extends Gui
     public void printChatMessageWithOptionalDeletion(IChatComponent chatComponent, int chatLineId)
     {
         ServerChatEvent event = new ServerChatEvent(chatComponent.getUnformattedText());
-        AlbinoClient.getInstance.eventManager.post(event);
+        AlbinoClient.instance.eventManager.post(event);
         if(event.isCancelled())
             return;
 

@@ -4,7 +4,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import ir.albino.client.AlbinoClient;
-import ir.albino.client.event.impl.PlayerChatEvent;
 import ir.albino.client.event.impl.Render2DEvent;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -365,7 +364,7 @@ public class GuiIngame extends Gui
     protected void renderTooltip(ScaledResolution sr, float partialTicks)
     {
         Render2DEvent event = new Render2DEvent();
-        AlbinoClient.getInstance.eventManager.post(event);
+        AlbinoClient.instance.eventManager.post(event);
 
         if (this.mc.getRenderViewEntity() instanceof EntityPlayer)
         {

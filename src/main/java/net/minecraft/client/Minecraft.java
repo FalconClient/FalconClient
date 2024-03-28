@@ -10,7 +10,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
-import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import java.awt.image.BufferedImage;
@@ -146,7 +145,6 @@ import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.stats.AchievementList;
-import net.minecraft.stats.IStatStringFormat;
 import net.minecraft.stats.StatFileWriter;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -200,6 +198,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     public static byte[] memoryReserve = new byte[10485760];
     private static final List<DisplayMode> macDisplayModes = Lists.newArrayList(new DisplayMode[] {new DisplayMode(2560, 1600), new DisplayMode(2880, 1800)});
     private final File fileResourcepacks;
+    @Getter
     private final PropertyMap twitchDetails;
 
     /** The player's GameProfile properties */
@@ -238,6 +237,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private Entity renderViewEntity;
     public Entity pointedEntity;
     public EffectRenderer effectRenderer;
+    @Getter
     private final Session session;
     private boolean isGamePaused;
 
@@ -280,6 +280,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     public final File mcDataDir;
     private final File fileAssets;
     private final String launchedVersion;
+    @Getter
     private final Proxy proxy;
     /**
      * -- GETTER --
@@ -329,7 +330,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private long debugCrashKeyPressTime = -1L;
     private IReloadableResourceManager mcResourceManager;
     private final IMetadataSerializer metadataSerializer_ = new IMetadataSerializer();
-    private final List<IResourcePack> defaultResourcePacks = Lists.<IResourcePack>newArrayList();
+    private final List<IResourcePack> defaultResourcePacks = Lists.newArrayList();
     private final DefaultResourcePack mcDefaultResourcePack;
     private ResourcePackRepository mcResourcePackRepository;
     private LanguageManager mcLanguageManager;
@@ -456,7 +457,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             {
                 this.addGraphicsAndWorldToCrashReport(reportedexception.getCrashReport());
                 this.freeMemory();
-                logger.fatal((String)"Reported exception thrown!", (Throwable)reportedexception);
+                logger.fatal("Reported exception thrown!", reportedexception);
                 this.displayCrashReport(reportedexception.getCrashReport());
                 break;
             }
@@ -480,8 +481,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     /**
      * Starts the game: initializes the canvas, the title, the settings, etcetera.
      */
-    private void startGame() throws LWJGLException, IOException
-    {
+    private void startGame() throws LWJGLException {
         this.gameSettings = new GameSettings(this, this.mcDataDir);
         this.defaultResourcePacks.add(this.mcDefaultResourcePack);
         this.startTimerHackThread();
@@ -527,18 +527,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.mcResourceManager.registerReloadListener(this.standardGalacticFontRenderer);
         this.mcResourceManager.registerReloadListener(new GrassColorReloadListener());
         this.mcResourceManager.registerReloadListener(new FoliageColorReloadListener());
-        AchievementList.openInventory.setStatStringFormatter(new IStatStringFormat()
-        {
-            public String formatString(String str)
+        AchievementList.openInventory.setStatStringFormatter(str -> {
+            try
             {
-                try
-                {
-                    return String.format(str, new Object[] {GameSettings.getKeyDisplayString(Minecraft.this.gameSettings.keyBindUseItem.getKeyCode())});
-                }
-                catch (Exception exception)
-                {
-                    return "Error: " + exception.getLocalizedMessage();
-                }
+                return String.format(str, GameSettings.getKeyDisplayString(Minecraft.this.gameSettings.keyBindUseItem.getKeyCode()));
+            }
+            catch (Exception exception)
+            {
+                return "Error: " + exception.getLocalizedMessage();
             }
         });
         this.mouseHelper = new MouseHelper();
@@ -624,19 +620,19 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     {
         try
         {
-            this.stream = new TwitchStream(this, (Property)Iterables.getFirst(this.twitchDetails.get("twitch_access_token"), null));
+            this.stream = new TwitchStream(this, Iterables.getFirst(this.twitchDetails.get("twitch_access_token"), null));
         }
         catch (Throwable throwable)
         {
             this.stream = new NullStream(throwable);
-            logger.error("Couldn\'t initialize twitch stream");
+            logger.error("Couldn't initialize twitch stream");
         }
     }
 
     private void createDisplay() throws LWJGLException
     {
         Display.setResizable(true);
-        Display.setTitle(String.format("Loading %s %s....", AlbinoClient.getInstance.NAME, AlbinoClient.getInstance.VERSION));
+        Display.setTitle(String.format("Loading %s %s....", AlbinoClient.instance.NAME, AlbinoClient.instance.VERSION));
 
         try
         {
@@ -644,15 +640,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
         catch (LWJGLException lwjglexception)
         {
-            logger.error((String)"Couldn\'t set pixel format", (Throwable)lwjglexception);
+            logger.error("Couldn't set pixel format", lwjglexception);
 
             try
             {
                 Thread.sleep(1000L);
             }
-            catch (InterruptedException var3)
+            catch (InterruptedException ignored)
             {
-                ;
             }
 
             if (this.fullscreen)
@@ -700,7 +695,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             }
             catch (IOException ioexception)
             {
-                logger.error((String)"Couldn\'t set icon", (Throwable)ioexception);
+                logger.error("Couldn't set icon", ioexception);
             }
             finally
             {
@@ -749,9 +744,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     {
                         Thread.sleep(2147483647L);
                     }
-                    catch (InterruptedException var2)
+                    catch (InterruptedException ignored)
                     {
-                        ;
                     }
                 }
             }
@@ -838,7 +832,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private ByteBuffer readImageToBuffer(InputStream imageStream) throws IOException
     {
         BufferedImage bufferedimage = ImageIO.read(imageStream);
-        int[] aint = bufferedimage.getRGB(0, 0, bufferedimage.getWidth(), bufferedimage.getHeight(), (int[])null, 0, bufferedimage.getWidth());
+        int[] aint = bufferedimage.getRGB(0, 0, bufferedimage.getWidth(), bufferedimage.getHeight(), null, 0, bufferedimage.getWidth());
         ByteBuffer bytebuffer = ByteBuffer.allocate(4 * aint.length);
 
         for (int i : aint)
@@ -903,15 +897,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.displayHeight = displaymode.getHeight();
     }
 
-    private void drawSplashScreen(TextureManager textureManagerInstance) throws LWJGLException
-    {
+    private void drawSplashScreen(TextureManager textureManagerInstance) {
         ScaledResolution scaledresolution = new ScaledResolution(this);
         int i = scaledresolution.getScaleFactor();
         Framebuffer framebuffer = new Framebuffer(scaledresolution.getScaledWidth() * i, scaledresolution.getScaledHeight() * i, true);
         framebuffer.bindFramebuffer(false);
         GlStateManager.matrixMode(5889);
         GlStateManager.loadIdentity();
-        GlStateManager.ortho(0.0D, (double)scaledresolution.getScaledWidth(), (double)scaledresolution.getScaledHeight(), 0.0D, 1000.0D, 3000.0D);
+        GlStateManager.ortho(0.0D, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), 0.0D, 1000.0D, 3000.0D);
         GlStateManager.matrixMode(5888);
         GlStateManager.loadIdentity();
         GlStateManager.translate(0.0F, 0.0F, -2000.0F);
@@ -929,7 +922,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
         catch (IOException ioexception)
         {
-            logger.error((String)("Unable to load logo: " + locationMojangPng), (Throwable)ioexception);
+            logger.error("Unable to load logo: " + locationMojangPng, ioexception);
         }
         finally
         {
@@ -977,10 +970,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         float f1 = 0.00390625F;
         WorldRenderer worldrenderer = Tessellator.getInstance().getWorldRenderer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        worldrenderer.pos((double)posX, (double)(posY + height), 0.0D).tex((double)((float)texU * f), (double)((float)(texV + height) * f1)).color(red, green, blue, alpha).endVertex();
-        worldrenderer.pos((double)(posX + width), (double)(posY + height), 0.0D).tex((double)((float)(texU + width) * f), (double)((float)(texV + height) * f1)).color(red, green, blue, alpha).endVertex();
-        worldrenderer.pos((double)(posX + width), (double)posY, 0.0D).tex((double)((float)(texU + width) * f), (double)((float)texV * f1)).color(red, green, blue, alpha).endVertex();
-        worldrenderer.pos((double)posX, (double)posY, 0.0D).tex((double)((float)texU * f), (double)((float)texV * f1)).color(red, green, blue, alpha).endVertex();
+        worldrenderer.pos(posX, posY + height, 0.0D).tex((float)texU * f, (float)(texV + height) * f1).color(red, green, blue, alpha).endVertex();
+        worldrenderer.pos(posX + width, posY + height, 0.0D).tex((float)(texU + width) * f, (float)(texV + height) * f1).color(red, green, blue, alpha).endVertex();
+        worldrenderer.pos(posX + width, posY, 0.0D).tex((float)(texU + width) * f, (float)texV * f1).color(red, green, blue, alpha).endVertex();
+        worldrenderer.pos(posX, posY, 0.0D).tex((float)texU * f, (float)texV * f1).color(red, green, blue, alpha).endVertex();
         Tessellator.getInstance().draw();
     }
 
@@ -3046,16 +3039,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         return this.fullscreen;
     }
 
-    public Session getSession()
-    {
-        return this.session;
-    }
-
-    public PropertyMap getTwitchDetails()
-    {
-        return this.twitchDetails;
-    }
-
     /**
      * Return the player's GameProfile properties
      */
@@ -3068,11 +3051,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
 
         return this.profileProperties;
-    }
-
-    public Proxy getProxy()
-    {
-        return this.proxy;
     }
 
     public TextureManager getTextureManager()
