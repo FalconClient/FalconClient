@@ -20,8 +20,6 @@
 - کار راحت
 - فولدر متفاوت کلاینت(تنظیمات کلاینتتون به ورژنای دیگه هیچ ربطی نخواهد داشت)
 - در دسترس بودن سرور های ایرانی در قسمت مولتی پلیر (قدرت گرفته از MCTools.ir)
-- الت منیجر
-- 
 
 ## امکانات درحال توسعه
 
@@ -65,12 +63,11 @@
 لینک دونیشن درحال حاضر قرار نمیگیره!
 
 **ضمنا اگه یک دونه استار هم به این ریپو بدید خیلی کمک بزرگی کردید :)
-
-
+**
 ## Credits
-- **Mmd4J** Developer
-- **mehran1022** Developer
-- **KernelPanic** Developer
+- **Mmd4J** Client Developer
+- **KernelPanic** Client Developer
+- **mehran1022** Client Developer
 - **Amir Enderman** UI/ResourcePack Artist
 - **Amrya** UI Artist
 - **Mackhoude & Steve8Dream & Nepton** Discord Developer
