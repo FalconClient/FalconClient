@@ -12,14 +12,11 @@ import java.util.UUID;
 
 public class AltManager {
 
-    public Session currentSession = new Session("AlbinoPlayer","","","legacy");
     public Map<String, Session> sessions = new HashMap<>();
 
     public void addOfflineSession(String userName, UUID uuid) {
         Session session = new Session(userName, uuid.toString(), "0", Session.Type.LEGACY.name());
         sessions.put(userName, session);
-        if (currentSession == null)
-            currentSession = session;
     }
 
     public void save() {
@@ -29,13 +26,6 @@ public class AltManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-
-    public void makeCurrentSession(Session session) {
-        currentSession = session;
-        sessions.put(session.getUsername(), session);
-        System.out.println("Changed account to " + session.getUsername());
     }
 
 }

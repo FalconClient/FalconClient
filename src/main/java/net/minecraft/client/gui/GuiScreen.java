@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.EntityList;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
@@ -29,6 +30,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+import tv.twitch.broadcast.FrameBuffer;
 import tv.twitch.chat.ChatUserInfo;
 
 import java.awt.*;
@@ -51,7 +54,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
     /**
      * Reference to the Minecraft object.
      */
-    protected Minecraft mc;
+    public Minecraft mc;
 
     /**
      * Holds an instance of RenderItem, used to draw the achievement icons on screen (is based on ItemStack)
@@ -554,18 +557,8 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
      * Draws the background (tint is always 0 as of 1.2.2)
      */
     public void drawBackground(int tint) {
-        GlStateManager.disableLighting();
-        GlStateManager.disableFog();
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         this.mc.getTextureManager().bindTexture(optionsBackground);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        worldrenderer.pos(0.0D, this.height, 0.0D).tex(0.0D, this.height / 32.0F + tint).color(64, 64, 64, 255).endVertex();
-        worldrenderer.pos(this.width, this.height, 0.0D).tex(this.width / 32.0F, this.height / 32.0F + tint).color(64, 64, 64, 255).endVertex();
-        worldrenderer.pos(this.width, 0.0D, 0.0D).tex(this.width / 32.0F, tint).color(64, 64, 64, 255).endVertex();
-        worldrenderer.pos(0.0D, 0.0D, 0.0D).tex(0.0D, tint).color(64, 64, 64, 255).endVertex();
-        tessellator.draw();
+        Gui.drawModalTexturedRectWithoutLightning(0, 0, 0, 0, this.width, this.height, this.width, this.height);
     }
 
     /**

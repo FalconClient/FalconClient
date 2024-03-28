@@ -9,11 +9,12 @@ public class MainMenu extends GuiScreen {
     @Override
     public void initGui() {
         int j = this.height / 4 + 48;
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, j + 72 + 12, 98, 20, I18n.format("menu.options", new Object[0])));
-        this.buttonList.add(new GuiButton(4, this.width / 2 + 2, j + 72 + 12, 98, 20, I18n.format("menu.quit", new Object[0])));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, j + 72 + 12, 98, 20, I18n.format("menu.options")));
+        this.buttonList.add(new GuiButton(4, this.width / 2 + 2, j + 72 + 12, 98, 20, I18n.format("menu.quit")));
         this.buttonList.add(new GuiButtonLanguage(5, this.width / 2 - 124, j + 72 + 12));
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, j, I18n.format("menu.singleplayer", new Object[0])));
-        this.buttonList.add(new GuiButton(2, this.width / 2 - 100, j + 22, I18n.format("menu.multiplayer", new Object[0])));
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, j, I18n.format("menu.singleplayer")));
+        this.buttonList.add(new GuiButton(2, this.width / 2 - 100, j + 22, I18n.format("menu.multiplayer")));
+        this.buttonList.add(new GuiButton(3, this.width / 2 - 100, j + 44, I18n.format("menu.altmanager")));
         super.initGui();
     }
 
@@ -30,6 +31,7 @@ public class MainMenu extends GuiScreen {
                 this.mc.displayGuiScreen(new GuiMultiplayer(this));
                 break;
             case 3:
+                this.mc.displayGuiScreen(new AltManagerMenu(this));
                 break;
             case 4:
                 this.mc.shutdown();

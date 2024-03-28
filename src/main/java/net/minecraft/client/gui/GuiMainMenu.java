@@ -392,7 +392,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
     /**
      * Draws the main menu panorama
      */
-    private void drawPanorama(int p_73970_1_, int p_73970_2_, float p_73970_3_)
+    private void drawPanorama(float p_73970_3_)
     {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
@@ -541,7 +541,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
     {
         this.mc.getFramebuffer().unbindFramebuffer();
         GlStateManager.viewport(0, 0, 256, 256);
-        this.drawPanorama(p_73971_1_, p_73971_2_, p_73971_3_);
+        this.drawPanorama(p_73971_3_);
         this.rotateAndBlurSkybox(p_73971_3_);
         int i = 3;
         CustomPanoramaProperties custompanoramaproperties = CustomPanorama.getCustomPanoramaProperties();
