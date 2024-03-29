@@ -293,7 +293,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
      * This is set to fpsCounter every debug screen update, and is shown on the debug screen. It's also sent as part of
      * the usage snooping.
      */
-    private static int debugFPS;
+    public static int debugFPS;
 
     /**
      * When you place a block, it's set to 6, decremented once per tick, when it's 0, you can place another block.
@@ -368,7 +368,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     long debugUpdateTime = getSystemTime();
 
     /** holds the current fps */
-    int fpsCounter;
+    public int fpsCounter;
     long prevFrameTime = -1L;
 
     /** Profiler currently displayed in the debug screen pie chart */

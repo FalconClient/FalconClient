@@ -7,7 +7,7 @@ public class Start {
     public static void main(String[] args) {
         DiscordRPC rpc = new DiscordRPC();
         rpc.start();
-        Main.main(concat(new String[]{"--version", "mcp", "--accessToken", "0", "--assetsDir", "assets", "--assetIndex", "1.8", "--userProperties", "{}"},
+        Main.main(concat(new String[]{"--version", "albinoclient", "--accessToken", "0", "--assetsDir", "assets", "--assetIndex", "1.8", "--userProperties", "{}"},
                 args));
     }
 

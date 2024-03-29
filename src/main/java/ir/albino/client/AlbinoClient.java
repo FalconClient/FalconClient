@@ -32,7 +32,6 @@ public class AlbinoClient {
     public AltManager altManager;
     public EventManager eventManager;
     public ModuleManager moduleManager;
-
     public ArrayList<Module> modules = new ArrayList<>();
 
 

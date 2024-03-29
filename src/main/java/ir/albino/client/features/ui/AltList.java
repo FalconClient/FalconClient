@@ -21,7 +21,7 @@ public class AltList extends GuiListExtended {
 
     public void loadAlts() {
         alts.clear();
-        manager.sessions.values().forEach(s -> alts.add(new AltEntry(s.getUsername(), s.getPlayerID())));
+        manager.sessions.values().forEach(s -> alts.add(new AltEntry(s.getUsername(), s.getPlayerID(),this)));
     }
 
     @Override

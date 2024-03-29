@@ -20,14 +20,14 @@ public class ModuleManager {
                 val annotation = loadClass.getAnnotation(ModuleInfo.class);
                 val module = (Module) loadClass.getConstructor().newInstance();
 
-                module.setName(annotation.Module());
-                module.setDescription(annotation.Description());
-                module.setVersion(annotation.Version());
-                module.setDraggable(annotation.Draggable());
+                module.setName(annotation.module());
+                module.setDescription(annotation.description());
+                module.setVersion(annotation.version());
+                module.setDraggable(annotation.draggable());
 
                 module.onInit();
 
-                AlbinoClient.instance.getLogger().info(String.format("Module Loaded %s - %s", annotation.Module(), annotation.Version()));
+                AlbinoClient.instance.getLogger().info(String.format("Module Loaded %s - %s", annotation.module(), annotation.version()));
                 AlbinoClient.instance.modules.add(module);
 
             }

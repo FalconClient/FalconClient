@@ -5,15 +5,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Defines the module information's
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ModuleInfo {
-    String Module();
-    String Version();
-    String Description();
-    boolean Draggable();
+    String module();
 
-    Category Category();
+    String version();
+
+    String description();
+
+    boolean draggable();
+
+    Category category();
 
 
     enum Category {

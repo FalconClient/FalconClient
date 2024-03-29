@@ -4,9 +4,11 @@ import ir.albino.client.event.Listener;
 import ir.albino.client.event.impl.Render2DEvent;
 import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.modules.ModuleInfo;
+import net.minecraft.client.Minecraft;
 
-@ModuleInfo(Module = "Fps", Version = "1.0", Description = "Shows Your FPS on the Screen", Category = ModuleInfo.Category.VISUAL, Draggable = true)
+@ModuleInfo(module = "Fps", version = "1.0", description = "Shows Your FPS on the Screen", category = ModuleInfo.Category.VISUAL, draggable = true)
 public class FpsModule extends Module {
+
     @Override
     public void onEnable() {
         super.onEnable();
@@ -19,6 +21,9 @@ public class FpsModule extends Module {
 
     @Listener
     public void onRender2D(Render2DEvent event) {
-        mc.fontRendererObj.drawStringWithShadow("FPS: kos",0,0,0x988888);
+        int fps = Minecraft.debugFPS;
+        mc.fontRendererObj.drawStringWithShadow(String.format("FPS: %s", fps), 0, 0, 0x988888);
     }
+
+
 }
