@@ -10,7 +10,7 @@
 که هرکسی آزاد هست تا به نحوی کمک کنه.
 
 ## فضای مجازی
-(تلگرام)[https://t.me/AlbinoClient]
+[تلگرام](https://t.me/AlbinoClient)
 
 [دیسکورد](https://dsc.gg/albinoclient)
 ## امکانات
