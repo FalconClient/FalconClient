@@ -7,6 +7,8 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Random;
 import java.util.Map.Entry;
+
+import lombok.Getter;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentDurability;
@@ -44,6 +46,11 @@ public final class ItemStack
      * Number of animation frames to go when receiving an item (by walking into it, for example).
      */
     public int animationsToGo;
+    /**
+     * -- GETTER --
+     *  Returns the object corresponding to the stack.
+     */
+    @Getter
     private Item item;
 
     /**
@@ -132,14 +139,6 @@ public final class ItemStack
     }
 
     /**
-     * Returns the object corresponding to the stack.
-     */
-    public Item getItem()
-    {
-        return this.item;
-    }
-
-    /**
      * Called when the player uses this ItemStack on a Block (right-click). Places blocks, etc. (Legacy name:
      * tryPlaceItemIntoWorld)
      */
@@ -182,7 +181,7 @@ public final class ItemStack
      */
     public NBTTagCompound writeToNBT(NBTTagCompound nbt)
     {
-        ResourceLocation resourcelocation = (ResourceLocation)Item.itemRegistry.getNameForObject(this.item);
+        ResourceLocation resourcelocation = Item.itemRegistry.getNameForObject(this.item);
         nbt.setString("id", resourcelocation == null ? "minecraft:air" : resourcelocation.toString());
         nbt.setByte("Count", (byte)this.stackSize);
         nbt.setShort("Damage", (short)this.itemDamage);

@@ -1,5 +1,6 @@
 package ir.albino.client.features.ui;
 
+import ir.albino.client.features.ui.chat.ChatMenu;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.resources.I18n;
 
@@ -15,6 +16,7 @@ public class MainMenu extends GuiScreen {
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, j, I18n.format("menu.singleplayer")));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, j + 22, I18n.format("menu.multiplayer")));
         this.buttonList.add(new GuiButton(3, this.width / 2 - 100, j + 44, I18n.format("menu.altmanager")));
+        this.buttonList.add(new GuiButton(6, this.width / 2 - 150, j + 44, I18n.format("menu.chat")));
         super.initGui();
     }
 
@@ -35,6 +37,9 @@ public class MainMenu extends GuiScreen {
                 break;
             case 4:
                 this.mc.shutdown();
+                break;
+            case 6:
+                this.mc.displayGuiScreen(new ChatMenu(this));
                 break;
             case 5:
                 this.mc.displayGuiScreen(new GuiLanguage(this, this.mc.gameSettings, this.mc.getLanguageManager()));

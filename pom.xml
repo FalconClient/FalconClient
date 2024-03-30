@@ -260,11 +260,6 @@
             <version>1.0.1</version>
         </dependency>
         <dependency>
-            <groupId>com.cosium.matrix_communication_client</groupId>
-            <artifactId>matrix-communication-client</artifactId>
-            <version>1.9</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.JnCrMx</groupId>
             <artifactId>discord-game-sdk4j</artifactId>
             <version>v0.5.5</version>
@@ -281,7 +276,11 @@
             <version>4.8.161</version>
             <scope>compile</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.JojiiOfficial</groupId>
+            <artifactId>Matrix-ClientServer-API-java</artifactId>
+            <version>cb733066b8</version>
+        </dependency>
     </dependencies>
 
 </project>

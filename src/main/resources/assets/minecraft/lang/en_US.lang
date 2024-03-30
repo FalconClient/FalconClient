@@ -27,6 +27,7 @@ menu.game=Game menu
 menu.singleplayer=Singleplayer
 menu.multiplayer=Multiplayer
 menu.altmanager=AltManager
+menu.chat=Chat
 menu.online=Minecraft Realms
 menu.options=Options...
 menu.quit=Quit Game
