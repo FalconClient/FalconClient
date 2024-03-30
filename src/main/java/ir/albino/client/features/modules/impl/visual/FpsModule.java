@@ -6,7 +6,6 @@ import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.modules.ModuleInfo;
 import net.minecraft.client.Minecraft;
 
-import static ir.albino.client.features.modules.ModuleTheme.color;
 
 @ModuleInfo(module = "fps", version = "1.0", description = "Shows Your FPS on the Screen", category = ModuleInfo.Category.VISUAL, draggable = true)
 public class FpsModule extends Module {
@@ -24,7 +23,7 @@ public class FpsModule extends Module {
     @Listener
     public void onRender2D(Render2DEvent event) {
         int fps = Minecraft.debugFPS;
-        mc.fontRendererObj.drawStringWithShadow(String.format("FPS: %s", fps), x, y,color);
+        mc.fontRendererObj.drawStringWithShadow(String.format("FPS: %s", fps), x, y, theme.color);
     }
 
 

@@ -4,10 +4,13 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import ir.albino.client.AlbinoClient;
+import ir.albino.client.features.modules.custom.ModuleTheme;
 import lombok.SneakyThrows;
 import lombok.val;
 
 public class ModuleManager {
+
+    private ModuleTheme currentTheme;
 
     @SneakyThrows
     public void initModules() {
@@ -37,5 +40,12 @@ public class ModuleManager {
     public Module getModuleByName(String name) {
         val module = AlbinoClient.instance.modules.stream().filter(m -> m.getName().equalsIgnoreCase(name)).findFirst();
         return module.orElse(null);
+    }
+
+    public ModuleTheme getModuleTheme() {
+        if (currentTheme == null) {
+            currentTheme = new ModuleTheme();
+        }
+        return currentTheme;
     }
 }

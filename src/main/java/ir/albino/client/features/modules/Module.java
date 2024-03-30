@@ -1,6 +1,7 @@
 package ir.albino.client.features.modules;
 
 import ir.albino.client.AlbinoClient;
+import ir.albino.client.features.modules.custom.ModuleTheme;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -9,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ir.albino.client.features.modules.ModuleTheme.distance;
 
 @Getter
 @Setter
@@ -24,6 +24,7 @@ public class Module {
     private boolean draggable;
     private boolean enabled;
     public final Minecraft mc = Minecraft.getMinecraft();
+    public ModuleTheme theme = AlbinoClient.instance.moduleManager.getModuleTheme();
 
     public void onEnable() {
         AlbinoClient client = AlbinoClient.instance;
@@ -34,10 +35,10 @@ public class Module {
             client.modules.remove(this);
             client.modules.add(this);
             while (i < enabledModules.size() - 1) {
-                enabledModules.get(i).y -= distance;
+                enabledModules.get(i).y -= theme.distance;
                 i++;
             }
-            newY = enabledModules.get(enabledModules.size() - 1).y + distance;
+            newY = enabledModules.get(enabledModules.size() - 1).y + theme.distance;
         }
         this.setY(newY);
     }
@@ -49,7 +50,7 @@ public class Module {
         int i = enabledModules.indexOf(this);
         if (!client.modules.isEmpty()) {
             while (i > enabledModules.size() - 1) {
-                enabledModules.get(i).y -= distance;
+                enabledModules.get(i).y -= theme.distance;
             }
         }
 
@@ -70,5 +71,5 @@ public class Module {
             client.eventManager.unregister(this);
         }
     }
-
 }
+
