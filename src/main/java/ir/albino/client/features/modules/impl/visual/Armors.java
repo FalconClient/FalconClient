@@ -29,4 +29,4 @@ public class Armors extends Module {
 
     }
 */
-}
+//}
