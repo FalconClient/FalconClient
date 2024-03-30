@@ -16,7 +16,6 @@ public class MainMenu extends GuiScreen {
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, j, I18n.format("menu.singleplayer")));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, j + 22, I18n.format("menu.multiplayer")));
         this.buttonList.add(new GuiButton(3, this.width / 2 - 100, j + 44, I18n.format("menu.altmanager")));
-        this.buttonList.add(new GuiButton(6, this.width / 2 - 150, j + 44, I18n.format("menu.chat")));
         super.initGui();
     }
 
