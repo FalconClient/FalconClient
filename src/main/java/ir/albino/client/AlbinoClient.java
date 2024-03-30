@@ -11,6 +11,7 @@ import ir.albino.client.features.ui.font.AlbinoFontRenderer;
 import ir.albino.client.utils.Common;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import net.minecraft.client.main.Main;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
@@ -38,7 +39,6 @@ public class AlbinoClient {
 
     @SneakyThrows
     public void start() {
-        logger.info(String.format("Loading %s %s", NAME, VERSION));
         this.eventManager = new EventManager();
         this.fontRenderer = new AlbinoFontRenderer("vazir", 20, Font.PLAIN, true, false);
         this.detectAccounts();
@@ -54,6 +54,8 @@ public class AlbinoClient {
 //                client.sendText("!HqjpLQhNAyJxJIdIfU:wiiz.ir", "yo", System.out::println);
 //            });
         }
+
+        logger.info(String.format("Took %sms to load.", System.currentTimeMillis() - Main.startTime));
 
     }
 

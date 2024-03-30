@@ -23,14 +23,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
@@ -403,9 +396,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * String that shows the debug information
      */
     public String debug = "";
-    public boolean field_175613_B = false;
-    public boolean field_175614_C = false;
-    public boolean field_175611_D = false;
     public boolean renderChunksMany = true;
 
     /**
@@ -424,7 +414,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      */
     private String debugProfilerName = "root";
 
-    public Minecraft(GameConfiguration gameConfig) {
+    public Minecraft(final GameConfiguration gameConfig) {
         theMinecraft = this;
         this.mcDataDir = gameConfig.folderInfo.mcDataDir;
         this.fileAssets = gameConfig.folderInfo.assetsDir;
@@ -434,10 +424,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         this.profileProperties = gameConfig.userInfo.profileProperties;
         this.mcDefaultResourcePack = new DefaultResourcePack((new ResourceIndex(gameConfig.folderInfo.assetsDir, gameConfig.folderInfo.assetIndex)).getResourceMap());
         this.proxy = gameConfig.userInfo.proxy == null ? Proxy.NO_PROXY : gameConfig.userInfo.proxy;
+        assert gameConfig.userInfo.proxy != null;
         this.sessionService = (new YggdrasilAuthenticationService(gameConfig.userInfo.proxy, UUID.randomUUID().toString())).createMinecraftSessionService();
         this.session = gameConfig.userInfo.session;
-        logger.info("Setting user: " + this.session.getUsername());
-        logger.info("(Session ID is " + this.session.getSessionID() + ")");
+        logger.info(String.format("Username: %s | Session ID: %s", this.session.getUsername(), this.session.getSessionID()));
         this.isDemo = gameConfig.gameInfo.isDemo;
         this.displayWidth = gameConfig.displayInfo.width > 0 ? gameConfig.displayInfo.width : 1;
         this.displayHeight = gameConfig.displayInfo.height > 0 ? gameConfig.displayInfo.height : 1;
@@ -695,17 +685,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     }
 
     private static boolean isJvm64bit() {
-        String[] astring = new String[]{"sun.arch.data.model", "com.ibm.vm.bitmode", "os.arch"};
-
-        for (String s : astring) {
-            String s1 = System.getProperty(s);
-
-            if (s1 != null && s1.contains("64")) {
-                return true;
-            }
-        }
-
-        return false;
+        return Arrays.stream(new String[]{"sun.arch.data.model", "com.ibm.vm.bitmode", "os.arch"})
+                .map(System::getProperty)
+                .filter(Objects::nonNull)
+                .anyMatch(s -> s.contains("64"));
     }
 
     public Framebuffer getFramebuffer() {
@@ -2573,13 +2556,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     }
 
     public static void stopIntegratedServer() {
-        if (theMinecraft != null) {
-            IntegratedServer integratedserver = theMinecraft.getIntegratedServer();
-
-            if (integratedserver != null) {
-                integratedserver.stopServer();
-            }
-        }
+        if (theMinecraft != null && theMinecraft.getIntegratedServer() != null)
+                theMinecraft.getIntegratedServer().stopServer();
     }
 
     /**

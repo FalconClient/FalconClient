@@ -13,7 +13,7 @@ public class GameConfiguration
     public final GameConfiguration.GameInformation gameInfo;
     public final GameConfiguration.ServerInformation serverInfo;
 
-    public GameConfiguration(GameConfiguration.UserInformation userInfoIn, GameConfiguration.DisplayInformation displayInfoIn, GameConfiguration.FolderInformation folderInfoIn, GameConfiguration.GameInformation gameInfoIn, GameConfiguration.ServerInformation serverInfoIn)
+    public GameConfiguration(final GameConfiguration.UserInformation userInfoIn, final GameConfiguration.DisplayInformation displayInfoIn, final GameConfiguration.FolderInformation folderInfoIn, final GameConfiguration.GameInformation gameInfoIn, final GameConfiguration.ServerInformation serverInfoIn)
     {
         this.userInfo = userInfoIn;
         this.displayInfo = displayInfoIn;
@@ -29,7 +29,7 @@ public class GameConfiguration
         public final boolean fullscreen;
         public final boolean checkGlErrors;
 
-        public DisplayInformation(int widthIn, int heightIn, boolean fullscreenIn, boolean checkGlErrorsIn)
+        public DisplayInformation(final int widthIn, final int heightIn, final boolean fullscreenIn, final boolean checkGlErrorsIn)
         {
             this.width = widthIn;
             this.height = heightIn;
@@ -45,7 +45,7 @@ public class GameConfiguration
         public final File assetsDir;
         public final String assetIndex;
 
-        public FolderInformation(File mcDataDirIn, File resourcePacksDirIn, File assetsDirIn, String assetIndexIn)
+        public FolderInformation(final File mcDataDirIn, final File resourcePacksDirIn, final File assetsDirIn, final String assetIndexIn)
         {
             this.mcDataDir = mcDataDirIn;
             this.resourcePacksDir = resourcePacksDirIn;
@@ -59,7 +59,7 @@ public class GameConfiguration
         public final boolean isDemo;
         public final String version;
 
-        public GameInformation(boolean isDemoIn, String versionIn)
+        public GameInformation(final boolean isDemoIn, final String versionIn)
         {
             this.isDemo = isDemoIn;
             this.version = versionIn;
@@ -71,7 +71,7 @@ public class GameConfiguration
         public final String serverName;
         public final int serverPort;
 
-        public ServerInformation(String serverNameIn, int serverPortIn)
+        public ServerInformation(final String serverNameIn, final int serverPortIn)
         {
             this.serverName = serverNameIn;
             this.serverPort = serverPortIn;
@@ -85,7 +85,7 @@ public class GameConfiguration
         public final PropertyMap profileProperties;
         public final Proxy proxy;
 
-        public UserInformation(Session sessionIn, PropertyMap userPropertiesIn, PropertyMap profilePropertiesIn, Proxy proxyIn)
+        public UserInformation(final Session sessionIn, final PropertyMap userPropertiesIn, final PropertyMap profilePropertiesIn, final Proxy proxyIn)
         {
             this.session = sessionIn;
             this.userProperties = userPropertiesIn;

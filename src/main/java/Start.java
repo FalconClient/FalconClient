@@ -1,19 +1,27 @@
+import ir.albino.client.AlbinoClient;
 import ir.albino.client.features.DiscordRPC;
 import net.minecraft.client.main.Main;
 
+import java.io.File;
 import java.util.Arrays;
 
 public class Start {
+    /**
+     * Entry point of the client
+     * @param args
+     */
     public static void main(String[] args) {
-        DiscordRPC rpc = new DiscordRPC();
-        rpc.start();
-        Main.main(concat(new String[]{"--version", "albinoclient", "--accessToken", "0", "--assetsDir", "assets", "--assetIndex", "1.8", "--userProperties", "{}"},
-                args));
-    }
+        AlbinoClient.instance.getLogger().info(String.format("Loading %s %s",
+                AlbinoClient.instance.getNAME(),
+                AlbinoClient.instance.getVERSION()));
+        //final DiscordRPC rpc = new DiscordRPC();
+        //rpc.start();
 
-    public static <T> T[] concat(T[] first, T[] second) {
-        T[] result = Arrays.copyOf(first, first.length + second.length);
-        System.arraycopy(second, 0, result, first.length, second.length);
-        return result;
+        final String[] input = new String[]{"--version", "albinoclient", "--accessToken", "0", "--assetsDir", "assets", "--assetIndex", "1.8", "--userProperties", "{}"};
+
+        final String[] result = Arrays.copyOf(input, input.length + args.length);;
+
+        System.arraycopy(args, 0, result, input.length, args.length);
+        Main.main(result, System.currentTimeMillis());
     }
 }
