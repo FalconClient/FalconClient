@@ -1,6 +1,7 @@
 package net.minecraft.client.gui;
 
 import ir.albino.client.AlbinoClient;
+import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.ui.MainMenu;
 import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.gui.achievement.GuiStats;
@@ -9,8 +10,7 @@ import net.minecraft.realms.RealmsBridge;
 
 import java.io.IOException;
 
-public class GuiIngameMenu extends GuiScreen
-{
+public class GuiIngameMenu extends GuiScreen {
     private int field_146445_a;
     private int field_146444_f;
 
@@ -18,9 +18,10 @@ public class GuiIngameMenu extends GuiScreen
      * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
      * window resizes, the buttonList is cleared beforehand.
      */
-    public void initGui()
-    {
-        AlbinoClient.instance.moduleManager.getModuleByName("Fps").toggle();
+    public void initGui() {
+        for (Module m : AlbinoClient.instance.modules) {
+            m.toggle();
+        }
 
         this.field_146445_a = 0;
         this.buttonList.clear();
@@ -28,8 +29,7 @@ public class GuiIngameMenu extends GuiScreen
         int j = 98;
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + i, I18n.format("menu.returnToMenu")));
 
-        if (!this.mc.isIntegratedServerRunning())
-        {
+        if (!this.mc.isIntegratedServerRunning()) {
             this.buttonList.get(0).displayString = I18n.format("menu.disconnect");
         }
 
@@ -45,10 +45,8 @@ public class GuiIngameMenu extends GuiScreen
     /**
      * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
      */
-    protected void actionPerformed(GuiButton button) throws IOException
-    {
-        switch (button.id)
-        {
+    protected void actionPerformed(GuiButton button) throws IOException {
+        switch (button.id) {
             case 0:
                 this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
                 break;
@@ -60,17 +58,12 @@ public class GuiIngameMenu extends GuiScreen
                 this.mc.theWorld.sendQuittingDisconnectingPacket();
                 this.mc.loadWorld(null);
 
-                if (flag)
-                {
+                if (flag) {
                     this.mc.displayGuiScreen(new MainMenu());
-                }
-                else if (flag1)
-                {
+                } else if (flag1) {
                     RealmsBridge realmsbridge = new RealmsBridge();
                     realmsbridge.switchToRealms(new MainMenu());
-                }
-                else
-                {
+                } else {
                     this.mc.displayGuiScreen(new GuiMultiplayer(new MainMenu()));
                 }
 
@@ -100,8 +93,7 @@ public class GuiIngameMenu extends GuiScreen
     /**
      * Called from the main game loop to update the screen.
      */
-    public void updateScreen()
-    {
+    public void updateScreen() {
         super.updateScreen();
         ++this.field_146444_f;
     }
@@ -109,8 +101,7 @@ public class GuiIngameMenu extends GuiScreen
     /**
      * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
      */
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
         this.drawCenteredString(this.fontRendererObj, I18n.format("menu.game"), this.width / 2, 40, 16777215);
         super.drawScreen(mouseX, mouseY, partialTicks);

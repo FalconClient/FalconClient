@@ -363,7 +363,7 @@ public class GuiIngame extends Gui
 
     protected void renderTooltip(ScaledResolution sr, float partialTicks)
     {
-        Render2DEvent event = new Render2DEvent();
+        Render2DEvent event = new Render2DEvent(sr);
         AlbinoClient.instance.eventManager.post(event);
 
         if (this.mc.getRenderViewEntity() instanceof EntityPlayer)
