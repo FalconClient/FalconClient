@@ -13,6 +13,6 @@ public class PingModule extends Module {
     public void onRender2D(Render2DEvent e) {
         long ping = 0;
         if (mc.getCurrentServerData() != null) ping = mc.getCurrentServerData().pingToServer;
-        mc.fontRendererObj.drawString(String.format("Ping: %s", ping), x, y, theme.color);
+        mc.fontRendererObj.drawStringWithShadow(String.format("Ping: %s", ping), x, y, theme.color);
     }
 }

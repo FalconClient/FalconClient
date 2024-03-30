@@ -10,7 +10,7 @@ import ir.albino.client.features.modules.ModuleInfo;
 public class NoHurtCamModule extends Module {
     @Listener
     public void onRender2D(Render2DEvent e) {
-        mc.fontRendererObj.drawString("NoHurtCam", x, y, theme.color);
+        mc.fontRendererObj.drawStringWithShadow("NoHurtCam", x, y, theme.color);
     }
 
     @Listener

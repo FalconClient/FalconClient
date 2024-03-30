@@ -29,16 +29,21 @@ public class Module {
     public void onEnable() {
         AlbinoClient client = AlbinoClient.instance;
         List<Module> enabledModules = client.modules.stream().filter(Module::isEnabled).collect(Collectors.toList());
-        int newY = 0;
         int i = enabledModules.indexOf(this);
+        int newY = 0;
         if (i > 0) {
-            client.modules.remove(this);
-            client.modules.add(this);
-            while (i < enabledModules.size() - 1) {
-                enabledModules.get(i).y -= theme.distance;
+            int i1 = client.modules.indexOf(this);
+            if (i1 != client.modules.size() - 1) {
+                client.modules.remove(this);
+                client.modules.add(this);
+            }
+            while (i > enabledModules.size() - 1) {
+                Module m = enabledModules.get(i);
+                m.setY(m.getY() - theme.distance);
                 i++;
             }
-            newY = enabledModules.get(enabledModules.size() - 1).y + theme.distance;
+            Module last = enabledModules.get(enabledModules.size() - 1);
+            newY = last.y + theme.distance;
         }
         this.setY(newY);
     }
@@ -50,11 +55,12 @@ public class Module {
         int i = enabledModules.indexOf(this);
         if (!client.modules.isEmpty()) {
             while (i > enabledModules.size() - 1) {
-                enabledModules.get(i).y -= theme.distance;
+                Module m = enabledModules.get(i);
+                m.setY(m.getY() - theme.distance);
             }
         }
-
-        this.setY(0);
+        setY(0);
+        System.out.println(this + " " + y);
     }
 
     public void onInit() {
@@ -70,6 +76,16 @@ public class Module {
             onDisable();
             client.eventManager.unregister(this);
         }
+    }
+
+    public void setY(int y) {
+        System.out.println("Y has changed " + this.y + "to " + y);
+        this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s-%s", getName(), getVersion());
     }
 }
 
