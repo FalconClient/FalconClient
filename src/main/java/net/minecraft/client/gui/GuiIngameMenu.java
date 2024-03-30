@@ -1,5 +1,6 @@
 package net.minecraft.client.gui;
 
+import com.google.common.collect.Lists;
 import ir.albino.client.AlbinoClient;
 import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.ui.MainMenu;
@@ -9,6 +10,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.realms.RealmsBridge;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public class GuiIngameMenu extends GuiScreen {
     private int field_146445_a;
@@ -19,9 +24,8 @@ public class GuiIngameMenu extends GuiScreen {
      * window resizes, the buttonList is cleared beforehand.
      */
     public void initGui() {
-        for (Module m : AlbinoClient.instance.modules) {
-            m.toggle();
-        }
+        List<Module> modules = Lists.newCopyOnWriteArrayList(AlbinoClient.instance. modules);
+        for (Module module : modules) module.toggle();
 
         this.field_146445_a = 0;
         this.buttonList.clear();

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@ModuleInfo(module = "Cps", description = "Shows your Clicks Per Second on the Screen ", version = "1.0", category = ModuleInfo.Category.VISUAL, draggable = true)
+@ModuleInfo(module = "cps", description = "Shows your Clicks Per Second on the Screen ", version = "1.0", category = ModuleInfo.Category.VISUAL, draggable = true)
 public class CpsModule extends Module {
         private int interval = 1000;
         private int delay = 125;
@@ -27,7 +27,7 @@ public class CpsModule extends Module {
             while (!cpsList.isEmpty() && now - cpsList.get(0) >= interval) {
                 cpsList.remove(0);
             }
-            mc.fontRendererObj.drawStringWithShadow(String.format("CPS: %s", cpsList.size()), 0, 20, 0x988888);
+            mc.fontRendererObj.drawStringWithShadow(String.format("CPS: %s", cpsList.size()), x, y, 0x988888);
 
         }
 
@@ -36,7 +36,6 @@ public class CpsModule extends Module {
             if (event.key == 0) {
                 if (!cpsList.isEmpty() && !(System.currentTimeMillis() - cpsList.get(cpsList.size() - 1) >= delay)) return;
                 cpsList.add(System.currentTimeMillis());
-                System.out.println("added cps");
             }
         }
 
