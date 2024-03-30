@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class Module {
     protected int x;
+    @Setter
     protected int y;
     private String name;
     private String description;
@@ -60,7 +61,6 @@ public class Module {
             }
         }
         setY(0);
-        System.out.println(this + " " + y);
     }
 
     public void onInit() {
@@ -76,11 +76,6 @@ public class Module {
             onDisable();
             client.eventManager.unregister(this);
         }
-    }
-
-    public void setY(int y) {
-        System.out.println("Y has changed " + this.y + "to " + y);
-        this.y = y;
     }
 
     @Override
