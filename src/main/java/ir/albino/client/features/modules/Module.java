@@ -15,7 +15,9 @@ import java.util.stream.Collectors;
 
 @Data
 public class Module {
+    @JsonIgnore
     protected int x;
+    @JsonIgnore
     protected int y;
     @JsonIgnore
     private String name;

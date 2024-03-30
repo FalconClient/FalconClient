@@ -19,28 +19,27 @@ public class ModuleManager {
 
     @SneakyThrows
     public void initModules() {
-
+        if (!Common.getModulesPath().exists()) Common.getModulesPath().mkdirs();
         try (ScanResult scanResult = new ClassGraph().enableAllInfo().scan()) {
             for (ClassInfo clz : scanResult.getClassesWithAnnotation(ModuleInfo.class)) {
 
                 val loadClass = clz.loadClass();
                 val annotation = loadClass.getAnnotation(ModuleInfo.class);
                 val catFile = new File(Common.getModulesPath(), String.format("%s.json", annotation.module()));
-//                final Module module;
-//                if (catFile.exists()) {
-//                    module = (Module) new JsonMapper().readValue(catFile, loadClass);
-//                } else module = (Module) loadClass.getConstructor().newInstance();
-                val module = (Module) new JsonMapper().readValue(catFile, loadClass);
+                final Module module;
+                JsonMapper map = new JsonMapper();
+                if (catFile.exists()) {
+                    module = (Module) map.readValue(catFile, loadClass);
+                } else module = (Module) loadClass.getConstructor().newInstance();
                 module.setName(annotation.module());
                 module.setDescription(annotation.description());
                 module.setVersion(annotation.version());
                 module.setDraggable(annotation.draggable());
-
                 module.onInit();
 
                 AlbinoClient.instance.getLogger().info(String.format("Module Loaded %s - %s", annotation.module(), annotation.version()));
+                map.writeValue(catFile, module);
                 AlbinoClient.instance.modules.add(module);
-
             }
         }
     }
@@ -55,5 +54,9 @@ public class ModuleManager {
             currentTheme = new ModuleTheme();
         }
         return currentTheme;
+    }
+
+    public void renderModuleSettings() {
+
     }
 }

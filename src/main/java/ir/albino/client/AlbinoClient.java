@@ -43,7 +43,7 @@ public class AlbinoClient {
         this.moduleManager = new ModuleManager();
         moduleManager.initModules();
 
-        Display.setTitle(String.format("%s %s", this.NAME, this.VERSION));
+        Display.setTitle(this.NAME);
     }
 
     public void shutDown() {
@@ -57,7 +57,6 @@ public class AlbinoClient {
         if (users.exists()) {
             altManager = new JsonMapper().readValue(users, AltManager.class);
         }
-
     }
 
 }

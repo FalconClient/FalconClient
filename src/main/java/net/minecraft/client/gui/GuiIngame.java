@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import ir.albino.client.AlbinoClient;
 import ir.albino.client.event.impl.Render2DEvent;
 import ir.albino.client.features.modules.Module;
+import ir.albino.client.features.ui.ModuleSettings;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -53,6 +54,7 @@ public class GuiIngame extends Gui {
      * ChatGUI instance that retains all previous chat data
      */
     private final GuiNewChat persistantChatGUI;
+    private final ModuleSettings moduleSettings;
     private final GuiStreamIndicator streamIndicator;
     private int updateCounter;
 
@@ -140,6 +142,7 @@ public class GuiIngame extends Gui {
         this.streamIndicator = new GuiStreamIndicator(mcIn);
         this.overlayPlayerList = new GuiPlayerTabOverlay(mcIn, this);
         this.setDefaultTitlesTimes();
+        moduleSettings = new ModuleSettings(mc);
     }
 
     /**
@@ -347,6 +350,7 @@ public class GuiIngame extends Gui {
         } else {
             this.overlayPlayerList.updatePlayerList(false);
         }
+        this.moduleSettings.drawSettings();
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();

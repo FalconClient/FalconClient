@@ -25,6 +25,7 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import net.optifine.gui.GuiButtonOF;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -410,7 +411,8 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
      */
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         if (mouseButton == 0) {
-            for (GuiButton guibutton : this.buttonList) {
+            List<GuiButton> listCopy = Lists.newCopyOnWriteArrayList(buttonList);
+            for (GuiButton guibutton : listCopy) {
                 if (guibutton.mousePressed(this.mc, mouseX, mouseY)) {
                     this.selectedButton = guibutton;
                     guibutton.playPressSound(this.mc.getSoundHandler());
