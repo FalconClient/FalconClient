@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static ir.albino.client.features.modules.ModuleTheme.color;
+
 @ModuleInfo(module = "cps", description = "Shows your Clicks Per Second on the Screen ", version = "1.0", category = ModuleInfo.Category.VISUAL, draggable = true)
 public class CpsModule extends Module {
         private int interval = 1000;
@@ -27,7 +29,7 @@ public class CpsModule extends Module {
             while (!cpsList.isEmpty() && now - cpsList.get(0) >= interval) {
                 cpsList.remove(0);
             }
-            mc.fontRendererObj.drawStringWithShadow(String.format("CPS: %s", cpsList.size()), x, y, 0x988888);
+            mc.fontRendererObj.drawStringWithShadow(String.format("CPS: %s", cpsList.size()), x, y, color);
 
         }
 

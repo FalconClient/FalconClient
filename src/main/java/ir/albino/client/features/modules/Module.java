@@ -9,6 +9,8 @@ import net.minecraft.client.Minecraft;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ir.albino.client.features.modules.ModuleTheme.distance;
+
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -22,7 +24,6 @@ public class Module {
     private boolean draggable;
     private boolean enabled;
     public final Minecraft mc = Minecraft.getMinecraft();
-    public int distance = mc.fontRendererObj.FONT_HEIGHT + 6;
 
     public void onEnable() {
         AlbinoClient client = AlbinoClient.instance;
