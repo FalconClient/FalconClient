@@ -26,6 +26,7 @@ public @interface ModuleInfo {
         VISUAL,
         PVP,
         PLAYER,
-        MISCELLANEOUS
+        MISCELLANEOUS,
+        SETTINGS
     }
 }

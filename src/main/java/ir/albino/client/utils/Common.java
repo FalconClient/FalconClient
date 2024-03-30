@@ -16,4 +16,8 @@ public class Common {
         return new File(getGamePath(),"assets");
     }
 
+    public File getModulesPath() {
+        return new File(getGamePath(),"modules");
+    }
+
 }

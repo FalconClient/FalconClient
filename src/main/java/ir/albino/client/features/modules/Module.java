@@ -1,7 +1,9 @@
 package ir.albino.client.features.modules;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ir.albino.client.AlbinoClient;
-import ir.albino.client.features.modules.custom.ModuleTheme;
+import ir.albino.client.features.modules.configuration.ModuleTheme;
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -11,20 +13,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 public class Module {
     protected int x;
-    @Setter
     protected int y;
+    @JsonIgnore
     private String name;
+    @JsonIgnore
     private String description;
+    @JsonIgnore
     private String version;
+    @JsonIgnore
     private ModuleInfo.Category category;
+    @JsonIgnore
     private boolean draggable;
     private boolean enabled;
+    @JsonIgnore
     public final Minecraft mc = Minecraft.getMinecraft();
+    @JsonIgnore
     public ModuleTheme theme = AlbinoClient.instance.moduleManager.getModuleTheme();
 
     public void onEnable() {

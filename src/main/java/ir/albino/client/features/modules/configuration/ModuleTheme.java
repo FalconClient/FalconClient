@@ -1,4 +1,4 @@
-package ir.albino.client.features.modules.custom;
+package ir.albino.client.features.modules.configuration;
 
 import net.minecraft.client.Minecraft;
 

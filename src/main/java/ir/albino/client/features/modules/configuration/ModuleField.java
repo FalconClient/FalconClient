@@ -1,6 +1,4 @@
-package ir.albino.client.features.modules.custom;
-
-import net.bytebuddy.implementation.bind.annotation.RuntimeType;
+package ir.albino.client.features.modules.configuration;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
