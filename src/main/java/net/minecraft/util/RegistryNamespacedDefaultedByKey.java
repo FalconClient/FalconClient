@@ -20,10 +20,7 @@ public class RegistryNamespacedDefaultedByKey<K, V> extends RegistryNamespaced<K
     public void register(int id, K key, V value)
     {
         if (this.defaultValueKey.equals(key))
-        {
             this.defaultValue = value;
-        }
-
         super.register(id, key, value);
     }
 

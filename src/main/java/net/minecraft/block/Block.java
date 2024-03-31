@@ -1487,12 +1487,12 @@ public class Block
         }
     }
 
-    private static void registerBlock(int id, ResourceLocation textualID, Block block_)
+    private static void registerBlock(final int id, final ResourceLocation textualID, final Block block_)
     {
         blockRegistry.register(id, textualID, block_);
     }
 
-    private static void registerBlock(int id, String textualID, Block block_)
+    private static void registerBlock(final int id, final String textualID, final Block block_)
     {
         registerBlock(id, new ResourceLocation(textualID), block_);
     }
