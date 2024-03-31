@@ -5,6 +5,7 @@ import de.jcm.discordgamesdk.CreateParams;
 import de.jcm.discordgamesdk.activity.Activity;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.pathfinding.Path;
 
 import java.io.File;
 import java.time.Instant;
@@ -18,7 +19,7 @@ public class DiscordRPC extends Thread {
 //        Core.init(new File("C:/Users/Mmd4j/Downloads/windows-amd64-discord_game_sdk_jni.dll"));
         Core.init(new File(System.getProperty("java.library.path") + "/windows-amd64-discord_game_sdk_jni.dll"));
         Core.init(new File(System.getProperty("java.library.path") + "/discord_game_sdk.dll"));
-        final CreateParams params = new CreateParams();
+        CreateParams params = new CreateParams();
         params.setClientID(1221159378724589629L);
         params.setFlags(CreateParams.getDefaultFlags());
         core = new Core(params);
@@ -32,15 +33,15 @@ public class DiscordRPC extends Thread {
 
     }
 
-    public void setServer(final ServerData data) {
+    public void setServer(ServerData data) {
         this.setState("Playing multiplayer (" + data.serverIP + ")");
     }
 
-    public void setScreen(final GuiScreen screen) {
+    public void setScreen(GuiScreen screen) {
         this.setState(screen.getClass().getName().toLowerCase().replace("Gui", ""));
     }
 
-    public void setState(final String state) {
+    public void setState(String state) {
         activity.setState(state);
         core.activityManager().updateActivity(activity);
     }

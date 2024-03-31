@@ -54,7 +54,6 @@ public class GuiIngame extends Gui {
      * ChatGUI instance that retains all previous chat data
      */
     private final GuiNewChat persistantChatGUI;
-    private final ModuleSettings moduleSettings;
     private final GuiStreamIndicator streamIndicator;
     private int updateCounter;
 
@@ -142,7 +141,6 @@ public class GuiIngame extends Gui {
         this.streamIndicator = new GuiStreamIndicator(mcIn);
         this.overlayPlayerList = new GuiPlayerTabOverlay(mcIn, this);
         this.setDefaultTitlesTimes();
-        moduleSettings = new ModuleSettings(mc);
     }
 
     /**
@@ -350,8 +348,6 @@ public class GuiIngame extends Gui {
         } else {
             this.overlayPlayerList.updatePlayerList(false);
         }
-        this.moduleSettings.drawSettings();
-
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
         GlStateManager.enableAlpha();

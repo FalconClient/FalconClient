@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import de.jojii.matrixclientserver.Bot.Client;
 import ir.albino.client.event.EventManager;
 import ir.albino.client.features.account.AltManager;
-import ir.albino.client.features.matrix.MatrixConfiguration;
 import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.modules.ModuleManager;
-import ir.albino.client.features.ui.font.AlbinoFontRenderer;
 import ir.albino.client.utils.Common;
+import ir.albino.client.utils.render.font.AlbinoFontRenderer;
+import ir.albino.client.utils.render.font.FontManager;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.minecraft.client.main.Main;
@@ -19,6 +19,7 @@ import org.lwjgl.opengl.Display;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class AlbinoClient {
     @Getter
@@ -30,18 +31,19 @@ public class AlbinoClient {
 
 
     public static AlbinoClient instance = new AlbinoClient();
-    public AlbinoFontRenderer fontRenderer;
+    public FontManager fontRenderer;
     public AltManager altManager;
     public EventManager eventManager;
     public ModuleManager moduleManager;
-    public ArrayList<Module> modules = new ArrayList<>();
+    public ConcurrentLinkedQueue<Module> modules = new ConcurrentLinkedQueue<>();
     public Client client;
 
     @SneakyThrows
     public void start() {
-        this.eventManager = new EventManager();
-        this.fontRenderer = new AlbinoFontRenderer("vazir", 20, Font.PLAIN, true, false);
+        logger.info(String.format("Loading %s %s", NAME, VERSION));
         this.detectAccounts();
+        this.eventManager = new EventManager();
+        this.fontRenderer = new FontManager();
         this.moduleManager = new ModuleManager();
         moduleManager.initModules();
         Display.setTitle(this.NAME);
@@ -54,8 +56,8 @@ public class AlbinoClient {
 //                client.sendText("!HqjpLQhNAyJxJIdIfU:wiiz.ir", "yo", System.out::println);
 //            });
         }
-
         logger.info(String.format("Took %sms to load.", System.currentTimeMillis() - Main.startTime));
+
 
     }
 

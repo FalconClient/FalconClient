@@ -1,9 +1,14 @@
 package ir.albino.client.features.ui;
 
+import ir.albino.client.AlbinoClient;
 import ir.albino.client.features.ui.chat.ChatMenu;
+import ir.albino.client.utils.render.RenderUtils;
 import net.minecraft.client.gui.*;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 
+import java.awt.*;
 import java.io.IOException;
 
 public class MainMenu extends GuiScreen {
@@ -16,6 +21,7 @@ public class MainMenu extends GuiScreen {
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, j, I18n.format("menu.singleplayer")));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, j + 22, I18n.format("menu.multiplayer")));
         this.buttonList.add(new GuiButton(3, this.width / 2 - 100, j + 44, I18n.format("menu.altmanager")));
+//        this.buttonList.add(new GuiButton(6, this.width / 2 - 150, j + 44, I18n.format("menu.chat")));
         super.initGui();
     }
 
@@ -50,6 +56,32 @@ public class MainMenu extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawDefaultBackground();
+        final ScaledResolution sr = new ScaledResolution(mc);
+
+        mc.getTextureManager().bindTexture(new ResourceLocation("Albino/images/background.png"));
+        Gui.drawModalRectWithCustomSizedTexture(
+                -21 + mouseX / 90,
+                mouseY * -1 / 90,
+                0.0f, 0.0f,
+                this.width + 20,
+                this.height + 20,
+                (float) (this.width + 21),
+                (float) (this.height + 20)
+        );
+
+        //RenderUtils.rect(5,10,50,100, new Color(0,0,0,155).getRGB());
+        GlStateManager.pushMatrix();
+        GlStateManager.disableBlend();
+        AlbinoClient.instance.fontRenderer.getComfortaa().drawStringWithShadow(String.format(
+                        "%s %s By AlbinoTeam",
+                        AlbinoClient.instance.NAME,
+                        AlbinoClient.instance.VERSION),
+                5,
+                sr.getScaledHeight() - 15,
+                new Color(141, 211, 211).getRGB()
+        );
+        GlStateManager.enableBlend();
+        GlStateManager.popMatrix();
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 }

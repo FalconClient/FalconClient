@@ -6,7 +6,7 @@ import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.modules.ModuleInfo;
 
 
-@ModuleInfo(module = "ping", description = "Shows your current ping", draggable = true,
+@ModuleInfo(module = "Ping", description = "Shows your current ping", draggable = true,
         category = ModuleInfo.Category.VISUAL, version = "1.0")
 public class PingModule extends Module {
     @Listener

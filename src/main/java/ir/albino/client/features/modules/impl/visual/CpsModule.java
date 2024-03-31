@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@ModuleInfo(module = "cps", description = "Shows your Clicks Per Second on the Screen ", version = "1.0", category = ModuleInfo.Category.VISUAL, draggable = true)
+@ModuleInfo(module = "Cps", description = "Shows your Clicks Per Second on the Screen ", version = "1.0", category = ModuleInfo.Category.VISUAL, draggable = true)
 public class CpsModule extends Module {
     private final int interval = 1000;
     private final int delay = 125;
@@ -23,7 +23,12 @@ public class CpsModule extends Module {
         while (!cpsList.isEmpty() && now - cpsList.get(0) >= interval) {
             cpsList.remove(0);
         }
-        mc.fontRendererObj.drawStringWithShadow(String.format("CPS: %s", cpsList.size()), x, y, theme.color);
+        final String text = String.format("CPS: %s", cpsList.size());
+
+        this.width = mc.fontRendererObj.getStringWidth(text);
+        this.height = mc.fontRendererObj.FONT_HEIGHT + 1;
+
+        mc.fontRendererObj.drawStringWithShadow(text, x, y, theme.color);
     }
 
     @Listener

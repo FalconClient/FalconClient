@@ -7,7 +7,7 @@ import ir.albino.client.features.modules.ModuleInfo;
 import net.minecraft.client.Minecraft;
 
 
-@ModuleInfo(module = "fps", version = "1.0", description = "Shows Your FPS on the Screen", category = ModuleInfo.Category.VISUAL, draggable = true)
+@ModuleInfo(module = "Fps", version = "1.0", description = "Shows Your FPS on the Screen", category = ModuleInfo.Category.VISUAL, draggable = true)
 public class FpsModule extends Module {
 
     @Override
@@ -22,8 +22,12 @@ public class FpsModule extends Module {
 
     @Listener
     public void onRender2D(Render2DEvent event) {
-        int fps = Minecraft.debugFPS;
-        mc.fontRendererObj.drawStringWithShadow(String.format("FPS: %s", fps), x, y, theme.color);
+        final String text = String.format("FPS: %s", Minecraft.debugFPS);
+
+        this.width = mc.fontRendererObj.getStringWidth(text);
+        this.height = mc.fontRendererObj.FONT_HEIGHT + 1;
+
+        mc.fontRendererObj.drawStringWithShadow(text, this.x, this.y, theme.color);
     }
 
 

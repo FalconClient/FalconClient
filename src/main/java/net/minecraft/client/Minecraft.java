@@ -30,6 +30,7 @@ import java.util.concurrent.FutureTask;
 import javax.imageio.ImageIO;
 
 import ir.albino.client.AlbinoClient;
+import ir.albino.client.event.impl.GuiOpeningEvent;
 import ir.albino.client.event.impl.KeypressEvent;
 import ir.albino.client.event.impl.MouseClickEvent;
 import ir.albino.client.features.ui.MainMenu;
@@ -909,6 +910,16 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * Sets the argument GuiScreen as the main (topmost visible) screen.
      */
     public void displayGuiScreen(GuiScreen guiScreenIn) {
+
+        final GuiOpeningEvent event = new GuiOpeningEvent(guiScreenIn);
+        if (guiScreenIn != null) {
+            AlbinoClient.instance.eventManager.post(event);
+        }
+
+        if (event.isCancelled())
+            return;
+
+
         if (this.currentScreen != null) {
             this.currentScreen.onGuiClosed();
         }
@@ -1681,6 +1692,12 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
                     } else {
                         KeypressEvent event = new KeypressEvent(k);
                         AlbinoClient.instance.eventManager.post(event);
+
+                        //TODO: Change this with config and etc
+
+                        if (k == Keyboard.KEY_N) {
+                            AlbinoClient.instance.moduleManager.getModuleByName("ClickGUI").toggle();
+                        }
 
 
                         if (k == 1) {

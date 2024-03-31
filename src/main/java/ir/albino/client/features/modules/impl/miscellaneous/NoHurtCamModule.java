@@ -6,7 +6,7 @@ import ir.albino.client.event.impl.Render2DEvent;
 import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.modules.ModuleInfo;
 
-@ModuleInfo(module = "nohurtcam", description = "Disables the camera shaking when damaged", version = "1.0", category = ModuleInfo.Category.MISCELLANEOUS, draggable = true)
+@ModuleInfo(module = "NoHurtCam", description = "Disables the camera shaking when damaged", version = "1.0", category = ModuleInfo.Category.MISCELLANEOUS, draggable = true)
 public class NoHurtCamModule extends Module {
     @Listener
     public void onRender2D(Render2DEvent e) {

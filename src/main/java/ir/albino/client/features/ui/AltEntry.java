@@ -34,7 +34,7 @@ public class AltEntry implements GuiListExtended.IGuiListEntry {
     public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected) {
         mc.getTextureManager().bindTexture(resource);
         Gui.drawSingleTexture(x, y, listWidth, slotHeight);
-        AlbinoClient.instance.fontRenderer.drawCenteredString(username, x + (float) listWidth / 1.9, y + slotHeight / 2.3, Color.white.getRGB());
+        AlbinoClient.instance.fontRenderer.getComfortaa().drawCenteredString(username, x + (float) listWidth / 1.9, y + slotHeight / 2.3, Color.white.getRGB());
     }
 
     public static void drawHead(ResourceLocation skin, int x, int y, int width, int height) {

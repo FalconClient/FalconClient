@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import ir.albino.client.AlbinoClient;
 import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.ui.MainMenu;
+import ir.albino.client.features.ui.clickgui.GuiDragging;
 import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.gui.achievement.GuiStats;
 import net.minecraft.client.resources.I18n;
@@ -24,8 +25,6 @@ public class GuiIngameMenu extends GuiScreen {
      * window resizes, the buttonList is cleared beforehand.
      */
     public void initGui() {
-        List<Module> modules = Lists.newCopyOnWriteArrayList(AlbinoClient.instance. modules);
-        for (Module module : modules) module.toggle();
 
         this.field_146445_a = 0;
         this.buttonList.clear();
@@ -42,7 +41,8 @@ public class GuiIngameMenu extends GuiScreen {
         GuiButton guibutton;
         this.buttonList.add(guibutton = new GuiButton(7, this.width / 2 + 2, this.height / 4 + 96 + i, 98, 20, I18n.format("menu.shareToLan")));
         this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 48 + i, 98, 20, I18n.format("gui.achievements")));
-        this.buttonList.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + i, 98, 20, I18n.format("gui.stats")));
+        //this.buttonList.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + i, 98, 20, I18n.format("gui.stats")));
+        this.buttonList.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + i, 98, 20, "Test Dragging"));
         guibutton.enabled = this.mc.isSingleplayer() && !this.mc.getIntegratedServer().getPublic();
     }
 
@@ -86,7 +86,8 @@ public class GuiIngameMenu extends GuiScreen {
                 break;
 
             case 6:
-                this.mc.displayGuiScreen(new GuiStats(this, this.mc.thePlayer.getStatFileWriter()));
+               // this.mc.displayGuiScreen(new GuiStats(this, this.mc.thePlayer.getStatFileWriter()));
+                this.mc.displayGuiScreen(new GuiDragging());
                 break;
 
             case 7:

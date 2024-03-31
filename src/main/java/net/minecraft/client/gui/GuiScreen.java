@@ -3,6 +3,8 @@ package net.minecraft.client.gui;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import ir.albino.client.AlbinoClient;
+import ir.albino.client.utils.render.font.FontManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.stream.GuiTwitchUserMode;
 import net.minecraft.client.renderer.GlStateManager;
@@ -636,5 +638,9 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
      */
     public void onResize(Minecraft mcIn, int w, int h) {
         this.setWorldAndResolution(mcIn, w, h);
+    }
+
+    protected FontManager fontManager() {
+        return AlbinoClient.instance.fontRenderer;
     }
 }

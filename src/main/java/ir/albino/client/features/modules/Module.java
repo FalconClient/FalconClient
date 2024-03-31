@@ -2,12 +2,16 @@ package ir.albino.client.features.modules;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import ir.albino.client.AlbinoClient;
+import ir.albino.client.event.Listener;
+import ir.albino.client.event.impl.GuiOpeningEvent;
 import ir.albino.client.features.modules.configuration.ModuleTheme;
+import ir.albino.client.features.ui.clickgui.GuiDragging;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +24,10 @@ public class Module {
     @JsonIgnore
     protected int y;
     @JsonIgnore
+    protected int width;
+    @JsonIgnore
+    protected int height;
+    @JsonIgnore
     private String name;
     @JsonIgnore
     private String description;
@@ -29,47 +37,18 @@ public class Module {
     private ModuleInfo.Category category;
     @JsonIgnore
     private boolean draggable;
+    @JsonIgnore
+    private boolean dragging;
+
     private boolean enabled;
     @JsonIgnore
     public final Minecraft mc = Minecraft.getMinecraft();
     @JsonIgnore
     public ModuleTheme theme = AlbinoClient.instance.moduleManager.getModuleTheme();
 
-    public void onEnable() {
-        AlbinoClient client = AlbinoClient.instance;
-        List<Module> enabledModules = client.modules.stream().filter(Module::isEnabled).collect(Collectors.toList());
-        int i = enabledModules.indexOf(this);
-        int newY = 0;
-        if (i > 0) {
-            int i1 = client.modules.indexOf(this);
-            if (i1 != client.modules.size() - 1) {
-                client.modules.remove(this);
-                client.modules.add(this);
-            }
-            while (i > enabledModules.size() - 1) {
-                Module m = enabledModules.get(i);
-                m.setY(m.getY() - theme.distance);
-                i++;
-            }
-            Module last = enabledModules.get(enabledModules.size() - 1);
-            newY = last.y + theme.distance;
-        }
-        this.setY(newY);
-    }
+    public void onEnable() {}
 
-
-    public void onDisable() {
-        AlbinoClient client = AlbinoClient.instance;
-        List<Module> enabledModules = client.modules.stream().filter(Module::isEnabled).collect(Collectors.toList());
-        int i = enabledModules.indexOf(this);
-        if (!client.modules.isEmpty()) {
-            while (i > enabledModules.size() - 1) {
-                Module m = enabledModules.get(i);
-                m.setY(m.getY() - theme.distance);
-            }
-        }
-        setY(0);
-    }
+    public void onDisable() {}
 
     public void onInit() {
     }
