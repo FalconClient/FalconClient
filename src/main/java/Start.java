@@ -14,8 +14,8 @@ public class Start {
         AlbinoClient.instance.getLogger().info(String.format("Loading %s %s",
                 AlbinoClient.instance.getNAME(),
                 AlbinoClient.instance.getVERSION()));
-        final DiscordRPC rpc = new DiscordRPC();
-        rpc.start();
+        //final DiscordRPC rpc = new DiscordRPC();
+        //rpc.start();
 
         final String[] input = new String[]{"--version", "albinoclient", "--accessToken", "0", "--assetsDir", "assets", "--assetIndex", "1.8", "--userProperties", "{}"};
 

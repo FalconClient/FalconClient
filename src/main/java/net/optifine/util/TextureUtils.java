@@ -251,7 +251,6 @@ public class TextureUtils
     {
         if (getTextureMapBlocks() != null)
         {
-            Config.dbg("*** Reloading custom textures ***");
             CustomSky.reset();
             TextureAnimations.reset();
             update();

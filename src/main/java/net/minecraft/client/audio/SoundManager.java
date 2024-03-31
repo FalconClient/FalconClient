@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import ir.albino.client.AlbinoClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
@@ -131,7 +133,8 @@ public class SoundManager
                         SoundManager.this.sndSystem = SoundManager.this.new SoundSystemStarterThread();
                         SoundManager.this.loaded = true;
                         SoundManager.this.sndSystem.setMasterVolume(SoundManager.this.options.getSoundLevel(SoundCategory.MASTER));
-                        SoundManager.logger.info(SoundManager.LOG_MARKER, "Sound engine started");
+                        if(AlbinoClient.instance.debug)
+                            SoundManager.logger.info(SoundManager.LOG_MARKER, "Sound engine started");
                     }
                 }, "Sound Library Loader")).start();
             }

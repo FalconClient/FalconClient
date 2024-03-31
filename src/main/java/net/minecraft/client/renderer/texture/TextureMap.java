@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
+
+import ir.albino.client.AlbinoClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.StitcherException;
 import net.minecraft.client.resources.IResource;
@@ -375,7 +377,8 @@ public class TextureMap extends AbstractTexture implements ITickableTextureObjec
                 throw stitcherexception;
             }
 
-            logger.info("Created: {}x{} {}-atlas", new Object[] {Integer.valueOf(stitcher.getCurrentWidth()), Integer.valueOf(stitcher.getCurrentHeight()), this.basePath});
+            if(AlbinoClient.instance.debug)
+                logger.info("Created: {}x{} {}-atlas", stitcher.getCurrentWidth(), stitcher.getCurrentHeight(), this.basePath);
 
             if (Config.isShaders())
             {

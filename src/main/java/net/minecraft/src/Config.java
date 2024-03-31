@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import ir.albino.client.AlbinoClient;
 import net.minecraft.client.LoadingScreenRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -540,17 +541,20 @@ public class Config
 
     public static void dbg(String p_dbg_0_)
     {
-        LOGGER.info("[OptiFine] " + p_dbg_0_);
+        if(AlbinoClient.instance.debug)
+            LOGGER.info("[OptiFine] " + p_dbg_0_);
     }
 
     public static void warn(String p_warn_0_)
     {
-        LOGGER.warn("[OptiFine] " + p_warn_0_);
+        if(AlbinoClient.instance.debug)
+            LOGGER.warn("[OptiFine] " + p_warn_0_);
     }
 
     public static void error(String p_error_0_)
     {
-        LOGGER.error("[OptiFine] " + p_error_0_);
+        if(AlbinoClient.instance.debug)
+            LOGGER.error("[OptiFine] " + p_error_0_);
     }
 
     public static void log(String p_log_0_)

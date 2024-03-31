@@ -1,5 +1,6 @@
 package net.optifine.shaders;
 
+import ir.albino.client.AlbinoClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,45 +11,57 @@ public abstract class SMCLog
 
     public static void severe(String message)
     {
-        LOGGER.error("[Shaders] " + message);
+        if(AlbinoClient.instance.debug)
+            LOGGER.error("[Shaders] " + message);
     }
 
     public static void warning(String message)
     {
-        LOGGER.warn("[Shaders] " + message);
+        if(AlbinoClient.instance.debug)
+            LOGGER.warn("[Shaders] " + message);
     }
 
     public static void info(String message)
     {
-        LOGGER.info("[Shaders] " + message);
+        if(AlbinoClient.instance.debug)
+            LOGGER.info("[Shaders] " + message);
     }
 
     public static void fine(String message)
     {
-        LOGGER.debug("[Shaders] " + message);
+        if(AlbinoClient.instance.debug)
+            LOGGER.debug("[Shaders] " + message);
     }
 
     public static void severe(String format, Object... args)
     {
-        String s = String.format(format, args);
-        LOGGER.error("[Shaders] " + s);
+        if(AlbinoClient.instance.debug) {
+            String s = String.format(format, args);
+            LOGGER.error("[Shaders] " + s);
+        }
     }
 
     public static void warning(String format, Object... args)
     {
-        String s = String.format(format, args);
-        LOGGER.warn("[Shaders] " + s);
+        if(AlbinoClient.instance.debug) {
+            String s = String.format(format, args);
+            LOGGER.warn("[Shaders] " + s);
+        }
     }
 
     public static void info(String format, Object... args)
     {
-        String s = String.format(format, args);
-        LOGGER.info("[Shaders] " + s);
+        if(AlbinoClient.instance.debug) {
+            String s = String.format(format, args);
+            LOGGER.info("[Shaders] " + s);
+        }
     }
 
     public static void fine(String format, Object... args)
     {
-        String s = String.format(format, args);
-        LOGGER.debug("[Shaders] " + s);
+        if(AlbinoClient.instance.debug) {
+            String s = String.format(format, args);
+            LOGGER.debug("[Shaders] " + s);
+        }
     }
 }

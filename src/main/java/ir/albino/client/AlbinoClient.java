@@ -29,7 +29,6 @@ public class AlbinoClient {
     @Getter
     private final Logger logger = LogManager.getLogger(AlbinoClient.class);
 
-
     public static AlbinoClient instance = new AlbinoClient();
     public FontManager fontRenderer;
     public AltManager altManager;
@@ -37,10 +36,10 @@ public class AlbinoClient {
     public ModuleManager moduleManager;
     public ConcurrentLinkedQueue<Module> modules = new ConcurrentLinkedQueue<>();
     public Client client;
-
+    // TODO: do more things by this
+    public boolean debug = false;
     @SneakyThrows
     public void start() {
-        logger.info(String.format("Loading %s %s", NAME, VERSION));
         this.detectAccounts();
         this.eventManager = new EventManager();
         this.fontRenderer = new FontManager();
@@ -56,7 +55,7 @@ public class AlbinoClient {
 //                client.sendText("!HqjpLQhNAyJxJIdIfU:wiiz.ir", "yo", System.out::println);
 //            });
         }
-        logger.info(String.format("Took %sms to load.", System.currentTimeMillis() - Main.startTime));
+
 
 
     }

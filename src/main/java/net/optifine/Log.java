@@ -1,5 +1,6 @@
 package net.optifine;
 
+import ir.albino.client.AlbinoClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,7 +11,7 @@ public class Log
 
     public static void detail(String s)
     {
-        if (logDetail)
+        if (logDetail && AlbinoClient.instance.debug)
         {
             LOGGER.info("[OptiFine] " + s);
         }
@@ -18,27 +19,32 @@ public class Log
 
     public static void dbg(String s)
     {
-        LOGGER.info("[OptiFine] " + s);
+        if(AlbinoClient.instance.debug)
+            LOGGER.info("[OptiFine] " + s);
     }
 
     public static void warn(String s)
     {
-        LOGGER.warn("[OptiFine] " + s);
+        if(AlbinoClient.instance.debug)
+            LOGGER.warn("[OptiFine] " + s);
     }
 
     public static void warn(String s, Throwable t)
     {
-        LOGGER.warn("[OptiFine] " + s, t);
+        if(AlbinoClient.instance.debug)
+            LOGGER.warn("[OptiFine] " + s, t);
     }
 
     public static void error(String s)
     {
-        LOGGER.error("[OptiFine] " + s);
+        if(AlbinoClient.instance.debug)
+            LOGGER.error("[OptiFine] " + s);
     }
 
     public static void error(String s, Throwable t)
     {
-        LOGGER.error("[OptiFine] " + s, t);
+        if(AlbinoClient.instance.debug)
+            LOGGER.error("[OptiFine] " + s, t);
     }
 
     public static void log(String s)

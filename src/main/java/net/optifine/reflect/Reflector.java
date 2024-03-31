@@ -7,6 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import javax.vecmath.Matrix4f;
+
+import ir.albino.client.AlbinoClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -1156,7 +1158,8 @@ public class Reflector
 
     private static boolean logEntry(String str)
     {
-        LOGGER.info("[OptiFine] " + str);
+        if(AlbinoClient.instance.debug)
+            LOGGER.info("[OptiFine] " + str);
         return true;
     }
 
@@ -1166,7 +1169,8 @@ public class Reflector
         {
             public void resolve()
             {
-                Reflector.LOGGER.info("[OptiFine] " + str);
+                if(AlbinoClient.instance.debug)
+                    Reflector.LOGGER.info("[OptiFine] " + str);
             }
         };
         ReflectorResolver.register(iresolvable);

@@ -45,7 +45,9 @@ public class ModuleManager {
                 module.setDraggable(annotation.draggable());
                 module.onInit();
 
-                AlbinoClient.instance.getLogger().info(String.format("Module Loaded %s - %s", annotation.module(), annotation.version()));
+                if(AlbinoClient.instance.debug)
+                    AlbinoClient.instance.getLogger().info(String.format("Module Loaded %s - %s", annotation.module(), annotation.version()));
+
                 map.writeValue(catFile, module);
                 modules.add(module);
             }

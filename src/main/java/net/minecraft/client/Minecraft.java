@@ -57,6 +57,7 @@ import net.minecraft.client.gui.achievement.GuiAchievement;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.gui.stream.GuiStreamUnavailable;
 import net.minecraft.client.main.GameConfiguration;
+import net.minecraft.client.main.Main;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.ServerData;
@@ -601,6 +602,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         }
 
         this.renderGlobal.makeEntityOutlineShader();
+
+        logger.info(String.format("Took %sms to load.", System.currentTimeMillis() - Main.startTime));
     }
 
     private void registerMetadataSerializers() {
