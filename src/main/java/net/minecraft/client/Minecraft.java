@@ -35,6 +35,7 @@ import ir.albino.client.event.impl.KeypressEvent;
 import ir.albino.client.event.impl.MouseClickEvent;
 import ir.albino.client.features.ui.MainMenu;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -226,7 +227,13 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
     /**
      * True if the player is connected to a realms server
+     * -- SETTER --
+     *  Set if the player is connected to a realms server
+     *
+     * @param isConnected The value that set if the player is connected to a realms server or not
+
      */
+    @Setter
     private boolean connectedToRealms = false;
     public Timer timer = new Timer(20.0F);
 
@@ -236,10 +243,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     private final PlayerUsageSnooper usageSnooper = new PlayerUsageSnooper("client", this, MinecraftServer.getCurrentTimeMillis());
     public WorldClient theWorld;
     public RenderGlobal renderGlobal;
+    @Getter
     private RenderManager renderManager;
+    @Getter
     private RenderItem renderItem;
+    @Getter
     private ItemRenderer itemRenderer;
     public EntityPlayerSP thePlayer;
+    @Getter
     private Entity renderViewEntity;
     public Entity pointedEntity;
     public EffectRenderer effectRenderer;
@@ -321,6 +332,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * This is set to fpsCounter every debug screen update, and is shown on the debug screen. It's also sent as part of
      * the usage snooping.
      */
+    @Getter
     public static int debugFPS;
 
     /**
@@ -343,7 +355,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
     /**
      * The FrameTimer's instance
+     * -- GETTER --
+     *  Return the FrameTimer's instance
+
      */
+    @Getter
     public final FrameTimer frameTimer = new FrameTimer();
 
     /**
@@ -372,11 +388,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     private LanguageManager mcLanguageManager;
     private IStream stream;
     private Framebuffer framebufferMc;
+    @Getter
     private TextureMap textureMapBlocks;
     private SoundHandler mcSoundHandler;
     private MusicTicker mcMusicTicker;
     private ResourceLocation mojangLogo;
+    @Getter
     private final MinecraftSessionService sessionService;
+    @Getter
     private SkinManager skinManager;
     private final Queue<FutureTask<?>> scheduledTasks = Queues.newArrayDeque();
     private final Thread mcThread = Thread.currentThread();
@@ -451,14 +470,13 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
         this.startGame();
 
-        // needs to test before clean code
         while (true) {
             try {
                 while (this.running) {
                     if (!this.hasCrashed || this.crashReporter == null) {
                         try {
                             this.runGameLoop();
-                        } catch (OutOfMemoryError var10) {
+                        } catch (final OutOfMemoryError var10) {
                             this.freeMemory();
                             this.displayGuiScreen(new GuiMemoryErrorScreen());
                             System.gc();
@@ -467,22 +485,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
                         this.displayCrashReport(this.crashReporter);
                     }
                 }
-            } catch (ReportedException reportedexception) {
-                this.addGraphicsAndWorldToCrashReport(reportedexception.getCrashReport());
-                this.freeMemory();
-                logger.fatal("Reported exception thrown!", reportedexception);
-                this.displayCrashReport(reportedexception.getCrashReport());
-                break;
-            } catch (Throwable throwable1) {
-                CrashReport crashreport1 = this.addGraphicsAndWorldToCrashReport(new CrashReport("Unexpected error", throwable1));
-                this.freeMemory();
-                logger.fatal("Unreported exception thrown!", throwable1);
-                this.displayCrashReport(crashreport1);
-                break;
             } finally {
                 this.shutdownMinecraftApplet();
             }
-
             return;
         }
     }
@@ -2609,10 +2614,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         return this.mcLanguageManager;
     }
 
-    public TextureMap getTextureMapBlocks() {
-        return this.textureMapBlocks;
-    }
-
     public boolean isJava64bit() {
         return this.jvm64bit;
     }
@@ -2685,18 +2686,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         }
     }
 
-    public MinecraftSessionService getSessionService() {
-        return this.sessionService;
-    }
-
-    public SkinManager getSkinManager() {
-        return this.skinManager;
-    }
-
-    public Entity getRenderViewEntity() {
-        return this.renderViewEntity;
-    }
-
     public void setRenderViewEntity(Entity viewingEntity) {
         this.renderViewEntity = viewingEntity;
         this.entityRenderer.loadEntityShader(viewingEntity);
@@ -2714,7 +2703,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
             }
         } else {
             try {
-                return Futures.<V>immediateFuture(callableToSchedule.call());
+                return Futures.immediateFuture(callableToSchedule.call());
             } catch (Exception exception) {
                 return Futures.immediateFailedCheckedFuture(exception);
             }
@@ -2734,29 +2723,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         return this.blockRenderDispatcher;
     }
 
-    public RenderManager getRenderManager() {
-        return this.renderManager;
-    }
-
-    public RenderItem getRenderItem() {
-        return this.renderItem;
-    }
-
-    public ItemRenderer getItemRenderer() {
-        return this.itemRenderer;
-    }
-
-    public static int getDebugFPS() {
-        return debugFPS;
-    }
-
-    /**
-     * Return the FrameTimer's instance
-     */
-    public FrameTimer getFrameTimer() {
-        return this.frameTimer;
-    }
-
     public static Map<String, String> getSessionInfo() {
         Map<String, String> map = Maps.<String, String>newHashMap();
         map.put("X-Minecraft-Username", getMinecraft().getSession().getUsername());
@@ -2772,12 +2738,4 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         return this.connectedToRealms;
     }
 
-    /**
-     * Set if the player is connected to a realms server
-     *
-     * @param isConnected The value that set if the player is connected to a realms server or not
-     */
-    public void setConnectedToRealms(boolean isConnected) {
-        this.connectedToRealms = isConnected;
-    }
 }
