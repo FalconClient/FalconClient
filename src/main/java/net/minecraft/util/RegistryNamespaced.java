@@ -15,7 +15,7 @@ public class RegistryNamespaced<K, V> extends RegistrySimple<K, V> implements IO
         this.inverseObjectRegistry = ((BiMap)this.registryObjects).inverse();
     }
 
-    public void register(int id, K key, V value)
+    public void register(final int id, final K key, final V value)
     {
         this.underlyingIntegerMap.put(value, id);
         this.putObject(key, value);

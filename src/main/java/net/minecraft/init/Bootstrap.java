@@ -510,9 +510,7 @@ public class Bootstrap
             alreadyRegistered = true;
 
             if (LOGGER.isDebugEnabled())
-            {
                 redirectOutputToLog();
-            }
 
             Block.registerBlocks();
             BlockFire.init();
