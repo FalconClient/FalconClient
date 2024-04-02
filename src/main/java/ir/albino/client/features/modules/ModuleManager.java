@@ -33,10 +33,10 @@ public class ModuleManager {
                 val catFile = new File(Common.getModulesPath(), String.format("%s.json", annotation.module()));
 
                 final Module module;
-                JsonMapper map = new JsonMapper();
+                /*JsonMapper map = new JsonMapper();
                 if (catFile.exists()) {
                     module = (Module) map.readValue(catFile, loadClass);
-                } else
+                } else*/
                     module = (Module) loadClass.getConstructor().newInstance();
 
                 module.setName(annotation.module());
@@ -48,7 +48,7 @@ public class ModuleManager {
                 if(AlbinoClient.instance.debug)
                     AlbinoClient.instance.getLogger().info(String.format("Module Loaded %s - %s", annotation.module(), annotation.version()));
 
-                map.writeValue(catFile, module);
+               // map.writeValue(catFile, module);
                 modules.add(module);
             }
         }

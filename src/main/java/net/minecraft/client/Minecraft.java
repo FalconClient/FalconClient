@@ -1036,9 +1036,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         this.mcProfiler.startSection("display");
         GlStateManager.enableTexture2D();
 
-        if (this.thePlayer != null && this.thePlayer.isEntityInsideOpaqueBlock()) {
+        if (this.thePlayer != null && this.thePlayer.isEntityInsideOpaqueBlock())
             this.gameSettings.showDebugInfo = 0;
-        }
+
 
         this.mcProfiler.endSection();
 
@@ -1084,7 +1084,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         this.mcProfiler.endSection();
         this.checkGLError("Post render");
         ++this.fpsCounter;
-        this.isGamePaused = this.isSingleplayer() && this.currentScreen != null && this.currentScreen.doesGuiPauseGame() && !this.theIntegratedServer.getPublic();
+        this.isGamePaused = this.isSingleplayer() &&
+                this.currentScreen != null &&
+                this.currentScreen.doesGuiPauseGame() &&
+                !this.theIntegratedServer.getPublic();
         long k = System.nanoTime();
         this.frameTimer.addFrame(k - this.startNanoTime);
         this.startNanoTime = k;
@@ -1536,23 +1539,20 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * Runs the current tick.
      */
     public void runTick() throws IOException {
-        if (this.rightClickDelayTimer > 0) {
+        if (this.rightClickDelayTimer > 0)
             --this.rightClickDelayTimer;
-        }
 
         this.mcProfiler.startSection("gui");
 
-        if (!this.isGamePaused) {
+        if (!this.isGamePaused)
             this.ingameGUI.updateTick();
-        }
 
         this.mcProfiler.endSection();
         this.entityRenderer.getMouseOver(1.0F);
         this.mcProfiler.startSection("gameMode");
 
-        if (!this.isGamePaused && this.theWorld != null) {
+        if (!this.isGamePaused && this.theWorld != null)
             this.playerController.updateController();
-        }
 
         this.mcProfiler.endStartSection("textures");
 

@@ -8,36 +8,46 @@ public class Util
 {
     public static Util.EnumOS getOSType()
     {
-        String s = System.getProperty("os.name").toLowerCase();
-        return s.contains("win") ? Util.EnumOS.WINDOWS : (s.contains("mac") ? Util.EnumOS.OSX : (s.contains("solaris") ? Util.EnumOS.SOLARIS : (s.contains("sunos") ? Util.EnumOS.SOLARIS : (s.contains("linux") ? Util.EnumOS.LINUX : (s.contains("unix") ? Util.EnumOS.LINUX : Util.EnumOS.UNKNOWN)))));
+        final String s = System.getProperty("os.name").toLowerCase();
+        return s.contains("win") ?
+                Util.EnumOS.WINDOWS :
+                (
+                        s.contains("mac") ?
+                        Util.EnumOS.OSX :
+                                (
+                                        s.contains("solaris") ?
+                                                Util.EnumOS.SOLARIS :
+                                                (
+                                                        s.contains("sunos") ?
+                                                        Util.EnumOS.SOLARIS :
+                                                        (
+                                                                s.contains("linux") ?
+                                                                        Util.EnumOS.LINUX :
+                                                                        (
+                                                                                s.contains("unix") ?
+                                                                                        Util.EnumOS.LINUX :
+                                                                                        Util.EnumOS.UNKNOWN)))));
     }
 
-    public static <V> V runTask(FutureTask<V> task, Logger logger)
+    public static <V> void runTask(final FutureTask<V> task, final Logger logger)
     {
         try
         {
             task.run();
-            return task.get();
+            task.get();
         }
-        catch (ExecutionException executionexception)
+        catch (final Exception e)
         {
-            logger.fatal((String)"Error executing task", (Throwable)executionexception);
+            logger.fatal("Error executing task", e);
 
-            if (executionexception.getCause() instanceof OutOfMemoryError)
+            if (e.getCause() instanceof OutOfMemoryError)
             {
-                OutOfMemoryError outofmemoryerror = (OutOfMemoryError)executionexception.getCause();
-                throw outofmemoryerror;
+                throw (OutOfMemoryError)e.getCause();
             }
         }
-        catch (InterruptedException interruptedexception)
-        {
-            logger.fatal((String)"Error executing task", (Throwable)interruptedexception);
-        }
-
-        return (V)((Object)null);
     }
 
-    public static enum EnumOS
+    public enum EnumOS
     {
         LINUX,
         SOLARIS,

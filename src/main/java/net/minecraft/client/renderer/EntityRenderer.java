@@ -95,9 +95,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
     public static int anaglyphField;
 
     /** A reference to the Minecraft object. */
-    private Minecraft mc;
+    private final Minecraft mc;
     private final IResourceManager resourceManager;
-    private Random random = new Random();
+    private final Random random = new Random();
     private float farPlaneDistance;
     public ItemRenderer itemRenderer;
     private final MapItemRenderer theMapItemRenderer;
@@ -109,7 +109,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
     private Entity pointedEntity;
     private MouseFilter mouseFilterXAxis = new MouseFilter();
     private MouseFilter mouseFilterYAxis = new MouseFilter();
-    private float thirdPersonDistance = 4.0F;
+    private final float thirdPersonDistance = 4.0F;
 
     /** Third person distance temp */
     private float thirdPersonDistanceTemp = 4.0F;
@@ -446,20 +446,19 @@ public class EntityRenderer implements IResourceManagerReloadListener
     /**
      * Finds what block or object the mouse is over at the specified partial tick time. Args: partialTickTime
      */
-    public void getMouseOver(float partialTicks)
+    public void getMouseOver(final float partialTicks)
     {
-        Entity entity = this.mc.getRenderViewEntity();
+        final Entity entity = this.mc.getRenderViewEntity();
 
         if (entity != null && this.mc.theWorld != null)
         {
             this.mc.mcProfiler.startSection("pick");
             this.mc.pointedEntity = null;
-            double d0 = (double)this.mc.playerController.getBlockReachDistance();
+            double d0 = this.mc.playerController.getBlockReachDistance();
             this.mc.objectMouseOver = entity.rayTrace(d0, partialTicks);
             double d1 = d0;
-            Vec3 vec3 = entity.getPositionEyes(partialTicks);
+            final Vec3 vec3 = entity.getPositionEyes(partialTicks);
             boolean flag = false;
-            int i = 3;
 
             if (this.mc.playerController.extendedReach())
             {
@@ -476,14 +475,13 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 d1 = this.mc.objectMouseOver.hitVec.distanceTo(vec3);
             }
 
-            Vec3 vec31 = entity.getLook(partialTicks);
-            Vec3 vec32 = vec3.addVector(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0);
+            final Vec3 vec31 = entity.getLook(partialTicks);
+            final Vec3 vec32 = vec3.addVector(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0);
             this.pointedEntity = null;
             Vec3 vec33 = null;
-            float f = 1.0F;
-            List<Entity> list = this.mc.theWorld.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().addCoord(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0).expand((double)f, (double)f, (double)f), Predicates.and(EntitySelectors.NOT_SPECTATING, new Predicate<Entity>()
+            final List<Entity> list = this.mc.theWorld.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().addCoord(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0).expand(1.0D, 1.0D, 1.0D), Predicates.and(EntitySelectors.NOT_SPECTATING, new Predicate<Entity>()
             {
-                public boolean apply(Entity p_apply_1_)
+                public boolean apply(final Entity p_apply_1_)
                 {
                     return p_apply_1_.canBeCollidedWith();
                 }
@@ -493,18 +491,16 @@ public class EntityRenderer implements IResourceManagerReloadListener
             for (int j = 0; j < list.size(); ++j)
             {
                 Entity entity1 = (Entity)list.get(j);
-                float f1 = entity1.getCollisionBorderSize();
-                AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand((double)f1, (double)f1, (double)f1);
-                MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32);
+                final float f1 = entity1.getCollisionBorderSize();
+                final AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand((double)f1, (double)f1, (double)f1);
+                final MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32);
 
-                if (axisalignedbb.isVecInside(vec3))
+                if (axisalignedbb.isVecInside(vec3) && d2 >= 0.0D)
                 {
-                    if (d2 >= 0.0D)
-                    {
-                        this.pointedEntity = entity1;
-                        vec33 = movingobjectposition == null ? vec3 : movingobjectposition.hitVec;
-                        d2 = 0.0D;
-                    }
+                    this.pointedEntity = entity1;
+                    vec33 = movingobjectposition == null ? vec3 : movingobjectposition.hitVec;
+                    d2 = 0.0D;
+
                 }
                 else if (movingobjectposition != null)
                 {
@@ -515,9 +511,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                         boolean flag1 = false;
 
                         if (Reflector.ForgeEntity_canRiderInteract.exists())
-                        {
                             flag1 = Reflector.callBoolean(entity1, Reflector.ForgeEntity_canRiderInteract, new Object[0]);
-                        }
 
                         if (!flag1 && entity1 == entity.ridingEntity)
                         {
@@ -536,7 +530,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                     }
                 }
             }
-
+            assert vec33 != null;
             if (this.pointedEntity != null && flag && vec3.distanceTo(vec33) > 3.0D)
             {
                 this.pointedEntity = null;

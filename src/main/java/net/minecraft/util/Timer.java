@@ -64,10 +64,10 @@ public class Timer
      */
     public void updateTimer()
     {
-        long i = Minecraft.getSystemTime();
-        long j = i - this.lastSyncSysClock;
-        long k = System.nanoTime() / 1000000L;
-        double d0 = (double)k / 1000.0D;
+        final long i = Minecraft.getSystemTime();
+        final long j = i - this.lastSyncSysClock;
+        final long k = System.nanoTime() / 1000000L;
+        final double d0 = (double)k / 1000.0D;
 
         if (j <= 1000L && j >= 0L)
         {

@@ -55,25 +55,21 @@ public class Profiler
     /**
      * Start section
      */
-    public void startSection(String name)
+    public void startSection(final String name)
     {
         if (Lagometer.isActive())
         {
-            int i = name.hashCode();
+            final int i = name.hashCode();
 
             if (i == HASH_SCHEDULED_EXECUTABLES && name.equals("scheduledExecutables"))
-            {
                 Lagometer.timerScheduledExecutables.start();
-            }
             else if (i == HASH_TICK && name.equals("tick") && Config.isMinecraftThread())
             {
                 Lagometer.timerScheduledExecutables.end();
                 Lagometer.timerTick.start();
             }
             else if (i == HASH_PRE_RENDER_ERRORS && name.equals("preRenderErrors"))
-            {
                 Lagometer.timerTick.end();
-            }
         }
 
         if (Config.isFastRender())
@@ -81,29 +77,21 @@ public class Profiler
             int j = name.hashCode();
 
             if (j == HASH_RENDER && name.equals("render"))
-            {
                 GlStateManager.clearEnabled = false;
-            }
             else if (j == HASH_DISPLAY && name.equals("display"))
-            {
                 GlStateManager.clearEnabled = true;
-            }
         }
 
-        if (this.profilerLocalEnabled)
+        if (this.profilerLocalEnabled && this.profilingEnabled)
         {
-            if (this.profilingEnabled)
-            {
-                if (this.profilingSection.length() > 0)
-                {
-                    this.profilingSection = this.profilingSection + ".";
-                }
+            if (!this.profilingSection.isEmpty())
+                this.profilingSection = this.profilingSection + ".";
 
-                this.profilingSection = this.profilingSection + name;
-                this.sectionList.add(this.profilingSection);
-                this.timestampList.add(Long.valueOf(System.nanoTime()));
-            }
+            this.profilingSection = this.profilingSection + name;
+            this.sectionList.add(this.profilingSection);
+            this.timestampList.add(System.nanoTime());
         }
+
     }
 
     /**
@@ -111,31 +99,22 @@ public class Profiler
      */
     public void endSection()
     {
-        if (this.profilerLocalEnabled)
+        if (this.profilerLocalEnabled && this.profilingEnabled)
         {
-            if (this.profilingEnabled)
-            {
-                long i = System.nanoTime();
-                long j = ((Long)this.timestampList.remove(this.timestampList.size() - 1)).longValue();
-                this.sectionList.remove(this.sectionList.size() - 1);
-                long k = i - j;
+            final long i = System.nanoTime();
+            final long j = this.timestampList.remove(this.timestampList.size() - 1).longValue();
+            this.sectionList.remove(this.sectionList.size() - 1);
+            final long k = i - j;
 
-                if (this.profilingMap.containsKey(this.profilingSection))
-                {
-                    this.profilingMap.put(this.profilingSection, Long.valueOf(((Long)this.profilingMap.get(this.profilingSection)).longValue() + k));
-                }
-                else
-                {
-                    this.profilingMap.put(this.profilingSection, Long.valueOf(k));
-                }
+            if (this.profilingMap.containsKey(this.profilingSection))
+                this.profilingMap.put(this.profilingSection, Long.valueOf(((Long)this.profilingMap.get(this.profilingSection)).longValue() + k));
+            else
+                this.profilingMap.put(this.profilingSection, Long.valueOf(k));
 
-                if (k > 100000000L)
-                {
-                    logger.warn("Something\'s taking too long! \'" + this.profilingSection + "\' took aprox " + (double)k / 1000000.0D + " ms");
-                }
+            if (k > 100000000L)
+                logger.warn("Something\'s taking too long! \'" + this.profilingSection + "\' took aprox " + (double)k / 1000000.0D + " ms");
 
-                this.profilingSection = !this.sectionList.isEmpty() ? (String)this.sectionList.get(this.sectionList.size() - 1) : "";
-            }
+            this.profilingSection = !this.sectionList.isEmpty() ? (String)this.sectionList.get(this.sectionList.size() - 1) : "";
         }
     }
 
