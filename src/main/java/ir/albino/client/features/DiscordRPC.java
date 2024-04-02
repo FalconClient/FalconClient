@@ -15,10 +15,8 @@ public class DiscordRPC extends Thread {
     private final Activity activity;
 
     public DiscordRPC() {
-//        Core.init(new File("C:/Users/Mmd4j/Downloads/lib/x86_64/discord_game_sdk.dll"));
-//        Core.init(new File("C:/Users/Mmd4j/Downloads/windows-amd64-discord_game_sdk_jni.dll"));
-        Core.init(new File(System.getProperty("java.library.path") + "/windows-amd64-discord_game_sdk_jni.dll"));
-        Core.init(new File(System.getProperty("java.library.path") + "/discord_game_sdk.dll"));
+        System.loadLibrary("windows-amd64-discord_game_sdk_jni");
+        System.loadLibrary("discord_game_sdk");
         CreateParams params = new CreateParams();
         params.setClientID(1221159378724589629L);
         params.setFlags(CreateParams.getDefaultFlags());

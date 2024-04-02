@@ -23,6 +23,7 @@ public class AltManagerMenu extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
+
         this.altList.drawScreen(mouseX, mouseY, partialTicks);
         super.drawScreen(mouseX,mouseY,partialTicks);
     }

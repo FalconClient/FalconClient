@@ -5,8 +5,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import ir.albino.client.AlbinoClient;
 import ir.albino.client.event.impl.Render2DEvent;
-import ir.albino.client.features.modules.Module;
-import ir.albino.client.features.ui.ModuleSettings;
+import lombok.Getter;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -55,6 +54,7 @@ public class GuiIngame extends Gui {
      */
     private final GuiNewChat persistantChatGUI;
     private final GuiStreamIndicator streamIndicator;
+    @Getter
     private int updateCounter;
 
     /**
@@ -87,6 +87,7 @@ public class GuiIngame extends Gui {
     /**
      * The spectator GUI for this in-game GUI instance
      */
+    @Getter
     private final GuiSpectator spectatorGui;
     private final GuiPlayerTabOverlay overlayPlayerList;
 
@@ -1036,22 +1037,14 @@ public class GuiIngame extends Gui {
     }
 
     /**
-     * returns a pointer to the persistant Chat GUI, containing all previous chat messages and such
+     * returns a pointer to the persistent Chat GUI, containing all previous chat messages and such
      */
     public GuiNewChat getChatGUI() {
         return this.persistantChatGUI;
     }
 
-    public int getUpdateCounter() {
-        return this.updateCounter;
-    }
-
     public FontRenderer getFontRenderer() {
         return this.mc.fontRendererObj;
-    }
-
-    public GuiSpectator getSpectatorGui() {
-        return this.spectatorGui;
     }
 
     public GuiPlayerTabOverlay getTabList() {

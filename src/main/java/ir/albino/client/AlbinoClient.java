@@ -1,24 +1,19 @@
 package ir.albino.client;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import de.jojii.matrixclientserver.Bot.Client;
 import ir.albino.client.event.EventManager;
 import ir.albino.client.features.account.AltManager;
 import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.modules.ModuleManager;
 import ir.albino.client.utils.Common;
-import ir.albino.client.utils.render.font.AlbinoFontRenderer;
 import ir.albino.client.utils.render.font.FontManager;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import net.minecraft.client.main.Main;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
 
-import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class AlbinoClient {
@@ -35,7 +30,6 @@ public class AlbinoClient {
     public EventManager eventManager;
     public ModuleManager moduleManager;
     public ConcurrentLinkedQueue<Module> modules = new ConcurrentLinkedQueue<>();
-    public Client client;
     // TODO: do more things by this
     public boolean debug = false;
     @SneakyThrows

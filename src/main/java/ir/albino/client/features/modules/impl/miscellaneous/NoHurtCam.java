@@ -7,7 +7,7 @@ import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.modules.ModuleInfo;
 
 @ModuleInfo(module = "NoHurtCam", description = "Disables the camera shaking when damaged", version = "1.0", category = ModuleInfo.Category.MISCELLANEOUS, draggable = true)
-public class NoHurtCamModule extends Module {
+public class NoHurtCam extends Module {
     @Listener
     public void onRender2D(Render2DEvent e) {
         mc.fontRendererObj.drawStringWithShadow("NoHurtCam", x, y, theme.color);

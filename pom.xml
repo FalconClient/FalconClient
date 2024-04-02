@@ -9,6 +9,7 @@
     <version>1.8.9</version>
     <description>The best iranian PVP client</description>
 
+
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>

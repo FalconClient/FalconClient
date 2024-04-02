@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft;
 
 @ModuleInfo(module = "Fps", version = "1.0", description = "Shows Your FPS on the Screen", category = ModuleInfo.Category.VISUAL, draggable = true)
 public class FpsModule extends Module {
-
     @Override
     public void onEnable() {
         super.onEnable();

@@ -6,6 +6,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -46,7 +48,8 @@ public class AltEntry implements GuiListExtended.IGuiListEntry {
             Gui.drawScaledCustomSizeModalRect(x, y, 8F, 8F, 8, 8, width, height, 64F, 64F);
             GL11.glDisable(GL11.GL_BLEND);
         } catch (Exception e) {
-            e.printStackTrace();
+            CrashReport report = new CrashReport("Failed to ddraw head", e);
+            throw new ReportedException(report);
         }
     }
 

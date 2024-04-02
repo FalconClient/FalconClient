@@ -9,7 +9,7 @@ import net.minecraft.client.gui.Gui;
 
 
 
-@ModuleInfo(module = "Armors", description = "Shows your armor hp", version = "1.0", draggable = true, category = ModuleInfo.Category.VISUAL)
+@ModuleInfo(module = "armors", description = "Shows your armor hp", version = "1.0", draggable = true, category = ModuleInfo.Category.VISUAL)
 public class Armors extends Module {
     @Listener
     public void onRender2D(Render2DEvent e) {

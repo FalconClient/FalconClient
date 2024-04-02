@@ -12,8 +12,6 @@ import java.awt.*;
 import java.io.IOException;
 
 public class ClickGuiScreen extends GuiScreen {
-
-
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         final ScaledResolution sr = new ScaledResolution(mc);
@@ -66,6 +64,7 @@ public class ClickGuiScreen extends GuiScreen {
     }
 
     public boolean isClicked(int startX, int startY, int mouseX, int mouseY, int width, int height) {
+
         return mouseX >= startX && mouseY >= startY && mouseX < startX + width && mouseY < startY + height;
     }
 }

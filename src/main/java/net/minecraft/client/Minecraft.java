@@ -974,7 +974,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
             try {
                 this.loadWorld(null);
-            } catch (Throwable ignored) {}
+            } catch (Throwable ignored) {
+            }
 
             this.mcSoundHandler.unloadSounds();
         } finally {
@@ -1050,7 +1051,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         this.mcProfiler.endSection();
 
         this.mcProfiler.profilingEnabled =
-                        this.gameSettings.showDebugProfilerChart &&
+                this.gameSettings.showDebugProfilerChart &&
                         this.gameSettings.showLagometer &&
                         !this.gameSettings.thirdPersonView;
 
@@ -1151,13 +1152,15 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
         try {
             this.renderGlobal.deleteAllDisplayLists();
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
 
         System.gc();
 
         try {
             this.loadWorld(null);
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
 
         System.gc();
     }
@@ -2058,6 +2061,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
             if (this.thePlayer == null) {
                 this.thePlayer = this.playerController.func_178892_a(worldClientIn, new StatFileWriter());
                 this.playerController.flipPlayer(this.thePlayer);
+                thePlayer.setLocationOfCape(new ResourceLocation("texture.png"));
+
             }
 
             this.thePlayer.preparePlayerToSpawn();
@@ -2220,7 +2225,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
                     i = EntityList.getEntityID(this.objectMouseOver.entityHit);
                     flag1 = true;
 
-                    if (!EntityList.entityEggs.containsKey(Integer.valueOf(i))) {
+                    if (!EntityList.entityEggs.containsKey(i)) {
                         return;
                     }
                 }
@@ -2562,7 +2567,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
     public static void stopIntegratedServer() {
         if (theMinecraft != null && theMinecraft.getIntegratedServer() != null)
-                theMinecraft.getIntegratedServer().stopServer();
+            theMinecraft.getIntegratedServer().stopServer();
     }
 
     /**

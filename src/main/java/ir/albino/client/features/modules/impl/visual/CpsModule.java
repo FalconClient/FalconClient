@@ -5,16 +5,33 @@ import ir.albino.client.event.impl.MouseClickEvent;
 import ir.albino.client.event.impl.Render2DEvent;
 import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.modules.ModuleInfo;
+import ir.albino.client.features.modules.settings.ModuleSetting;
+import ir.albino.client.features.modules.settings.Setting;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.UtilityClass;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
 @ModuleInfo(module = "Cps", description = "Shows your Clicks Per Second on the Screen ", version = "1.0", category = ModuleInfo.Category.VISUAL, draggable = true)
 public class CpsModule extends Module {
-    private final int interval = 1000;
-    private final int delay = 125;
-    public long now = System.currentTimeMillis();
+    @Getter
+    @Setter
+    private int interval = 1000;
+    @Getter
+    @Setter
+    private int delay = 125;
+
+    @Setting
+    public ModuleSetting<Integer> intervalSettings = new ModuleSetting<>("Interval", this::getInterval, this::setInterval);
+    @Setting
+    public ModuleSetting<Integer> delaySettings = new ModuleSetting<>("Count Delay", this::getDelay, this::setInterval);
+    private long now = System.currentTimeMillis();
+
     private final List<Long> cpsList = new ArrayList<>();
 
     @Listener
