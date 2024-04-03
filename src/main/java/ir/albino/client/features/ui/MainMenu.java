@@ -1,8 +1,8 @@
 package ir.albino.client.features.ui;
 
 import ir.albino.client.AlbinoClient;
+import ir.albino.client.features.ui.altmanager.AltManagerMenu;
 import ir.albino.client.features.ui.chat.ChatMenu;
-import ir.albino.client.utils.render.RenderUtils;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;

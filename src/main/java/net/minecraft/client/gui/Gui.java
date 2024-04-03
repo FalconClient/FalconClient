@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
@@ -221,6 +222,23 @@ public class Gui {
 
     public static void drawSingleTexture(int x, int y, float width, float height) {
         drawModalRectWithCustomSizedTexture(x, y, 0, 0, (int) width, (int) height, width, height);
+    }
+
+    public static void drawSingleTexture(int x, int y, float width, float height, Color color) {
+        float f = 1.0F / width;
+        float f1 = 1.0F / height;
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+        worldrenderer.pos(x, y + height, 0.0D).tex(width * f, (height + height) * f1)
+                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+        worldrenderer.pos(x + width, y + height, 0.0D).tex((width + width) * f, (height + height) * f1)
+                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+        worldrenderer.pos(x + width, y, 0.0D).tex((width + width) * f, height * f1)
+                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+        worldrenderer.pos(x, y, 0.0D).tex(width * f, height * f1)
+                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+        tessellator.draw();
     }
 
     /**

@@ -1,23 +1,18 @@
-package ir.albino.client.features.ui;
+package ir.albino.client.features.ui.altmanager;
 
 import ir.albino.client.AlbinoClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiListExtended;
-import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
 
 import java.awt.*;
 
-public class AltEntry implements GuiListExtended.IGuiListEntry {
+public final class AltEntry implements GuiListExtended.IGuiListEntry {
     public final String uuid;
     public final String username;
-    private static Minecraft mc = Minecraft.getMinecraft();
+    private static final Minecraft mc = Minecraft.getMinecraft();
     private final AltList list;
     private ResourceLocation resource = new ResourceLocation("textures/gui/itembox.png");
 
@@ -34,24 +29,13 @@ public class AltEntry implements GuiListExtended.IGuiListEntry {
 
     @Override
     public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+        GlStateManager.enableBlend();
         mc.getTextureManager().bindTexture(resource);
         Gui.drawSingleTexture(x, y, listWidth, slotHeight);
-        AlbinoClient.instance.fontRenderer.getComfortaa().drawCenteredString(username, x + (float) listWidth / 1.9, y + slotHeight / 2.3, Color.white.getRGB());
+        GlStateManager.disableBlend();
+        AlbinoClient.instance.fontRenderer.getComfortaa().drawCenteredStringWithShadow(username, x + (float) listWidth / 1.9, y + slotHeight / 2.3, Color.white.getRGB());
     }
 
-    public static void drawHead(ResourceLocation skin, int x, int y, int width, int height) {
-        try {
-            mc.getTextureManager().bindTexture(skin);
-            GlStateManager.enableBlend();
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glColor4f(1, 1, 1, 1);
-            Gui.drawScaledCustomSizeModalRect(x, y, 8F, 8F, 8, 8, width, height, 64F, 64F);
-            GL11.glDisable(GL11.GL_BLEND);
-        } catch (Exception e) {
-            CrashReport report = new CrashReport("Failed to ddraw head", e);
-            throw new ReportedException(report);
-        }
-    }
 
     @Override
     public boolean mousePressed(int slotIndex, int p_148278_2_, int p_148278_3_, int p_148278_4_, int p_148278_5_, int p_148278_6_) {
@@ -65,7 +49,11 @@ public class AltEntry implements GuiListExtended.IGuiListEntry {
     public void select(boolean b) {
         if (b) {
             resource = new ResourceLocation("textures/gui/itembox-selected.png");
-        } else resource = new ResourceLocation("textures/gui/itembox.png");
+            list.selectedAlt = this;
+        } else {
+            resource = new ResourceLocation("textures/gui/itembox.png");
+            if (list.selectedAlt == this) list.selectedAlt = null;
+        }
     }
 
     @Override
