@@ -1,5 +1,7 @@
 # AlbinoClient 1.8.9
 
+## قوانین کپی رایت موجانگ
+ وجود این سورس تو گیت هاب احتمالا باعث نقض قوانین موجانگ بشه بنابراین ممکنه هر لحظه گیت هاب ما از دسترس خارج شه تا ما یک راه حلی پیدا کنیم. ترجیحا توی فضای مجازی مارو داشته باشید.
 ## درباره
 
 یک کلاینت پی وی پی برای بازیکن های ماینکرفت ایرانی!
@@ -12,13 +14,14 @@
 ## فضای مجازی
 [تلگرام](https://t.me/AlbinoClient)
 
-[دیسکورد](https://dsc.gg/albinoclient)
+[دیسکورد](https://discord.gg/ndwSr3UTJ5)
 ## امکانات
 
 - آیکون کاستوم
 - کار راحت
 - فولدر متفاوت کلاینت(تنظیمات کلاینتتون به ورژنای دیگه هیچ ربطی نخواهد داشت)
 - در دسترس بودن سرور های ایرانی در قسمت مولتی پلیر (قدرت گرفته از MCTools.ir)
+- الت منیجر
 
 ## امکانات درحال توسعه
 
@@ -47,6 +50,7 @@
 - Python Developer
 - React / JavaScript Developer
 - C++ / Rust Developer
+- UI Designer
 - UI Artist
 - Modeler (ترجیحا با بلاک بنچ)
 - Animator
@@ -64,13 +68,7 @@
 **ضمنا اگه یک دونه استار هم به این ریپو بدید خیلی کمک بزرگی کردید :)
 **
 ## Credits
-- **Mmd4J** Client Developer
-- **KernelPanic** Client Developer
-- **mehran1022** Client Developer
-- **Amir Enderman** UI/ResourcePack Artist
-- **Amrya** UI Artist
-- **Mackhoude & Steve8Dream & Nepton** Discord Developer
-- **SaH & Steve8Dream** Discord Manager
+- Albino Team
 - People who made this project possible
     - Thanks to the **MCP Development** team for providing the great MCP.
     - Thanks to **Marcloud** for providing maven to the MCP and providing all Minecraft libraries into a repo.
