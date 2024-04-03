@@ -43,6 +43,7 @@
                 </executions>
             </plugin>
         </plugins>
+        <testSourceDirectory>src/main/test/</testSourceDirectory>
     </build>
 
     <repositories>
@@ -282,6 +283,13 @@
             <artifactId>Matrix-ClientServer-API-java</artifactId>
             <version>cb733066b8</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.17.2</version>
+        </dependency>
+
     </dependencies>
 
 </project>
