@@ -12,7 +12,7 @@
 ## فضای مجازی
 [تلگرام](https://t.me/AlbinoClient)
 
-[دیسکورد](https://dsc.gg/albinoclient)
+[دیسکورد](https://discord.gg/ndwSr3UTJ5)
 ## امکانات
 
 - آیکون کاستوم
