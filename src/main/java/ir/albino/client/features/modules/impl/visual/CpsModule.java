@@ -1,5 +1,6 @@
 package ir.albino.client.features.modules.impl.visual;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ir.albino.client.event.Listener;
 import ir.albino.client.event.impl.MouseClickEvent;
 import ir.albino.client.event.impl.Render2DEvent;
@@ -27,9 +28,12 @@ public class CpsModule extends Module {
     private int delay = 125;
 
     @Setting
+    @JsonIgnore
     public ModuleSetting<Integer> intervalSettings = new ModuleSetting<>("Interval", this::getInterval, this::setInterval);
     @Setting
+    @JsonIgnore
     public ModuleSetting<Integer> delaySettings = new ModuleSetting<>("Count Delay", this::getDelay, this::setInterval);
+    @JsonIgnore
     private long now = System.currentTimeMillis();
 
     private final List<Long> cpsList = new ArrayList<>();

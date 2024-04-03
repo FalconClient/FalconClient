@@ -1,11 +1,13 @@
 package ir.albino.client.features.modules.settings;
 
 import ir.albino.client.features.modules.Module;
+import lombok.Getter;
 
 import java.util.function.Consumer;
 
 
 public class ModuleSetting<V> {
+    @Getter
     private final ModuleFunction<V> getter;
     private final String name;
     private final Consumer<V> setter;

@@ -464,11 +464,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         Bootstrap.register();
     }
 
-    @SneakyThrows
     public void run() {
         this.running = true;
 
-        this.startGame();
+        try {
+            this.startGame();
+        } catch (LWJGLException e) {
+            throw new RuntimeException(e);
+        }
 
         while (true) {
             try {
@@ -476,7 +479,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
                     if (!this.hasCrashed || this.crashReporter == null) {
                         try {
                             this.runGameLoop();
-                        } catch (final OutOfMemoryError var10) {
+                        } catch (final OutOfMemoryError | IOException var10) {
                             this.freeMemory();
                             this.displayGuiScreen(new GuiMemoryErrorScreen());
                             System.gc();

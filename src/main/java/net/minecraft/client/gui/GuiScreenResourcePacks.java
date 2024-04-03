@@ -46,21 +46,21 @@ public class GuiScreenResourcePacks extends GuiScreen
 
         if (!this.changed)
         {
-            this.availableResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
-            this.selectedResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
+            this.availableResourcePacks = Lists.newArrayList();
+            this.selectedResourcePacks = Lists.newArrayList();
             ResourcePackRepository resourcepackrepository = this.mc.getResourcePackRepository();
             resourcepackrepository.updateRepositoryEntriesAll();
             List<ResourcePackRepository.Entry> list = Lists.newArrayList(resourcepackrepository.getRepositoryEntriesAll());
             list.removeAll(resourcepackrepository.getRepositoryEntries());
 
-            for (ResourcePackRepository.Entry resourcepackrepository$entry : list)
+            for (ResourcePackRepository.Entry entry : list)
             {
-                this.availableResourcePacks.add(new ResourcePackListEntryFound(this, resourcepackrepository$entry));
+                this.availableResourcePacks.add(new ResourcePackListEntryFound(this, entry));
             }
 
-            for (ResourcePackRepository.Entry resourcepackrepository$entry1 : Lists.reverse(resourcepackrepository.getRepositoryEntries()))
+            for (ResourcePackRepository.Entry entry : Lists.reverse(resourcepackrepository.getRepositoryEntries()))
             {
-                this.selectedResourcePacks.add(new ResourcePackListEntryFound(this, resourcepackrepository$entry1));
+                this.selectedResourcePacks.add(new ResourcePackListEntryFound(this, entry));
             }
 
             this.selectedResourcePacks.add(new ResourcePackListEntryDefault(this));
