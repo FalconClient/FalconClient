@@ -32,7 +32,12 @@ public class TestHTMLParsing {
 
     @Test
     public void testDeserialize() {
-        val obj = new HTMLParser<>("test.html", new ExampleHTML()).getObj();
+        ExampleHTML obj = null;
+        try {
+            obj = new HTMLParser<>("test.html", new ExampleHTML()).getObj();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println(obj);
     }
 }

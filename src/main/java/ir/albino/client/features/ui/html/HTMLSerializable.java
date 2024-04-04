@@ -21,4 +21,12 @@ public class HTMLSerializable {
         }
         return String.format("<%s>%s</%s>", getClass().getName(), builder, getClass().getName());
     }
+
+
+
+    public static HTMLSerializable deserialize(Element e, Class<? extends HTMLSerializable> clazz) throws InstantiationException, IllegalAccessException {
+        HTMLSerializable obj = clazz.newInstance();
+
+        return new HTMLParser<>(e, obj).getObj();
+    }
 }
