@@ -4,6 +4,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import ir.albino.client.AlbinoClient;
+import ir.albino.client.features.ui.html.annotations.HTMLIgnore;
 import ir.albino.client.utils.render.font.FontManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.stream.GuiTwitchUserMode;
@@ -50,11 +51,13 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
     /**
      * Reference to the Minecraft object.
      */
+    @HTMLIgnore
     public Minecraft mc;
 
     /**
      * Holds an instance of RenderItem, used to draw the achievement icons on screen (is based on ItemStack)
      */
+    @HTMLIgnore
     protected RenderItem itemRender;
 
     /**
@@ -66,7 +69,9 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
      * The height of the screen object.
      */
     public int height;
+    @HTMLIgnore
     protected List<GuiButton> buttonList = Lists.newArrayList();
+    @HTMLIgnore
     protected List<GuiLabel> labelList = Lists.newArrayList();
     public boolean allowUserInput;
 

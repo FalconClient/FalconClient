@@ -3,6 +3,8 @@ package ir.albino.client.features.ui;
 import ir.albino.client.AlbinoClient;
 import ir.albino.client.features.ui.altmanager.AltManagerMenu;
 import ir.albino.client.features.ui.chat.ChatMenu;
+import ir.albino.client.features.ui.html.modules.HTMLButton;
+import ir.albino.client.features.ui.html.modules.HTMLScreen;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -10,19 +12,36 @@ import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-public class MainMenu extends GuiScreen {
+public class MainMenu extends HTMLScreen {
+    ;
+    public HTMLButton btnOptions = new HTMLButton(0, "width / 2 - 100", "height / 4 + 48 + 84", "98", "20", I18n.format("menu.options"));
+    public HTMLButton btnSinglePlayer = new HTMLButton(4, "width / 2 + 2", "height / 4 + 48 + 84", "98", "20", I18n.format("menu.quit"));
+    public HTMLButton btnQuit = new HTMLButton(4, "width / 2 + 2", "height / 4 + 48 + 84", "98", "20", I18n.format("menu.quit"));
+    public HTMLButton btnMultiPlayer = new HTMLButton(2, "width / 2 - 100", "height / 4 + 48 + 22", I18n.format("menu.multiplayer"));
+    public HTMLButton btnLanguage = new GuiButtonLanguage(5, "width / 2 - 124", "height / 4 + 48 + 72 + 12");
+    public HTMLButton btnAltManager = new HTMLButton(3, "width / 2 - 100", "height / 4 + 48 + 44", I18n.format("menu.altmanager"));
+
     @Override
     public void initGui() {
-        int j = this.height / 4 + 48;
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, j + 72 + 12, 98, 20, I18n.format("menu.options")));
-        this.buttonList.add(new GuiButton(4, this.width / 2 + 2, j + 72 + 12, 98, 20, I18n.format("menu.quit")));
-        this.buttonList.add(new GuiButtonLanguage(5, this.width / 2 - 124, j + 72 + 12));
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, j, I18n.format("menu.singleplayer")));
-        this.buttonList.add(new GuiButton(2, this.width / 2 - 100, j + 22, I18n.format("menu.multiplayer")));
-        this.buttonList.add(new GuiButton(3, this.width / 2 - 100, j + 44, I18n.format("menu.altmanager")));
+        Map<String, Double> map = new HashMap<>();
+        map.put("width", Integer.valueOf(width).doubleValue());
+        map.put("height", Integer.valueOf(height).doubleValue());
+        this.buttonList.add(btnOptions.initButton(map));
+        this.buttonList.add(btnQuit.initButton(map));
+        this.buttonList.add(btnSinglePlayer.initButton(map));
+        this.buttonList.add(btnLanguage.initButton(map));
+        this.buttonList.add(btnMultiPlayer.initButton(map));
+        this.buttonList.add(btnAltManager.initButton(map));
 //        this.buttonList.add(new GuiButton(6, this.width / 2 - 150, j + 44, I18n.format("menu.chat")));
         super.initGui();
+        try {
+            save();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

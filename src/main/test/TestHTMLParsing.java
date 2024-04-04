@@ -1,18 +1,16 @@
-import ir.albino.client.AlbinoClient;
-import ir.albino.client.features.ui.html.HTMLParser;
+import ir.albino.client.features.ui.MainMenu;
+import ir.albino.client.features.ui.html.serialize.HTMLParser;
 import lombok.Cleanup;
-import lombok.val;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.junit.Test;
 import test.ExampleHTML;
 
-import javax.swing.text.html.HTML;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 public class TestHTMLParsing {
     @Test
@@ -39,5 +37,20 @@ public class TestHTMLParsing {
             throw new RuntimeException(e);
         }
         System.out.println(obj);
+    }
+
+    @Test
+    public void testStringMath() {
+        Expression exp = new ExpressionBuilder("4*5").build();
+        System.out.println(exp.evaluate());
+    }
+
+    @Test
+    public void testSavingMainMenuScreen() {
+        try {
+            new MainMenu().save();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -1,10 +1,9 @@
-package ir.albino.client.features.ui.html;
+package ir.albino.client.features.ui.html.serialize;
 
 import ir.albino.client.features.ui.html.annotations.HTMLIgnore;
 import lombok.Getter;
 import net.minecraft.util.ResourceLocation;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.File;
@@ -28,25 +27,23 @@ public class HTMLParser<T> {
                     if (!f.isAnnotationPresent(HTMLIgnore.class))
                         this.setFieldValue(f, obj, e);
                 }
-            } catch (NoSuchFieldException | IllegalAccessException ex) {
-                System.out.println(e.id());
+            } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException |
+                     InstantiationException ex) {
                 throw new RuntimeException(ex);
             }
         }
     }
 
-    private void setFieldValue(Field f, Object inst, Element v) throws IllegalAccessException {
+    private void setFieldValue(Field f, Object inst, Element v) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
         Object fObj = f.get(obj);
         System.out.println(v);
         if (fObj instanceof Integer)
             f.set(inst, Integer.parseInt(v.text()));
         else if (fObj instanceof Boolean) f.set(inst, Boolean.parseBoolean(v.text()));
         else if (fObj instanceof HTMLSerializable) {
-            try {
-                HTMLSerializable.deserialize(v, (Class<? extends HTMLSerializable>) Class.forName(v.attr("type")));
-            } catch (InstantiationException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            HTMLSerializable.deserialize(v, (Class<? extends HTMLSerializable>) Class.forName(v.attr("type")));
+        } else if (fObj instanceof Enum<?>) {
+            f.set(inst, Enum.valueOf(((Enum<?>) fObj).getClass(), v.text()));
         } else f.set(inst, v.text());
     }
 

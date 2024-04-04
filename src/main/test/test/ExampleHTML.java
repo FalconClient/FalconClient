@@ -1,12 +1,12 @@
 package test;
 
-import ir.albino.client.features.ui.html.HTMLSerializable;
+import ir.albino.client.features.ui.html.serialize.HTMLSerializable;
 import ir.albino.client.features.ui.html.annotations.HTMLIgnore;
 import lombok.ToString;
 
 
 @ToString
-public class ExampleHTML extends HTMLSerializable {
+public class ExampleHTML implements HTMLSerializable {
     public int age = 32;
     @HTMLIgnore
     public String testIgnore = "ignore";
