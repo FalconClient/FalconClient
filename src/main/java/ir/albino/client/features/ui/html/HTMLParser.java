@@ -27,7 +27,7 @@ public class HTMLParser<T> {
             try {
                 if (!e.id().isEmpty()) {
                     Field f = obj.getClass().getDeclaredField(e.id());
-                    this.setFieldValue(f, obj, e.val());
+                    this.setFieldValue(f, obj, e.text());
                 }
             } catch (NoSuchFieldException | IllegalAccessException ex) {
                 System.out.println(e.id());
@@ -37,10 +37,12 @@ public class HTMLParser<T> {
     }
 
     private void setFieldValue(Field f, Object inst, String v) throws IllegalAccessException {
-        if (obj instanceof Integer) {
-            f.set(inst, Integer.valueOf(v));
-        }
-
+        Object fObj = f.get(obj);
+        System.out.println(v);
+        if (fObj instanceof Integer)
+            f.set(inst, Integer.parseInt(v));
+        else if (fObj instanceof Boolean) f.set(inst, Boolean.parseBoolean(v));
+        else f.set(inst, v);
     }
 
     public HTMLParser(ResourceLocation res, T obj) {
