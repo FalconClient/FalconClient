@@ -1,7 +1,9 @@
 package test;
 
 import ir.albino.client.features.ui.html.HTMLSerializable;
+import lombok.ToString;
 
+@ToString
 public class ExampleHTML extends HTMLSerializable {
     public int age = 32;
     public String name = "Dan";

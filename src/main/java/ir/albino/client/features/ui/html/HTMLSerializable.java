@@ -1,5 +1,8 @@
 package ir.albino.client.features.ui.html;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 
@@ -8,13 +11,13 @@ public class HTMLSerializable {
         Field[] fields = getClass().getDeclaredFields();
         StringBuilder builder = new StringBuilder();
         for (Field f : fields) {
-            String n = f.getName();
+            String n = f.getType().getName();
             String s = f.get(this).toString();
 
             if (f.getType().getSuperclass() != null && f.getType().getSuperclass().equals(HTMLSerializable.class)) {
                 s = ((HTMLSerializable) f.get(this)).serialize();
             }
-            builder.append(String.format("<%s>%s</%s>", n, s, n));
+            builder.append(String.format("<%s id=\"%s\">%s</%s>", n, f.getName(), s, n));
         }
         return String.format("<%s>%s</%s>", getClass().getName(), builder, getClass().getName());
     }
