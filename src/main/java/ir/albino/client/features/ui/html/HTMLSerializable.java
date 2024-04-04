@@ -1,5 +1,6 @@
 package ir.albino.client.features.ui.html;
 
+import ir.albino.client.features.ui.html.annotations.HTMLIgnore;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
@@ -11,17 +12,16 @@ public class HTMLSerializable {
         Field[] fields = getClass().getDeclaredFields();
         StringBuilder builder = new StringBuilder();
         for (Field f : fields) {
-            String n = f.getType().getName();
-            String s = f.get(this).toString();
-
-            if (f.getType().getSuperclass() != null && f.getType().getSuperclass().equals(HTMLSerializable.class)) {
-                s = ((HTMLSerializable) f.get(this)).serialize();
+            if (!f.isAnnotationPresent(HTMLIgnore.class)) {
+                String s = f.get(this).toString();
+                if (f.getType().getSuperclass() != null && f.getType().getSuperclass().equals(HTMLSerializable.class)) {
+                    s = ((HTMLSerializable) f.get(this)).serialize();
+                }
+                builder.append(String.format("<field id=\"%s\" type=\"%s\">%s</field>", f.getName(), f.getType().getName(), s));
             }
-            builder.append(String.format("<%s id=\"%s\">%s</%s>", n, f.getName(), s, n));
         }
-        return String.format("<%s>%s</%s>", getClass().getName(), builder, getClass().getName());
+        return String.format("<value>%s</value>", builder);
     }
-
 
 
     public static HTMLSerializable deserialize(Element e, Class<? extends HTMLSerializable> clazz) throws InstantiationException, IllegalAccessException {

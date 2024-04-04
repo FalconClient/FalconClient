@@ -1,5 +1,6 @@
 package ir.albino.client.features.ui.html;
 
+import ir.albino.client.features.ui.html.annotations.HTMLIgnore;
 import lombok.Getter;
 import net.minecraft.util.ResourceLocation;
 import org.jsoup.Jsoup;
@@ -24,7 +25,8 @@ public class HTMLParser<T> {
             try {
                 if (!e.id().isEmpty() && e.getAllElements().indexOf(e) != 0) {
                     Field f = obj.getClass().getDeclaredField(e.id());
-                    this.setFieldValue(f, obj, e);
+                    if (!f.isAnnotationPresent(HTMLIgnore.class))
+                        this.setFieldValue(f, obj, e);
                 }
             } catch (NoSuchFieldException | IllegalAccessException ex) {
                 System.out.println(e.id());
@@ -41,8 +43,8 @@ public class HTMLParser<T> {
         else if (fObj instanceof Boolean) f.set(inst, Boolean.parseBoolean(v.text()));
         else if (fObj instanceof HTMLSerializable) {
             try {
-                HTMLSerializable.deserialize(v, (Class<? extends HTMLSerializable>) fObj.getClass());
-            } catch (InstantiationException e) {
+                HTMLSerializable.deserialize(v, (Class<? extends HTMLSerializable>) Class.forName(v.attr("type")));
+            } catch (InstantiationException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         } else f.set(inst, v.text());
