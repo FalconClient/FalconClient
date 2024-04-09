@@ -44,7 +44,7 @@ public class GuiScreenDemo extends GuiScreen
                 }
                 catch (Throwable throwable)
                 {
-                    logger.error("Couldn\'t open link", throwable);
+                    logger.error("Couldn't open link", throwable);
                 }
 
                 break;

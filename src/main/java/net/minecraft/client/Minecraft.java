@@ -34,6 +34,7 @@ import ir.albino.client.event.impl.GuiOpeningEvent;
 import ir.albino.client.event.impl.KeypressEvent;
 import ir.albino.client.event.impl.MouseClickEvent;
 import ir.albino.client.features.ui.MainMenu;
+import ir.albino.client.features.ui.html.serialize.HTMLSerializable;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -228,11 +229,15 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     /**
      * True if the player is connected to a realms server
      * -- SETTER --
-     *  Set if the player is connected to a realms server
+     * Set if the player is connected to a realms server
+     * <p>
+     * <p>
+     * -- GETTER --
+     * Return true if the player is connected to a realms server
      *
      * @param isConnected The value that set if the player is connected to a realms server or not
-
      */
+    @Getter
     @Setter
     private boolean connectedToRealms = false;
     public Timer timer = new Timer(20.0F);
@@ -356,8 +361,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     /**
      * The FrameTimer's instance
      * -- GETTER --
-     *  Return the FrameTimer's instance
-
+     * Return the FrameTimer's instance
      */
     @Getter
     public final FrameTimer frameTimer = new FrameTimer();
@@ -911,7 +915,13 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * Sets the argument GuiScreen as the main (topmost visible) screen.
      */
     public void displayGuiScreen(GuiScreen guiScreenIn) {
-
+        if (currentScreen != null && currentScreen instanceof HTMLSerializable) {
+            try {
+                ((HTMLSerializable) currentScreen).save();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         final GuiOpeningEvent event = new GuiOpeningEvent(guiScreenIn);
         if (guiScreenIn != null) {
             AlbinoClient.instance.eventManager.post(event);
@@ -2283,76 +2293,41 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * adds core server Info (GL version , Texture pack, isModded, type), and the worldInfo to the crash report
      */
     public CrashReport addGraphicsAndWorldToCrashReport(CrashReport theCrash) {
-        theCrash.getCategory().addCrashSectionCallable("Launched Version", new Callable<String>() {
-            public String call() throws Exception {
-                return Minecraft.this.launchedVersion;
-            }
+        theCrash.getCategory().addCrashSectionCallable("Launched Version", () ->
+                Minecraft.this.launchedVersion);
+        theCrash.getCategory().addCrashSectionCallable("LWJGL", Sys::getVersion);
+        theCrash.getCategory().addCrashSectionCallable("OpenGL", () ->
+                GL11.glGetString(GL11.GL_RENDERER) + " GL version " + GL11.glGetString(GL11.GL_VERSION) + ", " + GL11.glGetString(GL11.GL_VENDOR));
+        theCrash.getCategory().addCrashSectionCallable("GL Caps", OpenGlHelper::getLogText);
+        theCrash.getCategory().addCrashSectionCallable("Using VBOs", () ->
+                Minecraft.this.gameSettings.useVbo ? "Yes" : "No");
+        theCrash.getCategory().addCrashSectionCallable("Is Modded", () -> {
+            String s = ClientBrandRetriever.getClientModName();
+            return !s.equals("vanilla") ? "Definitely; Client brand changed to '" + s + "'" : (Minecraft.class.getSigners() == null ? "Very likely; Jar signature invalidated" : "Probably not. Jar signature remains and client brand is untouched.");
         });
-        theCrash.getCategory().addCrashSectionCallable("LWJGL", new Callable<String>() {
-            public String call() {
-                return Sys.getVersion();
-            }
-        });
-        theCrash.getCategory().addCrashSectionCallable("OpenGL", new Callable<String>() {
-            public String call() {
-                return GL11.glGetString(GL11.GL_RENDERER) + " GL version " + GL11.glGetString(GL11.GL_VERSION) + ", " + GL11.glGetString(GL11.GL_VENDOR);
-            }
-        });
-        theCrash.getCategory().addCrashSectionCallable("GL Caps", new Callable<String>() {
-            public String call() {
-                return OpenGlHelper.getLogText();
-            }
-        });
-        theCrash.getCategory().addCrashSectionCallable("Using VBOs", new Callable<String>() {
-            public String call() {
-                return Minecraft.this.gameSettings.useVbo ? "Yes" : "No";
-            }
-        });
-        theCrash.getCategory().addCrashSectionCallable("Is Modded", new Callable<String>() {
-            public String call() throws Exception {
-                String s = ClientBrandRetriever.getClientModName();
-                return !s.equals("vanilla") ? "Definitely; Client brand changed to \'" + s + "\'" : (Minecraft.class.getSigners() == null ? "Very likely; Jar signature invalidated" : "Probably not. Jar signature remains and client brand is untouched.");
-            }
-        });
-        theCrash.getCategory().addCrashSectionCallable("Type", new Callable<String>() {
-            public String call() throws Exception {
-                return "Client (map_client.txt)";
-            }
-        });
-        theCrash.getCategory().addCrashSectionCallable("Resource Packs", new Callable<String>() {
-            public String call() throws Exception {
-                StringBuilder stringbuilder = new StringBuilder();
+        theCrash.getCategory().addCrashSectionCallable("Type", () -> "Client (map_client.txt)");
+        theCrash.getCategory().addCrashSectionCallable("Resource Packs", () -> {
+            StringBuilder stringbuilder = new StringBuilder();
 
-                for (String s : Minecraft.this.gameSettings.resourcePacks) {
-                    if (stringbuilder.length() > 0) {
-                        stringbuilder.append(", ");
-                    }
-
-                    stringbuilder.append(s);
-
-                    if (Minecraft.this.gameSettings.incompatibleResourcePacks.contains(s)) {
-                        stringbuilder.append(" (incompatible)");
-                    }
+            for (String s : Minecraft.this.gameSettings.resourcePacks) {
+                if (stringbuilder.length() > 0) {
+                    stringbuilder.append(", ");
                 }
 
-                return stringbuilder.toString();
+                stringbuilder.append(s);
+
+                if (Minecraft.this.gameSettings.incompatibleResourcePacks.contains(s)) {
+                    stringbuilder.append(" (incompatible)");
+                }
             }
+
+            return stringbuilder.toString();
         });
-        theCrash.getCategory().addCrashSectionCallable("Current Language", new Callable<String>() {
-            public String call() throws Exception {
-                return Minecraft.this.mcLanguageManager.getCurrentLanguage().toString();
-            }
-        });
-        theCrash.getCategory().addCrashSectionCallable("Profiler Position", new Callable<String>() {
-            public String call() throws Exception {
-                return Minecraft.this.mcProfiler.profilingEnabled ? Minecraft.this.mcProfiler.getNameOfLastSection() : "N/A (disabled)";
-            }
-        });
-        theCrash.getCategory().addCrashSectionCallable("CPU", new Callable<String>() {
-            public String call() {
-                return OpenGlHelper.getCpu();
-            }
-        });
+        theCrash.getCategory().addCrashSectionCallable("Current Language", () ->
+                Minecraft.this.mcLanguageManager.getCurrentLanguage().toString());
+        theCrash.getCategory().addCrashSectionCallable("Profiler Position", () ->
+                Minecraft.this.mcProfiler.profilingEnabled ? Minecraft.this.mcProfiler.getNameOfLastSection() : "N/A (disabled)");
+        theCrash.getCategory().addCrashSectionCallable("CPU", OpenGlHelper::getCpu);
 
         if (this.theWorld != null) {
             this.theWorld.addWorldInfoToCrashReport(theCrash);
@@ -2732,18 +2707,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     }
 
     public static Map<String, String> getSessionInfo() {
-        Map<String, String> map = Maps.<String, String>newHashMap();
+        Map<String, String> map = Maps.newHashMap();
         map.put("X-Minecraft-Username", getMinecraft().getSession().getUsername());
         map.put("X-Minecraft-UUID", getMinecraft().getSession().getPlayerID());
         map.put("X-Minecraft-Version", "1.8.9");
         return map;
-    }
-
-    /**
-     * Return true if the player is connected to a realms server
-     */
-    public boolean isConnectedToRealms() {
-        return this.connectedToRealms;
     }
 
 }

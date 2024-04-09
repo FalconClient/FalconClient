@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 
 public class GuiButtonLanguage extends HTMLButton {
     public GuiButtonLanguage(int buttonID, int xPos, int yPos) {
-        super(buttonID, xPos, yPos, 20, 20, "");
+        super(buttonID, String.valueOf(xPos), String.valueOf(yPos), "20", "20", "");
     }
 
     @ConstructorInjection(attrs = {"buttonID", "xPos", "yPos"})

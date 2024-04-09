@@ -184,7 +184,7 @@ public class ItemArmor extends Item
     {
         if (this.material != ItemArmor.ArmorMaterial.LEATHER)
         {
-            throw new UnsupportedOperationException("Can\'t dye non-leather!");
+            throw new UnsupportedOperationException("Can't dye non-leather!");
         }
         else
         {

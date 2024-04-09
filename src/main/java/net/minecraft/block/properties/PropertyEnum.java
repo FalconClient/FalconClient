@@ -26,7 +26,7 @@ public class PropertyEnum<T extends Enum<T> & IStringSerializable> extends Prope
 
             if (this.nameToValue.containsKey(s))
             {
-                throw new IllegalArgumentException("Multiple values have the same name \'" + s + "\'");
+                throw new IllegalArgumentException("Multiple values have the same name '" + s + "'");
             }
 
             this.nameToValue.put(s, t);

@@ -381,7 +381,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
                 }
                 catch (Throwable throwable)
                 {
-                    logger.error("Couldn\'t open link", throwable);
+                    logger.error("Couldn't open link", throwable);
                 }
             }
 

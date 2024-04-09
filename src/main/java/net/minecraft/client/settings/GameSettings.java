@@ -83,8 +83,8 @@ public class GameSettings
 
     /** Smooth Lighting */
     public int ambientOcclusion = 2;
-    public List<String> resourcePacks = Lists.<String>newArrayList();
-    public List<String> incompatibleResourcePacks = Lists.<String>newArrayList();
+    public List<String> resourcePacks = Lists.newArrayList();
+    public List<String> incompatibleResourcePacks = Lists.newArrayList();
     public EntityPlayer.EnumChatVisibility chatVisibility = EntityPlayer.EnumChatVisibility.FULL;
     public boolean chatColours = true;
     public boolean chatLinks = true;

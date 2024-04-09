@@ -1842,7 +1842,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
             }
             catch (IOException ioexception)
             {
-                logger.error((String)"Couldn\'t load trade info", (Throwable)ioexception);
+                logger.error((String)"Couldn't load trade info", (Throwable)ioexception);
             }
             finally
             {

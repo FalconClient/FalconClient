@@ -126,7 +126,7 @@ public class GuiScreenResourcePacks extends GuiScreen
                     }
                     catch (IOException ioexception1)
                     {
-                        logger.error((String)"Couldn\'t open file", (Throwable)ioexception1);
+                        logger.error((String)"Couldn't open file", (Throwable)ioexception1);
                     }
                 }
                 else if (Util.getOSType() == Util.EnumOS.WINDOWS)
@@ -140,7 +140,7 @@ public class GuiScreenResourcePacks extends GuiScreen
                     }
                     catch (IOException ioexception)
                     {
-                        logger.error((String)"Couldn\'t open file", (Throwable)ioexception);
+                        logger.error((String)"Couldn't open file", (Throwable)ioexception);
                     }
                 }
 
@@ -154,7 +154,7 @@ public class GuiScreenResourcePacks extends GuiScreen
                 }
                 catch (Throwable throwable)
                 {
-                    logger.error("Couldn\'t open link", throwable);
+                    logger.error("Couldn't open link", throwable);
                     flag = true;
                 }
 

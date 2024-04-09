@@ -19,7 +19,7 @@ public class SoundListSerializer implements JsonDeserializer<SoundList>
         soundlist.setReplaceExisting(JsonUtils.getBoolean(jsonobject, "replace", false));
         SoundCategory soundcategory = SoundCategory.getCategory(JsonUtils.getString(jsonobject, "category", SoundCategory.MASTER.getCategoryName()));
         soundlist.setSoundCategory(soundcategory);
-        Validate.notNull(soundcategory, "Invalid category", new Object[0]);
+        Validate.notNull(soundcategory, "Invalid category");
 
         if (jsonobject.has("sounds"))
         {

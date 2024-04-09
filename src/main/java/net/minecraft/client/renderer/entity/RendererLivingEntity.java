@@ -266,7 +266,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
             }
             catch (Exception exception)
             {
-                logger.error((String)"Couldn\'t render entity", (Throwable)exception);
+                logger.error((String)"Couldn't render entity", (Throwable)exception);
             }
 
             GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);

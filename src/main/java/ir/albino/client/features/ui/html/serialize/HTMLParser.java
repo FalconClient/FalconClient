@@ -1,54 +1,90 @@
 package ir.albino.client.features.ui.html.serialize;
 
 import ir.albino.client.features.ui.html.annotations.HTMLIgnore;
+import lombok.Cleanup;
 import lombok.Getter;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.*;
+import java.util.stream.Stream;
+
 
 @Getter
-public class HTMLParser<T> {
-    public final T obj;
+public class HTMLParser {
 
-    public HTMLParser(String path, T obj) throws IOException {
-        this(Jsoup.parse(new File(path)), obj);
+    public <T> T parse(String path, T obj) throws IOException {
+        return this.parse(Jsoup.parse(new File(path)), obj);
     }
 
-    public HTMLParser(Element element, T obj) {
-        this.obj = obj;
-        for (Element e : element.getAllElements()) {
+    public <T> T parse(File file, T obj) throws IOException {
+        return this.parse(Jsoup.parse(file), obj);
+    }
+
+    public <T> T parse(Element element, T obj) {
+        if (obj instanceof HTMLSerializable) {
+            ((HTMLSerializable) obj).onPreSerialize();
+        }
+        Iterator<Element> it = element.getElementsByTag("field").iterator();
+        while (it.hasNext()) {
+            Element e = it.next();
             try {
-                if (!e.id().isEmpty() && e.getAllElements().indexOf(e) != 0) {
-                    Field f = obj.getClass().getDeclaredField(e.id());
-                    if (!f.isAnnotationPresent(HTMLIgnore.class))
-                        this.setFieldValue(f, obj, e);
-                }
-            } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException |
-                     InstantiationException ex) {
+                Field f = obj.getClass().getField(e.id());
+                this.setFieldValue(f, obj, e);
+                for (int i = 0; i < e.childrenSize(); i++)
+                    if (it.hasNext()) it.next().id();
+
+            } catch (IllegalAccessException | ClassNotFoundException | InstantiationException |
+                     NoSuchFieldException ex) {
                 throw new RuntimeException(ex);
             }
         }
+        if (obj instanceof HTMLSerializable) {
+            ((HTMLSerializable) obj).onSerialize();
+        }
+        return obj;
     }
 
-    private void setFieldValue(Field f, Object inst, Element v) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
+    public <T> T parseChildren(Element parent, T obj) {
+        if (obj instanceof HTMLSerializable) {
+            ((HTMLSerializable) obj).onPreSerialize();
+        }
+        for (Element e : parent.children()) {
+            try {
+                Field f = obj.getClass().getField(e.id());
+                this.setFieldValue(f, obj, e);
+            } catch (IllegalAccessException | ClassNotFoundException | InstantiationException |
+                     NoSuchFieldException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        if (obj instanceof HTMLSerializable) {
+            ((HTMLSerializable) obj).onSerialize();
+        }
+        return obj;
+    }
+
+    private void setFieldValue(Field f, Object obj, Element v) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
         Object fObj = f.get(obj);
-        System.out.println(v);
-        if (fObj instanceof Integer)
-            f.set(inst, Integer.parseInt(v.text()));
-        else if (fObj instanceof Boolean) f.set(inst, Boolean.parseBoolean(v.text()));
+        if (fObj instanceof Integer) f.set(obj, Integer.parseInt(v.text()));
+        else if (fObj instanceof Boolean) f.set(obj, Boolean.parseBoolean(v.text()));
         else if (fObj instanceof HTMLSerializable) {
-            HTMLSerializable.deserialize(v, (Class<? extends HTMLSerializable>) Class.forName(v.attr("type")));
+            f.set(obj, parseChildren(v, fObj));
         } else if (fObj instanceof Enum<?>) {
-            f.set(inst, Enum.valueOf(((Enum<?>) fObj).getClass(), v.text()));
-        } else f.set(inst, v.text());
+            f.set(obj, Enum.valueOf(((Enum<?>) fObj).getClass(), v.text()));
+        } else {
+            f.set(obj, v.text());
+        }
     }
 
-    public HTMLParser(ResourceLocation res, T obj) throws IOException {
-        this(String.format("assets/%s/%s", res.getResourceDomain(), res.getResourcePath()), obj);
+    public <T> T parse(ResourceLocation res, T obj) throws IOException {
+        return this.parse(String.format("assets/%s/%s", res.getResourceDomain(), res.getResourcePath()), obj);
     }
 
 }

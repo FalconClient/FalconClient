@@ -163,8 +163,8 @@ public class OldServerPinger
             {
                 if (!this.field_147403_d)
                 {
-                    OldServerPinger.logger.error("Can\'t ping " + server.serverIP + ": " + reason.getUnformattedText());
-                    server.serverMOTD = EnumChatFormatting.DARK_RED + "Can\'t connect to server.";
+                    OldServerPinger.logger.error("Can't ping " + server.serverIP + ": " + reason.getUnformattedText());
+                    server.serverMOTD = EnumChatFormatting.DARK_RED + "Can't connect to server.";
                     server.populationInfo = "";
                     OldServerPinger.this.tryCompatibilityPing(server);
                 }

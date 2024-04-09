@@ -151,11 +151,11 @@ public class ShaderGroup
 
         if (framebuffer == null)
         {
-            throw new JsonException("Input target \'" + s1 + "\' does not exist");
+            throw new JsonException("Input target '" + s1 + "' does not exist");
         }
         else if (framebuffer1 == null)
         {
-            throw new JsonException("Output target \'" + s2 + "\' does not exist");
+            throw new JsonException("Output target '" + s2 + "' does not exist");
         }
         else
         {
@@ -185,7 +185,7 @@ public class ShaderGroup
                             }
                             catch (FileNotFoundException var24)
                             {
-                                throw new JsonException("Render target or texture \'" + s3 + "\' does not exist");
+                                throw new JsonException("Render target or texture '" + s3 + "' does not exist");
                             }
 
                             p_152764_1_.bindTexture(resourcelocation);
@@ -256,7 +256,7 @@ public class ShaderGroup
 
         if (shaderuniform == null)
         {
-            throw new JsonException("Uniform \'" + s + "\' does not exist");
+            throw new JsonException("Uniform '" + s + "' does not exist");
         }
         else
         {

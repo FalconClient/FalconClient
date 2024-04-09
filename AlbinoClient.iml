@@ -5,4 +5,11 @@
       <excludeFolder url="file://$MODULE_DIR$/assets" />
     </content>
   </component>
+  <component name="FacetManager">
+    <facet type="minecraft" name="Minecraft">
+      <configuration>
+        <projectReimportVersion>1</projectReimportVersion>
+      </configuration>
+    </facet>
+  </component>
 </module>

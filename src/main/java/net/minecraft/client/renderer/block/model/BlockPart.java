@@ -187,7 +187,7 @@ public class BlockPart
             }
             else
             {
-                throw new JsonParseException("\'to\' specifier exceeds the allowed boundaries: " + vector3f);
+                throw new JsonParseException("'to' specifier exceeds the allowed boundaries: " + vector3f);
             }
         }
 
@@ -201,7 +201,7 @@ public class BlockPart
             }
             else
             {
-                throw new JsonParseException("\'from\' specifier exceeds the allowed boundaries: " + vector3f);
+                throw new JsonParseException("'from' specifier exceeds the allowed boundaries: " + vector3f);
             }
         }
 

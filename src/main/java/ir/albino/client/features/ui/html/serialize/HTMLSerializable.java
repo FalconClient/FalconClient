@@ -17,21 +17,22 @@ public interface HTMLSerializable {
         Field[] fields = getClass().getDeclaredFields();
         StringBuilder builder = new StringBuilder();
         for (Field f : fields) {
+            f.setAccessible(true);
             if (!f.isAnnotationPresent(HTMLIgnore.class) && f.get(this) != null) {
                 String s = f.get(this).toString();
                 if (f.get(this) instanceof HTMLSerializable) {
                     s = ((HTMLSerializable) f.get(this)).serialize();
                 }
-                builder.append(String.format("<field id=\"%s\" type=\"%s\">%s</field>", f.getName(), f.getType().getName(), s));
+                builder.append(String.format("<field id=\"%s\" class=\"%s\">%s</field>", f.getName(), f.getType().getName(), s));
             }
         }
-        return String.format("<value>%s</value>", builder);
+        return builder.toString();
     }
 
 
     static HTMLSerializable deserialize(Element e, Class<? extends HTMLSerializable> clazz) throws InstantiationException, IllegalAccessException {
         HTMLSerializable obj = clazz.newInstance();
-        return new HTMLParser<>(e, obj).getObj();
+        return new HTMLParser().parse(e, obj);
     }
 
     default void save(String name) throws IOException {
@@ -48,4 +49,17 @@ public interface HTMLSerializable {
     default void save() throws IOException {
         this.save(getClass().getSimpleName().toLowerCase());
     }
+
+    default File getFile() {
+        return new File(Common.getGamePath(), String.format("%s.html", getClass().getSimpleName().toLowerCase()));
+    }
+
+    default void onSerialize() {
+
+    }
+
+    default void onPreSerialize() {
+
+    }
+
 }

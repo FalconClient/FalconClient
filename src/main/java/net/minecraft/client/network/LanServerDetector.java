@@ -132,7 +132,7 @@ public class LanServerDetector
                 }
                 catch (IOException ioexception)
                 {
-                    LanServerDetector.logger.error((String)"Couldn\'t ping server", (Throwable)ioexception);
+                    LanServerDetector.logger.error((String)"Couldn't ping server", (Throwable)ioexception);
                     break;
                 }
 

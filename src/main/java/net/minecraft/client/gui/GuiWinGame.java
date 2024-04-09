@@ -40,8 +40,8 @@ public class GuiWinGame extends GuiScreen
 
         if (this.field_146581_h == 0)
         {
-            musicticker.func_181557_a();
-            musicticker.func_181558_a(MusicTicker.MusicType.CREDITS);
+            musicticker.stopMusic();
+            musicticker.playMusic(MusicTicker.MusicType.CREDITS);
             soundhandler.resumeSounds();
         }
 
@@ -139,7 +139,7 @@ public class GuiWinGame extends GuiScreen
             }
             catch (Exception exception)
             {
-                logger.error((String)"Couldn\'t load credits", (Throwable)exception);
+                logger.error((String)"Couldn't load credits", (Throwable)exception);
             }
         }
     }

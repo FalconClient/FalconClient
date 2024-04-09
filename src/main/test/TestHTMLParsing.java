@@ -32,7 +32,7 @@ public class TestHTMLParsing {
     public void testDeserialize() {
         ExampleHTML obj = null;
         try {
-            obj = new HTMLParser<>("test.html", new ExampleHTML()).getObj();
+            obj = new HTMLParser().parse("test.html", new ExampleHTML());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

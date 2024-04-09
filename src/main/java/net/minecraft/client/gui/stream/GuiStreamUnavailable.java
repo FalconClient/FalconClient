@@ -149,7 +149,7 @@ public class GuiStreamUnavailable extends GuiScreen
         }
         catch (Throwable throwable)
         {
-            field_152322_a.error("Couldn\'t open link", throwable);
+            field_152322_a.error("Couldn't open link", throwable);
         }
     }
 
@@ -169,7 +169,7 @@ public class GuiStreamUnavailable extends GuiScreen
         }
         else if (istream instanceof NullStream)
         {
-            if (((NullStream)istream).func_152937_a().getMessage().contains("Can\'t load AMD 64-bit .dll on a IA 32-bit platform"))
+            if (((NullStream)istream).func_152937_a().getMessage().contains("Can't load AMD 64-bit .dll on a IA 32-bit platform"))
             {
                 minecraft.displayGuiScreen(new GuiStreamUnavailable(p_152321_0_, GuiStreamUnavailable.Reason.LIBRARY_ARCH_MISMATCH));
             }

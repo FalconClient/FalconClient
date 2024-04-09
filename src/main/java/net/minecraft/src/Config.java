@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import ir.albino.client.AlbinoClient;
+import lombok.Getter;
 import net.minecraft.client.LoadingScreenRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -68,6 +69,7 @@ public class Config
     public static boolean fancyFogAvailable = false;
     public static boolean occlusionAvailable = false;
     private static GameSettings gameSettings = null;
+    @Getter
     private static Minecraft minecraft = Minecraft.getMinecraft();
     private static boolean initialized = false;
     private static Thread minecraftThread = null;
@@ -895,11 +897,6 @@ public class Config
 
             return stringbuffer.toString();
         }
-    }
-
-    public static Minecraft getMinecraft()
-    {
-        return minecraft;
     }
 
     public static TextureManager getTextureManager()

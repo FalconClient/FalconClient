@@ -49,11 +49,11 @@ public class StatisticsFile extends StatFileWriter
             }
             catch (IOException ioexception)
             {
-                logger.error((String)("Couldn\'t read statistics file " + this.statsFile), (Throwable)ioexception);
+                logger.error((String)("Couldn't read statistics file " + this.statsFile), (Throwable)ioexception);
             }
             catch (JsonParseException jsonparseexception)
             {
-                logger.error((String)("Couldn\'t parse statistics file " + this.statsFile), (Throwable)jsonparseexception);
+                logger.error((String)("Couldn't parse statistics file " + this.statsFile), (Throwable)jsonparseexception);
             }
         }
     }
@@ -66,7 +66,7 @@ public class StatisticsFile extends StatFileWriter
         }
         catch (IOException ioexception)
         {
-            logger.error((String)"Couldn\'t save stats", (Throwable)ioexception);
+            logger.error((String)"Couldn't save stats", (Throwable)ioexception);
         }
     }
 
@@ -162,7 +162,7 @@ public class StatisticsFile extends StatFileWriter
                 }
                 else
                 {
-                    logger.warn("Invalid statistic in " + this.statsFile + ": Don\'t know what " + (String)entry.getKey() + " is");
+                    logger.warn("Invalid statistic in " + this.statsFile + ": Don't know what " + (String)entry.getKey() + " is");
                 }
             }
 
@@ -187,7 +187,7 @@ public class StatisticsFile extends StatFileWriter
                 }
                 catch (Throwable throwable)
                 {
-                    logger.warn("Couldn\'t save statistic " + ((StatBase)entry.getKey()).getStatName() + ": error serializing progress", throwable);
+                    logger.warn("Couldn't save statistic " + ((StatBase)entry.getKey()).getStatName() + ": error serializing progress", throwable);
                 }
 
                 jsonobject.add(((StatBase)entry.getKey()).statId, jsonobject1);

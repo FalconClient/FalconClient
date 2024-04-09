@@ -99,7 +99,7 @@ public class GuiChat extends GuiScreen
 
         if (keyCode == 1)
         {
-            this.mc.displayGuiScreen((GuiScreen)null);
+            this.mc.displayGuiScreen(null);
         }
         else if (keyCode != 28 && keyCode != 156)
         {

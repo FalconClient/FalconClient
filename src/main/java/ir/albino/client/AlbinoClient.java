@@ -9,6 +9,7 @@ import ir.albino.client.utils.Common;
 import ir.albino.client.utils.render.font.FontManager;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import net.minecraft.client.audio.SoundList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
@@ -27,11 +28,13 @@ public class AlbinoClient {
     public static AlbinoClient instance = new AlbinoClient();
     public FontManager fontRenderer;
     public AltManager altManager;
+    public SoundList soundList;
     public EventManager eventManager;
     public ModuleManager moduleManager;
     public ConcurrentLinkedQueue<Module> modules = new ConcurrentLinkedQueue<>();
     // TODO: do more things by this
     public boolean debug = false;
+
     @SneakyThrows
     public void start() {
         this.detectAccounts();
@@ -49,8 +52,8 @@ public class AlbinoClient {
 //                client.sendText("!HqjpLQhNAyJxJIdIfU:wiiz.ir", "yo", System.out::println);
 //            });
         }
-
-
+        this.soundList = new SoundList();
+        
 
     }
 

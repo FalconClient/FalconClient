@@ -57,7 +57,7 @@ public class NetHandlerLoginClient implements INetHandlerLoginClient
             }
             catch (AuthenticationException var10)
             {
-                logger.warn("Couldn\'t connect to auth servers but will continue to join LAN");
+                logger.warn("Couldn't connect to auth servers but will continue to join LAN");
             }
         }
         else

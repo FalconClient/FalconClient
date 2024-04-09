@@ -283,7 +283,7 @@ public class TwitchStream implements BroadcastController.BroadcastListener, Chat
 
             if (!this.broadcastController.func_152840_a(p_152911_1_.func_152810_c(), i + p_152911_2_, p_152911_1_.func_152809_a(), p_152911_1_.func_152806_b()))
             {
-                LOGGER.warn(STREAM_MARKER, "Couldn\'t send stream metadata action at {}: {}", new Object[] {Long.valueOf(i + p_152911_2_), p_152911_1_});
+                LOGGER.warn(STREAM_MARKER, "Couldn't send stream metadata action at {}: {}", new Object[] {Long.valueOf(i + p_152911_2_), p_152911_1_});
             }
             else
             {
