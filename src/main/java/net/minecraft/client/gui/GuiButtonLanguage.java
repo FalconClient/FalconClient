@@ -1,6 +1,5 @@
 package net.minecraft.client.gui;
 
-import ir.albino.client.features.ui.html.annotations.ConstructorInjection;
 import ir.albino.client.features.ui.html.modules.HTMLButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,7 +9,6 @@ public class GuiButtonLanguage extends HTMLButton {
         super(buttonID, String.valueOf(xPos), String.valueOf(yPos), "20", "20", "");
     }
 
-    @ConstructorInjection(attrs = {"buttonID", "xPos", "yPos"})
     public GuiButtonLanguage(int buttonID, String xPos, String yPos) {
         super(buttonID, xPos, yPos, "20", "20", "");
     }

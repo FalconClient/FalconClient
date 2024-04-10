@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class AlbinoClient {
@@ -35,7 +36,7 @@ public class AlbinoClient {
     // TODO: do more things by this
     public boolean debug = false;
 
-    @SneakyThrows
+
     public void start() {
         this.detectAccounts();
         this.eventManager = new EventManager();
@@ -43,17 +44,8 @@ public class AlbinoClient {
         this.moduleManager = new ModuleManager();
         moduleManager.initModules();
         Display.setTitle(this.NAME);
-        File acDetails = new File(Common.getGamePath(), "matrix.json");
-        if (acDetails.exists()) {
-//            MatrixConfiguration config = new JsonMapper().readValue(acDetails, MatrixConfiguration.class);
-//            client = new Client("https://wiiz.ir");
-//            client.login(config.access, loginData -> {
-//                client.joinRoom("!HqjpLQhNAyJxJIdIfU:wiiz.ir", System.out::println);
-//                client.sendText("!HqjpLQhNAyJxJIdIfU:wiiz.ir", "yo", System.out::println);
-//            });
-        }
         this.soundList = new SoundList();
-        
+
 
     }
 
@@ -61,12 +53,16 @@ public class AlbinoClient {
 
     }
 
-    @SneakyThrows
+
     public void detectAccounts() {
         File users = new File(Common.getGamePath(), "users.json");
         AltManager manager = new AltManager();
         if (users.exists()) {
-            altManager = new JsonMapper().readValue(users, AltManager.class);
+            try {
+                altManager = new JsonMapper().readValue(users, AltManager.class);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

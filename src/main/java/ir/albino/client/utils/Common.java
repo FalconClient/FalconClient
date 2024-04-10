@@ -1,12 +1,15 @@
 package ir.albino.client.utils;
 
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.SystemUtils;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class Common {
@@ -39,5 +42,13 @@ public class Common {
             map.put(entry.getKey(), entry.getValue());
         }
         return map;
+    }
+
+    public List<Field> getFieldsAnnotation(Class<?> obj, Class<? extends Annotation> annotation) {
+        return Arrays.stream(obj.getDeclaredFields()).filter(f -> f.isAnnotationPresent(annotation)).collect(Collectors.toList());
+    }
+
+    public List<Method> getMethodsAnnotation(Class<?> obj, Class<? extends Annotation> annotation) {
+        return Arrays.stream(obj.getDeclaredMethods()).filter(m -> m.isAnnotationPresent(annotation)).collect(Collectors.toList());
     }
 }

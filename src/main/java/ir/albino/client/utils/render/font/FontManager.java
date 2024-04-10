@@ -4,9 +4,11 @@ import ir.albino.client.AlbinoClient;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.minecraft.client.Minecraft;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
+import java.io.IOException;
 
 @Getter
 public class FontManager {
@@ -23,11 +25,14 @@ public class FontManager {
         comfortaa = new AlbinoFontRenderer(getFontFromTTF("comfortaa", 19, Font.PLAIN), true, true);
     }
 
-    @SneakyThrows
     public Font getFontFromTTF(String fontName, float fontSize, int fontType) {
         Font output = null;
         ResourceLocation fontLocation = new ResourceLocation("Albino/fonts/" + fontName + ".ttf");
-        output = Font.createFont(fontType, Minecraft.getMinecraft().getResourceManager().getResource(fontLocation).getInputStream());
+        try {
+            output = Font.createFont(fontType, Minecraft.getMinecraft().getResourceManager().getResource(fontLocation).getInputStream());
+        } catch (FontFormatException | IOException e) {
+            new CrashReport("Failed to load font", e);
+        }
         output = output.deriveFont(fontSize);
         return output;
     }

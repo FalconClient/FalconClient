@@ -201,7 +201,6 @@ public class SoundManager {
         }
     }
 
-    @SneakyThrows
     public void updateAllSounds() {
         ++this.playTime;
 

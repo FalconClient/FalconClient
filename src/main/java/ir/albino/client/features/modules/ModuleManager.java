@@ -13,6 +13,7 @@ import lombok.val;
 import net.minecraft.client.Minecraft;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class ModuleManager {
 
     private ModuleTheme currentTheme;
 
-    @SneakyThrows
+
     public void initModules() {
         final LinkedList<Module> modules = new LinkedList<>();
         if (!Common.getModulesPath().exists()) Common.getModulesPath().mkdirs();
@@ -51,6 +52,8 @@ public class ModuleManager {
 //                map.writeValue(catFile, module);
                 modules.add(module);
             }
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
         }
         //Sorting the Modules as Length -> Higher to lower
         modules.sort(Comparator.comparing(module -> Minecraft.getMinecraft().fontRendererObj.getStringWidth(module.getName())));

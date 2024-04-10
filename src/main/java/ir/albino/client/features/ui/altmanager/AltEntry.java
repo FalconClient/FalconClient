@@ -1,6 +1,9 @@
 package ir.albino.client.features.ui.altmanager;
 
 import ir.albino.client.AlbinoClient;
+import ir.albino.client.features.ui.html.annotations.Event;
+import ir.albino.client.features.ui.html.annotations.HTMLIgnore;
+import ir.albino.client.features.ui.html.modules.HTMLListExtended;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiListExtended;
@@ -9,12 +12,23 @@ import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
 
-public final class AltEntry implements GuiListExtended.IGuiListEntry {
+public final class AltEntry extends HTMLListExtended.HTMLEntry {
+    @HTMLIgnore
     public final String uuid;
+    @HTMLIgnore
     public final String username;
+    @HTMLIgnore
     private static final Minecraft mc = Minecraft.getMinecraft();
+    @HTMLIgnore
     private final AltList list;
-    private ResourceLocation resource = new ResourceLocation("textures/gui/itembox.png");
+    private String resource;
+    private String selectedResource;
+
+    @Event(eventType = Event.Type.BEFORE_SERIALIZE)
+    public void onPreSerialize() {
+        resource = "textures/gui/itembox.png";
+        selectedResource = "textures/gui/itembox-selected.png";
+    }
 
     public AltEntry(String username, String uuid, AltList altList) {
         this.username = username;
@@ -30,7 +44,9 @@ public final class AltEntry implements GuiListExtended.IGuiListEntry {
     @Override
     public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected) {
         GlStateManager.enableBlend();
-        mc.getTextureManager().bindTexture(resource);
+        String r = resource;
+        if (list.selectedAlt == this) r = selectedResource;
+        mc.getTextureManager().bindTexture(new ResourceLocation(r));
         Gui.drawSingleTexture(x, y, listWidth, slotHeight);
         GlStateManager.disableBlend();
         AlbinoClient.instance.fontRenderer.getComfortaa().drawCenteredStringWithShadow(username, x + (float) listWidth / 1.9, y + slotHeight / 2.3, Color.white.getRGB());
@@ -48,10 +64,8 @@ public final class AltEntry implements GuiListExtended.IGuiListEntry {
 
     public void select(boolean b) {
         if (b) {
-            resource = new ResourceLocation("textures/gui/itembox-selected.png");
             list.selectedAlt = this;
         } else {
-            resource = new ResourceLocation("textures/gui/itembox.png");
             if (list.selectedAlt == this) list.selectedAlt = null;
         }
     }

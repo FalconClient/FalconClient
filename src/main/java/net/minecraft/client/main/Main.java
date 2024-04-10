@@ -26,7 +26,6 @@ public class Main {
      * set options & start the game
      * @param p_main_0_, startTime
      */
-    @SneakyThrows
     public static void main(final String[] p_main_0_, final long startTime) {
         Main.startTime = startTime;
         System.setProperty("java.net.preferIPv4Stack", "true");

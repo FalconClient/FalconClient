@@ -1,30 +1,41 @@
 package ir.albino.client.features.ui.html.serialize;
 
-import ir.albino.client.features.ui.html.annotations.HTMLIgnore;
+import ir.albino.client.features.ui.html.annotations.HTMLMap;
 import ir.albino.client.utils.Common;
 import lombok.Cleanup;
 import org.jsoup.nodes.Element;
 
-import javax.swing.text.html.HTML;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Arrays;
+import java.lang.reflect.InvocationTargetException;
 
 public interface HTMLSerializable {
     default String serialize() throws IllegalAccessException {
-        Field[] fields = getClass().getDeclaredFields();
         StringBuilder builder = new StringBuilder();
-        for (Field f : fields) {
+        for (Field f : Common.getFieldsAnnotation(this.getClass(), HTMLMap.class)) {
             f.setAccessible(true);
-            if (!f.isAnnotationPresent(HTMLIgnore.class) && f.get(this) != null) {
-                String s = f.get(this).toString();
-                if (f.get(this) instanceof HTMLSerializable) {
-                    s = ((HTMLSerializable) f.get(this)).serialize();
+            HTMLMap map = f.getAnnotation(HTMLMap.class);
+            String s;
+            if (f.get(this) == null) {
+                s = map.defaultValue();
+            } else {
+                try {
+                    if (!map.deserializeFunction().isEmpty())
+                        s = (String) map.deserialize().getDeclaredMethod(map.deserializeFunction(), f.getType()).invoke(null, f.get(this));
+                    else s = f.get(this).toString();
+                } catch (InvocationTargetException | NoSuchMethodException e) {
+                    System.out.println(map.deserializeFunction());
+                    throw new RuntimeException(e);
                 }
-                builder.append(String.format("<field id=\"%s\" class=\"%s\">%s</field>", f.getName(), f.getType().getName(), s));
+                if (f.get(this) instanceof HTMLSerializable)
+                    s = ((HTMLSerializable) f.get(this)).serialize();
             }
+            String id = f.getName();
+            if (!map.id().isEmpty()) id = map.id();
+            String html = String.format("<%s id=\"%s\">%s</%s>", map.customTag(), id, s, map.customTag());
+            builder.append(html);
         }
         return builder.toString();
     }
@@ -54,12 +65,5 @@ public interface HTMLSerializable {
         return new File(Common.getGamePath(), String.format("%s.html", getClass().getSimpleName().toLowerCase()));
     }
 
-    default void onSerialize() {
-
-    }
-
-    default void onPreSerialize() {
-
-    }
 
 }
