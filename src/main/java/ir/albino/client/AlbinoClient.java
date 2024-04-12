@@ -1,18 +1,24 @@
 package ir.albino.client;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import dev.slangware.ultralight.HtmlScreen;
+import dev.slangware.ultralight.UltraManager;
 import ir.albino.client.event.EventManager;
 import ir.albino.client.features.account.AltManager;
 import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.modules.ModuleManager;
+import ir.albino.client.features.ui.MainMenu;
 import ir.albino.client.utils.Common;
 import ir.albino.client.utils.render.font.FontManager;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import lombok.val;
+import net.janrupf.ujr.api.UltralightRenderer;
 import net.minecraft.client.audio.SoundList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
+import spark.Spark;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,8 +51,8 @@ public class AlbinoClient {
         moduleManager.initModules();
         Display.setTitle(this.NAME);
         this.soundList = new SoundList();
-
-
+        UltraManager.getInstance().init("/templates");
+        UltraManager.getInstance().addScreen(new MainMenu());
     }
 
     public void shutDown() {

@@ -2,19 +2,14 @@ package ir.albino.client.features.ui.altmanager;
 
 import ir.albino.client.AlbinoClient;
 import ir.albino.client.features.account.AltManager;
-import ir.albino.client.features.ui.html.annotations.HTMLIgnore;
-import ir.albino.client.features.ui.html.modules.HTMLListExtended;
 import net.minecraft.client.gui.GuiListExtended;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AltList extends HTMLListExtended {
-    @HTMLIgnore
+public class AltList extends GuiListExtended {
     public AltManager manager;
-    @HTMLIgnore
     public List<AltEntry> alts = new ArrayList<>();
-    @HTMLIgnore
     public AltEntry selectedAlt = null;
 
     public AltList(AltManagerMenu menu, int widthIn, int heightIn, int topIn, int bottomIn, int slotHeightIn) {

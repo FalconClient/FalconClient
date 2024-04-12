@@ -1,17 +1,13 @@
 package net.minecraft.client.gui;
 
-import ir.albino.client.features.ui.html.modules.HTMLButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
-public class GuiButtonLanguage extends HTMLButton {
+public class GuiButtonLanguage extends GuiButton {
     public GuiButtonLanguage(int buttonID, int xPos, int yPos) {
-        super(buttonID, String.valueOf(xPos), String.valueOf(yPos), "20", "20", "");
+        super(buttonID, xPos, yPos, 20, 20, "");
     }
 
-    public GuiButtonLanguage(int buttonID, String xPos, String yPos) {
-        super(buttonID, xPos, yPos, "20", "20", "");
-    }
 
     /**
      * Draws this button to the screen.

@@ -1,16 +1,11 @@
 package net.minecraft.client.gui;
 
-import ir.albino.client.features.ui.html.annotations.HTMLIgnore;
-import ir.albino.client.features.ui.html.modules.HTMLButton;
-import ir.albino.client.features.ui.html.modules.HTMLItem;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -43,22 +38,18 @@ public class GuiButton extends Gui {
     /**
      * The string displayed on this control.
      */
-    @HTMLIgnore
     public String displayString;
     public int id;
 
     /**
      * True if this control is enabled, false to disable.
      */
-    @HTMLIgnore
     public boolean enabled;
 
     /**
      * Hides the button completely if false.
      */
-    @HTMLIgnore
     public boolean visible;
-    @HTMLIgnore
     protected boolean hovered;
 
     public GuiButton(int buttonId, int x, int y, String buttonText) {

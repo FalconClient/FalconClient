@@ -1,9 +1,5 @@
 package ir.albino.client.features.ui.altmanager;
 
-import ir.albino.client.features.ui.html.annotations.Event;
-import ir.albino.client.features.ui.html.annotations.HTMLIgnore;
-import ir.albino.client.features.ui.html.modules.HTMLButton;
-import ir.albino.client.features.ui.html.modules.HTMLScreen;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiButtonLanguage;
 import net.minecraft.client.gui.GuiScreen;
@@ -13,22 +9,14 @@ import net.minecraft.client.resources.I18n;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class AltManagerMenu extends HTMLScreen implements GuiYesNoCallback {
-    @HTMLIgnore
+public class AltManagerMenu extends GuiScreen implements GuiYesNoCallback {
     public final GuiScreen parent;
-    private AltList altList;
-    @HTMLIgnore
-    private boolean initialized;
+    private AltList altList = new AltList(this, width, height, 32, this.height - 64, 36);
+    private boolean initialized = true;
     private GuiButton btnRemove;
 
     public AltManagerMenu(GuiScreen parent) {
         this.parent = parent;
-    }
-
-    @Event(eventType = Event.Type.BEFORE_SERIALIZE)
-    public void onPreSerialize() {
-        this.altList = new AltList(this, width, height, 32, this.height - 64, 36);
-        this.initialized = true;
         this.altList.loadAlts();
     }
 

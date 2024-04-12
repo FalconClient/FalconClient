@@ -1,5 +1,6 @@
 package ir.albino.client.utils;
 
+import ir.albino.client.features.ui.MainMenu;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.SystemUtils;
@@ -14,8 +15,7 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class Common {
     public File getGamePath() {
-        if (SystemUtils.IS_OS_WINDOWS)
-            return new File(System.getenv("APPDATA") + "/AlbinoClient/");
+        if (SystemUtils.IS_OS_WINDOWS) return new File(System.getenv("APPDATA") + "/AlbinoClient/");
         return new File("~/AlbinoClient/");
     }
 
@@ -50,5 +50,15 @@ public class Common {
 
     public List<Method> getMethodsAnnotation(Class<?> obj, Class<? extends Annotation> annotation) {
         return Arrays.stream(obj.getDeclaredMethods()).filter(m -> m.isAnnotationPresent(annotation)).collect(Collectors.toList());
+    }
+
+    public static String getScreenURI(Class<?> obj) {
+        return new File(getScreensDirectory(), obj.getSimpleName().toLowerCase()).getPath();
+    }
+
+    public static File getScreensDirectory() {
+        File screens = new File(getGamePath(), "screens");
+        if (!screens.exists()) screens.mkdirs();
+        return screens;
     }
 }

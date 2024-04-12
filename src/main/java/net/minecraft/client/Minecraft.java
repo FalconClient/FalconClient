@@ -34,7 +34,6 @@ import ir.albino.client.event.impl.GuiOpeningEvent;
 import ir.albino.client.event.impl.KeypressEvent;
 import ir.albino.client.event.impl.MouseClickEvent;
 import ir.albino.client.features.ui.MainMenu;
-import ir.albino.client.features.ui.html.serialize.HTMLSerializable;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -915,13 +914,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * Sets the argument GuiScreen as the main (topmost visible) screen.
      */
     public void displayGuiScreen(GuiScreen guiScreenIn) {
-        if (currentScreen != null && currentScreen instanceof HTMLSerializable) {
-            try {
-                ((HTMLSerializable) currentScreen).save();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
         final GuiOpeningEvent event = new GuiOpeningEvent(guiScreenIn);
         if (guiScreenIn != null) {
             AlbinoClient.instance.eventManager.post(event);
