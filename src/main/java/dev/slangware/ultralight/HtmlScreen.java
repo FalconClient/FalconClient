@@ -189,6 +189,7 @@ public class HtmlScreen extends GuiScreen {
      * @param y           the y coordinate of the mouse pointer
      * @param mouseButton the button that was clicked (0 for left, 1 for right, 2 for middle)
      */
+
     @Override
     public void mouseClicked(int x, int y, int mouseButton) {
         viewController.onMouseClick(x, y, mouseButton, true);

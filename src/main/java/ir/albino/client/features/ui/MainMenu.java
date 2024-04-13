@@ -16,6 +16,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class MainMenu extends HtmlScreen {
@@ -55,8 +56,12 @@ public class MainMenu extends HtmlScreen {
         super.initGui();
     }
 
+    public void mouseEvent(MouseEvent e){
+        System.out.println("test");
+    }
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
+        System.out.println("test");
         switch (button.id) {
             case 0:
                 this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
