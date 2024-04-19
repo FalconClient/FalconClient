@@ -8,6 +8,8 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
+import dev.slangware.ultralight.HtmlScreen;
+import dev.slangware.ultralight.UltraManager;
 import ir.albino.client.AlbinoClient;
 import ir.albino.client.event.impl.GuiOpeningEvent;
 import ir.albino.client.event.impl.KeypressEvent;
@@ -624,10 +626,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     }
 
     private static boolean isJvm64bit() {
-        return Arrays.stream(new String[]{"sun.arch.data.model", "com.ibm.vm.bitmode", "os.arch"})
-                .map(System::getProperty)
-                .filter(Objects::nonNull)
-                .anyMatch(s -> s.contains("64"));
+        return Arrays.stream(new String[]{"sun.arch.data.model", "com.ibm.vm.bitmode", "os.arch"}).map(System::getProperty).filter(Objects::nonNull).anyMatch(s -> s.contains("64"));
     }
 
     public Framebuffer getFramebuffer() {
@@ -853,14 +852,12 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
             AlbinoClient.instance.eventManager.post(event);
         }
 
-        if (event.isCancelled())
-            return;
+        if (event.isCancelled()) return;
 
 
         if (this.currentScreen != null) {
             this.currentScreen.onGuiClosed();
         }
-
         if (guiScreenIn == null && this.theWorld == null) {
             guiScreenIn = new MainMenu();
         } else if (guiScreenIn == null && this.thePlayer.getHealth() <= 0.0F) {
@@ -871,8 +868,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
             this.gameSettings.showDebugProfilerChart = false;
             this.ingameGUI.getChatGUI().clearChatMessages();
         }
-
-        this.currentScreen = guiScreenIn;
 
         if (guiScreenIn != null) {
             this.setIngameNotInFocus();
@@ -885,6 +880,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
             this.mcSoundHandler.resumeSounds();
             this.setIngameFocus();
         }
+        this.currentScreen = guiScreenIn;
+        // move this line to before line 871 if produced any issue
+
     }
 
     /**
@@ -935,23 +933,20 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         long i = System.nanoTime();
         this.mcProfiler.startSection("root");
 
-        if (Display.isCreated() && Display.isCloseRequested())
-            this.shutdown();
+        if (Display.isCreated() && Display.isCloseRequested()) this.shutdown();
 
 
         if (this.isGamePaused && this.theWorld != null) {
             float before = this.timer.renderPartialTicks;
             this.timer.updateTimer();
             this.timer.renderPartialTicks = before;
-        } else
-            this.timer.updateTimer();
+        } else this.timer.updateTimer();
 
 
         this.mcProfiler.startSection("scheduledExecutables");
 
         synchronized (this.scheduledTasks) {
-            while (!this.scheduledTasks.isEmpty())
-                Util.runTask(this.scheduledTasks.poll(), logger);
+            while (!this.scheduledTasks.isEmpty()) Util.runTask(this.scheduledTasks.poll(), logger);
         }
 
         this.mcProfiler.endSection();
@@ -975,8 +970,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         this.mcProfiler.startSection("display");
         GlStateManager.enableTexture2D();
 
-        if (this.thePlayer != null && this.thePlayer.isEntityInsideOpaqueBlock())
-            this.gameSettings.showDebugInfo = 0;
+        if (this.thePlayer != null && this.thePlayer.isEntityInsideOpaqueBlock()) this.gameSettings.showDebugInfo = 0;
 
 
         this.mcProfiler.endSection();
@@ -989,15 +983,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
         this.mcProfiler.endSection();
 
-        this.mcProfiler.profilingEnabled =
-                this.gameSettings.showDebugProfilerChart &&
-                        this.gameSettings.showLagometer &&
-                        !this.gameSettings.thirdPersonView;
+        this.mcProfiler.profilingEnabled = this.gameSettings.showDebugProfilerChart && this.gameSettings.showLagometer && !this.gameSettings.thirdPersonView;
 
         if (this.gameSettings.showDebugProfilerChart && this.gameSettings.showLagometer && !this.gameSettings.thirdPersonView) {
             this.displayDebugInfo();
-        } else
-            this.prevFrameTime = System.nanoTime();
+        } else this.prevFrameTime = System.nanoTime();
 
 
         this.guiAchievement.updateAchievementWindow();
@@ -1021,10 +1011,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         this.mcProfiler.endSection();
         this.checkGLError("Post render");
         ++this.fpsCounter;
-        this.isGamePaused = this.isSingleplayer() &&
-                this.currentScreen != null &&
-                this.currentScreen.doesGuiPauseGame() &&
-                !this.theIntegratedServer.getPublic();
+        this.isGamePaused = this.isSingleplayer() && this.currentScreen != null && this.currentScreen.doesGuiPauseGame() && !this.theIntegratedServer.getPublic();
         long k = System.nanoTime();
         this.frameTimer.addFrame(k - this.startNanoTime);
         this.startNanoTime = k;
@@ -1338,8 +1325,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
     /**
      * Called when user clicked he's mouse right button (place)
-     */
-    private void rightClickMouse() {
+     */ private void rightClickMouse() {
         if (!this.playerController.getIsHittingBlock()) {
             this.rightClickDelayTimer = 4;
             boolean flag = true;
@@ -1467,20 +1453,17 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * Runs the current tick.
      */
     public void runTick() throws IOException {
-        if (this.rightClickDelayTimer > 0)
-            --this.rightClickDelayTimer;
+        if (this.rightClickDelayTimer > 0) --this.rightClickDelayTimer;
 
         this.mcProfiler.startSection("gui");
 
-        if (!this.isGamePaused)
-            this.ingameGUI.updateTick();
+        if (!this.isGamePaused) this.ingameGUI.updateTick();
 
         this.mcProfiler.endSection();
         this.entityRenderer.getMouseOver(1.0F);
         this.mcProfiler.startSection("gameMode");
 
-        if (!this.isGamePaused && this.theWorld != null)
-            this.playerController.updateController();
+        if (!this.isGamePaused && this.theWorld != null) this.playerController.updateController();
 
         this.mcProfiler.endStartSection("textures");
 
@@ -1508,8 +1491,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
             } catch (Throwable throwable1) {
                 CrashReport crashreport = CrashReport.makeCrashReport(throwable1, "Updating screen events");
                 CrashReportCategory crashreportcategory = crashreport.makeCategory("Affected screen");
-                crashreportcategory.addCrashSectionCallable("Screen name", () ->
-                        Minecraft.this.currentScreen.getClass().getCanonicalName());
+                crashreportcategory.addCrashSectionCallable("Screen name", () -> Minecraft.this.currentScreen.getClass().getCanonicalName());
                 throw new ReportedException(crashreport);
             }
 
@@ -2197,14 +2179,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * adds core server Info (GL version , Texture pack, isModded, type), and the worldInfo to the crash report
      */
     public CrashReport addGraphicsAndWorldToCrashReport(CrashReport theCrash) {
-        theCrash.getCategory().addCrashSectionCallable("Launched Version", () ->
-                Minecraft.this.launchedVersion);
+        theCrash.getCategory().addCrashSectionCallable("Launched Version", () -> Minecraft.this.launchedVersion);
         theCrash.getCategory().addCrashSectionCallable("LWJGL", Sys::getVersion);
-        theCrash.getCategory().addCrashSectionCallable("OpenGL", () ->
-                GL11.glGetString(GL11.GL_RENDERER) + " GL version " + GL11.glGetString(GL11.GL_VERSION) + ", " + GL11.glGetString(GL11.GL_VENDOR));
+        theCrash.getCategory().addCrashSectionCallable("OpenGL", () -> GL11.glGetString(GL11.GL_RENDERER) + " GL version " + GL11.glGetString(GL11.GL_VERSION) + ", " + GL11.glGetString(GL11.GL_VENDOR));
         theCrash.getCategory().addCrashSectionCallable("GL Caps", OpenGlHelper::getLogText);
-        theCrash.getCategory().addCrashSectionCallable("Using VBOs", () ->
-                Minecraft.this.gameSettings.useVbo ? "Yes" : "No");
+        theCrash.getCategory().addCrashSectionCallable("Using VBOs", () -> Minecraft.this.gameSettings.useVbo ? "Yes" : "No");
         theCrash.getCategory().addCrashSectionCallable("Is Modded", () -> {
             String s = ClientBrandRetriever.getClientModName();
             return !s.equals("vanilla") ? "Definitely; Client brand changed to '" + s + "'" : (Minecraft.class.getSigners() == null ? "Very likely; Jar signature invalidated" : "Probably not. Jar signature remains and client brand is untouched.");
@@ -2227,10 +2206,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
             return stringbuilder.toString();
         });
-        theCrash.getCategory().addCrashSectionCallable("Current Language", () ->
-                Minecraft.this.mcLanguageManager.getCurrentLanguage().toString());
-        theCrash.getCategory().addCrashSectionCallable("Profiler Position", () ->
-                Minecraft.this.mcProfiler.profilingEnabled ? Minecraft.this.mcProfiler.getNameOfLastSection() : "N/A (disabled)");
+        theCrash.getCategory().addCrashSectionCallable("Current Language", () -> Minecraft.this.mcLanguageManager.getCurrentLanguage().toString());
+        theCrash.getCategory().addCrashSectionCallable("Profiler Position", () -> Minecraft.this.mcProfiler.profilingEnabled ? Minecraft.this.mcProfiler.getNameOfLastSection() : "N/A (disabled)");
         theCrash.getCategory().addCrashSectionCallable("CPU", OpenGlHelper::getCpu);
 
         if (this.theWorld != null) {

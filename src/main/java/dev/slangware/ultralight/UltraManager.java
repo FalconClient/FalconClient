@@ -4,7 +4,6 @@ import dev.slangware.ultralight.annotations.HTMLRoute;
 import dev.slangware.ultralight.bridge.FileSystemBridge;
 import dev.slangware.ultralight.bridge.LoggerBridge;
 import dev.slangware.ultralight.bridge.LwjglClipboardBridge;
-import ir.albino.client.utils.Common;
 import lombok.Getter;
 import lombok.Synchronized;
 import net.janrupf.ujr.api.*;
@@ -16,15 +15,11 @@ import net.minecraft.client.gui.ScaledResolution;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
-import spark.ResponseTransformer;
-import spark.RouteImpl;
 import spark.Spark;
-import spark.routematch.RouteMatch;
 
 import java.io.Closeable;
 import java.io.File;
 import java.lang.reflect.Method;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +33,9 @@ public class UltraManager implements Closeable {
     private static final Logger logger = LogManager.getLogger("UltraManager");
     public int SERVER_PORT;
     private UltralightJavaReborn ultralight;
+    @Getter
     private ViewController viewController;
+
 
     /**
      * Adds a new HtmlScreen to the screens list and registers its annotated routes with Spark.
@@ -57,7 +54,6 @@ public class UltraManager implements Closeable {
 
             HTMLRoute annotation = m.getAnnotation(HTMLRoute.class);
 
-            System.out.println("Adding route: " + annotation.path() + " " + annotation.method());
             try {
                 switch (annotation.method()) {
                     case "GET":

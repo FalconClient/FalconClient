@@ -4,8 +4,8 @@ function on_button_click(id) {
     }
     let fun = "on_click"
     const body = {
-        id: id,
-        function: fun
+        'id': id,
+        'function': fun
     }
     fetch(`http://127.0.0.1:2001/api`, {
         method: 'POST', headers: headers, body: JSON.stringify(body)

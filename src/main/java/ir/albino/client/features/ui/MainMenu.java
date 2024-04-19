@@ -45,35 +45,15 @@ public class MainMenu extends HtmlScreen {
         }
         if (event.function != null && event.function.equals("on_click")) {
             if (event.id != null) {
-                try {
-                    this.actionPerformed(buttonList.stream().filter(b -> b.id == (int) event.id).findFirst().get());
-                } catch (IOException e) {
-                    new CrashReport("The clicked button doesnt exist", e);
-                }
+                this.actionPerformed(event.id);
             }
         }
     }
 
-    @Override
-    public void initGui() {
-        btnOptions = new GuiButton(0, width / 2 - 100, height / 4 + 48 + 84, 98, 20, I18n.format("menu.options"));
-        btnSinglePlayer = new GuiButton(1, width / 2 - 100, height / 4 + 48, I18n.format("menu.singleplayer"));
-        btnQuit = new GuiButton(4, width / 2 + 2, height / 4 + 48 + 84, 98, 20, I18n.format("menu.quit"));
-        btnMultiPlayer = new GuiButton(2, width / 2 - 100, height / 4 + 48 + 22, I18n.format("menu.multiplayer"));
-        btnLanguage = new GuiButtonLanguage(5, width / 2 - 124, height / 4 + 48 + 72 + 12);
-        btnAltManager = new GuiButton(3, width / 2 - 100, height / 4 + 48 + 44, I18n.format("menu.altmanager"));
-        this.buttonList.add(btnOptions);
-        this.buttonList.add(btnQuit);
-        this.buttonList.add(btnSinglePlayer);
-        this.buttonList.add(btnLanguage);
-        this.buttonList.add(btnMultiPlayer);
-        this.buttonList.add(btnAltManager);
-        super.initGui();
-    }
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
-        switch (button.id) {
+    protected void actionPerformed(int id) {
+        switch (id) {
             case 0:
                 this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
                 break;
@@ -96,7 +76,6 @@ public class MainMenu extends HtmlScreen {
                 this.mc.displayGuiScreen(new GuiLanguage(this, this.mc.gameSettings, this.mc.getLanguageManager()));
                 break;
         }
-        super.actionPerformed(button);
     }
 
     @Override
