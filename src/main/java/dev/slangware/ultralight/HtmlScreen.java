@@ -6,6 +6,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import net.janrupf.ujr.api.UltralightView;
+import net.janrupf.ujr.api.javascript.*;
+import net.janrupf.ujr.api.listener.UlMessageLevel;
+import net.janrupf.ujr.api.listener.UlMessageSource;
+import net.janrupf.ujr.api.listener.UltralightViewListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
@@ -26,14 +30,14 @@ public class HtmlScreen extends GuiScreen {
     private boolean initialized;
     @ToString.Exclude
     private GuiScreen parentScreen;
-
+    protected JSObject jsObj;
 
     public HtmlScreen() {
         this(UltraManager.getInstance().getViewController(), null, "");
     }
 
     public HtmlScreen(ViewController viewController) {
-        this(viewController, null, "");
+        this(viewController, "");
     }
 
     public HtmlScreen(ViewController viewController, String url) {
@@ -48,6 +52,7 @@ public class HtmlScreen extends GuiScreen {
         this.parentScreen = parentScreen;
         this.viewController = viewController;
         this.url = url;
+
     }
 
     /**
@@ -57,9 +62,7 @@ public class HtmlScreen extends GuiScreen {
      */
     public static ModelBuilder modelBuilder() {
         Minecraft minecraft = Minecraft.getMinecraft();
-        return ModelBuilder.builder()
-                .append("USERNAME", minecraft.thePlayer != null && !minecraft.thePlayer.getName().isEmpty() ? minecraft.thePlayer.getName() : minecraft.getSession().getUsername())
-                .append("USER_UUID", minecraft.thePlayer != null && minecraft.thePlayer.getUniqueID() != null ? minecraft.thePlayer.getUniqueID().toString() : minecraft.getSession().getPlayerID());
+        return ModelBuilder.builder().append("USERNAME", minecraft.thePlayer != null && !minecraft.thePlayer.getName().isEmpty() ? minecraft.thePlayer.getName() : minecraft.getSession().getUsername()).append("USER_UUID", minecraft.thePlayer != null && minecraft.thePlayer.getUniqueID() != null ? minecraft.thePlayer.getUniqueID().toString() : minecraft.getSession().getPlayerID());
     }
 
 
@@ -81,7 +84,12 @@ public class HtmlScreen extends GuiScreen {
     @Override
     public void initGui() {
         if (initialized) return;
-
+        viewController.setViewListener(new UltralightViewListener() {
+            @Override
+            public void onAddConsoleMessage(UltralightView view, UlMessageSource source, UlMessageLevel level, String message, long lineNumber, long columnNumber, String sourceId) {
+                System.out.println(message);
+            }
+        });
         initialized = true;
 
         if (viewController.hasFocus()) {
@@ -97,6 +105,7 @@ public class HtmlScreen extends GuiScreen {
 
         if (url.startsWith("http")) {
             viewController.loadURL(url);
+
         } else {
             viewController.loadURL(String.format("http://127.0.0.1:%d/%s", UltraManager.getInstance().SERVER_PORT, url));
         }

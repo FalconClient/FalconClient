@@ -1,22 +1,22 @@
 package ir.albino.client.features.ui;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.slangware.ultralight.HtmlScreen;
 import dev.slangware.ultralight.UltraManager;
-import dev.slangware.ultralight.ViewController;
 import dev.slangware.ultralight.annotations.HTMLRoute;
 import ir.albino.client.AlbinoClient;
 import ir.albino.client.features.ui.altmanager.AltManagerMenu;
 import ir.albino.client.features.ui.chat.ChatMenu;
-import ir.albino.client.utils.Common;
-import net.janrupf.ujr.api.config.UlViewConfig;
-import net.minecraft.client.Minecraft;
+import ir.albino.client.http.ApiEvent;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.util.ResourceLocation;
+import spark.Request;
+import spark.Response;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class MainMenu extends HtmlScreen {
@@ -31,6 +31,27 @@ public class MainMenu extends HtmlScreen {
 
     public MainMenu() {
         super(UltraManager.getInstance().getViewController(), "mainmenu.html");
+
+    }
+
+    @HTMLRoute(path = "/api", method = "POST")
+    public void onFunctionReceive(Request req, Response res) {
+        ObjectMapper mapper = new ObjectMapper();
+        ApiEvent event;
+        try {
+            event = mapper.readValue(req.body(), ApiEvent.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        if (event.function != null && event.function.equals("on_click")) {
+            if (event.id != null) {
+                try {
+                    this.actionPerformed(buttonList.stream().filter(b -> b.id == (int) event.id).findFirst().get());
+                } catch (IOException e) {
+                    new CrashReport("The clicked button doesnt exist", e);
+                }
+            }
+        }
     }
 
     @Override
@@ -47,21 +68,11 @@ public class MainMenu extends HtmlScreen {
         this.buttonList.add(btnLanguage);
         this.buttonList.add(btnMultiPlayer);
         this.buttonList.add(btnAltManager);
-//        this.buttonList.add(new GuiButton(6, this.width / 2 - 150, j + 44, I18n.format("menu.chat")));
-//        try {
-//            save();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
         super.initGui();
     }
 
-    public void mouseEvent(MouseEvent e){
-        System.out.println("test");
-    }
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
-        System.out.println("test");
         switch (button.id) {
             case 0:
                 this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));

@@ -31,12 +31,12 @@ public class ViewController extends  UltralightView{
 
     public ViewController(UltralightRenderer renderer, UltralightView view) {
         super(view.getImplementation());
-
         this.renderer = renderer;
         this.glTexture = -1;
 
         this.setLoadListener(new UILoadListener());
     }
+
 
 
     /**
@@ -204,7 +204,6 @@ public class ViewController extends  UltralightView{
         // Get the scale factor for the current resolution
         ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
         int scaleFactor = scaledResolution.getScaleFactor();
-
         // Fire the mouse event with scaled coordinates
         this.fireMouseEvent(builder
                 .x(x * scaleFactor)

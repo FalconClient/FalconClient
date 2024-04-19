@@ -286,7 +286,11 @@
             <artifactId>jackson-dataformat-yaml</artifactId>
             <version>2.13.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.jagrosh</groupId>
+            <artifactId>DiscordIPC</artifactId>
+            <version>a8d6631cc9</version>
+        </dependency>
         <dependency>
             <groupId>com.github.JojiiOfficial</groupId>
             <artifactId>Matrix-ClientServer-API-java</artifactId>
@@ -333,6 +337,24 @@
             <artifactId>spark-core</artifactId>
             <version>2.9.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf</artifactId>
+            <version>3.1.2.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-java8time</artifactId>
+            <version>3.0.4.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sparkjava</groupId>
+            <artifactId>spark-template-thymeleaf</artifactId>
+            <version>2.7.1</version>
+        </dependency>
+<!--        compile 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'-->
+<!--        compile 'org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE'-->
+<!--        compile 'com.sparkjava:spark-template-thymeleaf:2.7.1'-->
 
     </dependencies>
 

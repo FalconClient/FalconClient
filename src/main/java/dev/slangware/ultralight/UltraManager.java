@@ -16,7 +16,10 @@ import net.minecraft.client.gui.ScaledResolution;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
+import spark.ResponseTransformer;
+import spark.RouteImpl;
 import spark.Spark;
+import spark.routematch.RouteMatch;
 
 import java.io.Closeable;
 import java.io.File;
@@ -54,8 +57,7 @@ public class UltraManager implements Closeable {
 
             HTMLRoute annotation = m.getAnnotation(HTMLRoute.class);
 
-            logger.debug("Adding route: " + annotation.path() + " " + annotation.method());
-
+            System.out.println("Adding route: " + annotation.path() + " " + annotation.method());
             try {
                 switch (annotation.method()) {
                     case "GET":
@@ -173,7 +175,7 @@ public class UltraManager implements Closeable {
         logger.info("Ultralight Initialized!");
 
         try {
-            SERVER_PORT = SecureRandom.getInstanceStrong().nextInt(65535) + 1;
+            SERVER_PORT = 2001;
 
             logger.info("Starting http server port " + SERVER_PORT + "...");
             Spark.port(SERVER_PORT);
