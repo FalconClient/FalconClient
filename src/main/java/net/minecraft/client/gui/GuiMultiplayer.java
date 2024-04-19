@@ -2,6 +2,7 @@ package net.minecraft.client.gui;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import dev.slangware.ultralight.HtmlScreen;
 import ir.albino.client.features.ui.IranianServerList;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +23,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
     private static final Logger logger = LogManager.getLogger();
     @Getter
     private final OldServerPinger oldServerPinger = new OldServerPinger();
-    private GuiScreen parentScreen;
+    private final GuiScreen parentScreen;
     private ServerSelectionList serverListSelector;
     private ServerList savedServerList;
     private ServerList iranianServerList;
@@ -72,14 +73,12 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
     public void initGui() {
         Keyboard.enableRepeatEvents(true);
         this.buttonList.clear();
-
         if (!this.initialized) {
             this.initialized = true;
             this.savedServerList = new ServerList(this.mc);
             this.iranianServerList = new IranianServerList(this.mc);
             this.savedServerList.loadServerList();
             this.lanServerList = new LanServerDetector.LanServerList();
-
             try {
                 this.lanServerDetector = new LanServerDetector.ThreadLanServerFind(this.lanServerList);
                 this.lanServerDetector.start();
@@ -92,7 +91,6 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
         } else {
             this.serverListSelector.setDimensions(this.width, this.height, 32, this.height - 64);
         }
-
         this.createButtons();
     }
 
@@ -381,7 +379,8 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
     /**
      * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
      */
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+
+    public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
         this.serverListSelector.mouseClicked(mouseX, mouseY, mouseButton);
     }
@@ -389,7 +388,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
     /**
      * Called when a mouse button is released.  Args : mouseX, mouseY, releaseButton
      */
-    protected void mouseReleased(int mouseX, int mouseY, int state) {
+    public void mouseReleased(int mouseX, int mouseY, int state) {
         super.mouseReleased(mouseX, mouseY, state);
         this.serverListSelector.mouseReleased(mouseX, mouseY, state);
     }

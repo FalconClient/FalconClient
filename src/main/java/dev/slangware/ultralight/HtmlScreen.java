@@ -1,6 +1,7 @@
 package dev.slangware.ultralight;
 
 
+import dev.slangware.ultralight.annotations.HTMLRoute;
 import dev.slangware.ultralight.listener.UILoadListener;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,6 +12,7 @@ import net.janrupf.ujr.api.listener.UlMessageLevel;
 import net.janrupf.ujr.api.listener.UlMessageSource;
 import net.janrupf.ujr.api.listener.UltralightViewListener;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -65,7 +67,6 @@ public class HtmlScreen extends GuiScreen {
         return ModelBuilder.builder().append("USERNAME", minecraft.thePlayer != null && !minecraft.thePlayer.getName().isEmpty() ? minecraft.thePlayer.getName() : minecraft.getSession().getUsername()).append("USER_UUID", minecraft.thePlayer != null && minecraft.thePlayer.getUniqueID() != null ? minecraft.thePlayer.getUniqueID().toString() : minecraft.getSession().getPlayerID());
     }
 
-
     /**
      * Sets the ready status to true and performs necessary actions when the document is ready.
      */
@@ -105,11 +106,9 @@ public class HtmlScreen extends GuiScreen {
 
         if (url.startsWith("http")) {
             viewController.loadURL(url);
-
         } else {
             viewController.loadURL(String.format("http://127.0.0.1:%d/%s", UltraManager.getInstance().SERVER_PORT, url));
         }
-
         UltraManager.getInstance().addScreen(this);
 
     }
@@ -273,11 +272,12 @@ public class HtmlScreen extends GuiScreen {
         this.ready = false;
         this.initialized = false;
 
-        viewController.destroy();
-
         UltraManager.getLogger().debug("Unloaded " + this.getClass().getSimpleName());
 
         UltraManager.getInstance().removeScreen(this);
+    }
+
+    protected void actionPerformed(int id) throws IOException {
     }
 
     /**
