@@ -11,5 +11,7 @@ function on_button_click(id) {
         method: 'POST', headers: headers, body: JSON.stringify(body)
     })
         .then(response => response.json())
-        .then(response => console.log(response))
+        .then(response => console.log(response)).catch(function () {
+        console.log("Unhandled promise rejection")
+    })
 }

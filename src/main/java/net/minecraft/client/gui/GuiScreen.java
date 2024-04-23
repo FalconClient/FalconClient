@@ -450,7 +450,8 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
         this.fontRendererObj = mc.fontRendererObj;
         this.width = width;
         this.height = height;
-        this.buttonList.clear();
+        if (!buttonList.isEmpty())
+            this.buttonList.clear();
         this.initGui();
     }
 

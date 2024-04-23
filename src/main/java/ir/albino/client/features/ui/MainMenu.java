@@ -21,12 +21,6 @@ import java.io.IOException;
 
 public class MainMenu extends HtmlScreen {
 
-    public GuiButton btnOptions;
-    public GuiButton btnSinglePlayer;
-    public GuiButton btnQuit;
-    public GuiButton btnMultiPlayer;
-    public GuiButton btnLanguage;
-    public GuiButton btnAltManager;
     private final static AlbinoClient client = AlbinoClient.instance;
 
     public MainMenu() {

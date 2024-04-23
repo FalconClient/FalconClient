@@ -97,15 +97,15 @@ public class CompressedStreamTools
         }
     }
 
-    public static NBTTagCompound read(File p_74797_0_) throws IOException
+    public static NBTTagCompound read(File file) throws IOException
     {
-        if (!p_74797_0_.exists())
+        if (!file.exists())
         {
             return null;
         }
         else
         {
-            DataInputStream datainputstream = new DataInputStream(new FileInputStream(p_74797_0_));
+            DataInputStream datainputstream = new DataInputStream(new FileInputStream(file));
             NBTTagCompound nbttagcompound;
 
             try

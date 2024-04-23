@@ -868,7 +868,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
             this.gameSettings.showDebugProfilerChart = false;
             this.ingameGUI.getChatGUI().clearChatMessages();
         }
-
         if (guiScreenIn != null) {
             this.setIngameNotInFocus();
             ScaledResolution scaledresolution = new ScaledResolution(this);
@@ -881,8 +880,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
             this.setIngameFocus();
         }
         this.currentScreen = guiScreenIn;
-        // move this line to before line 871 if produced any issue
-
     }
 
     /**

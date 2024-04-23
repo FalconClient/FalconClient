@@ -8,7 +8,6 @@ import ir.albino.client.features.account.AltManager;
 import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.modules.ModuleManager;
 import ir.albino.client.features.ui.MainMenu;
-import ir.albino.client.javascript.ScreenJS;
 import ir.albino.client.utils.Common;
 import ir.albino.client.utils.render.font.FontManager;
 import lombok.Getter;
@@ -27,6 +26,8 @@ import spark.Spark;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AlbinoClient {
     @Getter
@@ -46,9 +47,11 @@ public class AlbinoClient {
     // TODO: do more things by this
     public boolean debug = false;
     public JSGlobalContext context;
+    public ExecutorService executorService;
 
 
     public void start() {
+        this.executorService = Executors.newSingleThreadExecutor();
         this.detectAccounts();
         this.eventManager = new EventManager();
         this.fontRenderer = new FontManager();
