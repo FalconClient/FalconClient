@@ -447,7 +447,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
             this.displayHeight = this.gameSettings.overrideHeight;
         }
 
-        logger.info("LWJGL Version: " + Sys.getVersion());
         this.setWindowIcon();
         this.setInitialDisplayMode();
         this.createDisplay();

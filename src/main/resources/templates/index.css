@@ -1,4 +1,21 @@
 button {
     width: 200px;
     height: 50px;
+    column-gap: 20px;
+    background-image: url("button.png");
+    background-position: center;
+    border: 30px;
+    border-radius: 20px;
+
+}
+button:active{
+    background-color: black;
+}
+button:visited {
+    background-color: gray;
+}
+
+div + div {
+    margin-top: 10px;
+    margin-left: 0;
 }

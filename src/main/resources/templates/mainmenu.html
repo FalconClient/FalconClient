@@ -7,7 +7,24 @@
     <title>AlbinoClient</title>
 </head>
 <body>
-
-<button id="multiplayer" onclick="on_button_click(2);">Multiplayer</button>
+<div class="xDiv">
+    <button id="multiplayer" onclick="on_button_click(2);">Multiplayer</button>
+</div>
+<div class="xDiv" id="centerDiv">
+    <button id="singleplayer" onclick="on_button_click(1);">SinglePlayer</button>
+    <button id="options" onclick="on_button_click(0);">Options</button>
+</div>
+<div class="xDiv">
+    <button id="altmanager" onclick="on_button_click(5);">AltManager</button>
+</div>
 </body>
+<footer>
+    <script>
+        for (let i = 0; i < document.getElementsByClassName("xDiv").length; i++) {
+            let element = document.getElementsByClassName("xDiv")[i];
+            element.style.marginLeft = window.outerWidth / (2 * element.childElementCount) + "px";
+        }
+
+    </script>
+</footer>
 </html>
