@@ -1,5 +1,4 @@
 function on_button_click(id) {
-    element.style.color = 150
     const headers = {
         'Accept': 'application/json', 'Content-Type': 'application/json'
     };
