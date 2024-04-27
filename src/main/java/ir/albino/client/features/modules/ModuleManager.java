@@ -7,15 +7,19 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import ir.albino.client.AlbinoClient;
 import ir.albino.client.features.modules.configuration.ModuleTheme;
+import ir.albino.client.features.modules.settings.ModuleSetting;
+import ir.albino.client.features.modules.settings.Setting;
 import ir.albino.client.utils.Common;
 import lombok.SneakyThrows;
 import lombok.val;
 import net.minecraft.client.Minecraft;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ModuleManager {
@@ -38,21 +42,31 @@ public class ModuleManager {
 //                if (catFile.exists()) {
 //                    module = (Module) map.readValue(catFile, loadClass);
 //                } else
-                    module = (Module) loadClass.getConstructor().newInstance();
-
+                module = (Module) loadClass.getConstructor().newInstance();
+                if (loadClass.isAnnotationPresent(Setting.class)) {
+                    module.setSettings(Arrays.stream(loadClass.getDeclaredFields())
+                            .filter(f -> f.isAnnotationPresent(Setting.class)).map(f -> {
+                                try {
+                                    return (ModuleSetting<?>) f.get(module);
+                                } catch (IllegalAccessException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }).collect(Collectors.toList()));
+                }
                 module.setName(annotation.module());
                 module.setDescription(annotation.description());
                 module.setVersion(annotation.version());
                 module.setDraggable(annotation.draggable());
                 module.onInit();
 
-                if(AlbinoClient.instance.debug)
+                if (AlbinoClient.instance.debug)
                     AlbinoClient.instance.getLogger().info(String.format("Module Loaded %s - %s", annotation.module(), annotation.version()));
 
 //                map.writeValue(catFile, module);
                 modules.add(module);
             }
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
+                 NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
         //Sorting the Modules as Length -> Higher to lower

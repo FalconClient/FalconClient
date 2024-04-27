@@ -2,7 +2,9 @@ package ir.albino.client.features.ui.clickgui;
 
 import ir.albino.client.AlbinoClient;
 import ir.albino.client.features.modules.Module;
+import ir.albino.client.features.modules.impl.visual.Armors;
 import ir.albino.client.features.modules.impl.visual.ClickGUI;
+import ir.albino.client.features.modules.settings.ModuleSetting;
 import ir.albino.client.utils.BoundingBox;
 import ir.albino.client.utils.render.RenderUtils;
 import net.minecraft.client.gui.GuiButton;
@@ -14,6 +16,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 public class ClickGuiScreen extends GuiScreen {
     public Map<Module, BoundingBox> map = new HashMap<>();
@@ -74,23 +78,31 @@ public class ClickGuiScreen extends GuiScreen {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         int y = 0;
-        for (Module m : AlbinoClient.instance.modules) {
-
-//          if (isClicked(36, 55 + y, mouseX, mouseY, mc.fontRendererObj.getStringWidth(m.getName()) + 3, 6)) {
-            if (map.containsKey(m) && map.get(m).contains(mouseX, mouseY)) {
-                m.toggle();
-            }
-            if (m.isEnabled()) {
-                m.setY(y);
-                y += 15;
-            }
+        Predicate<Module> pred =
+                m -> map.containsKey(m) && map.get(m).contains(mouseX, mouseY);
+        switch (mouseButton) {
+            case 0:
+                for (Module m : AlbinoClient.instance.modules) {
+                    if (pred.test(m)) {
+                        m.toggle();
+                    }
+                    if (m.isEnabled()) {
+                        m.setY(y);
+                        y += 15;
+                    }
+                }
+                break;
+            case 1:
+                Optional<Module> optional = AlbinoClient.instance.modules.stream().filter(pred).findAny();
+                if (optional.isPresent()) {
+                    Module m = optional.get();
+                    for (ModuleSetting<?> set : m.settings) {
+                        set.getSetter();
+                    }
+                }
+                break;
         }
 
         super.mouseClicked(mouseX, mouseY, mouseButton);
-    }
-
-    public boolean isClicked(int startX, int startY, int mouseX, int mouseY, int width, int height) {
-
-        return mouseX >= startX && mouseY >= startY && mouseX < startX + width && mouseY < startY + height;
     }
 }

@@ -836,8 +836,6 @@ public abstract class EntityLivingBase extends Entity {
                     if (source != DamageSource.drown) {
                         this.setBeenAttacked();
                     }
-                    CameraRotateEvent e = new CameraRotateEvent(CameraRotateEvent.Reason.DAMAGE);
-                    AlbinoClient.instance.eventManager.post(e);
                     if (entity != null) {
                         double d1 = entity.posX - this.posX;
                         double d0;
@@ -845,11 +843,11 @@ public abstract class EntityLivingBase extends Entity {
                         for (d0 = entity.posZ - this.posZ; d1 * d1 + d0 * d0 < 1.0E-4D; d0 = (Math.random() - Math.random()) * 0.01D) {
                             d1 = (Math.random() - Math.random()) * 0.01D;
                         }
-                        if (!e.isCancelled())
-                            this.attackedAtYaw = (float) (MathHelper.atan2(d0, d1) * 180.0D / Math.PI - (double) this.rotationYaw);
+
+                        this.attackedAtYaw = (float) (MathHelper.atan2(d0, d1) * 180.0D / Math.PI - (double) this.rotationYaw);
                         this.knockBack(entity, amount, d1, d0);
                     } else {
-                        if (!e.isCancelled()) this.attackedAtYaw = (float) ((int) (Math.random() * 2.0D) * 180);
+                        this.attackedAtYaw = (float) ((int) (Math.random() * 2.0D) * 180);
                     }
                 }
 

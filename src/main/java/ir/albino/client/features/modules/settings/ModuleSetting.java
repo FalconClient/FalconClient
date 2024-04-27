@@ -10,6 +10,7 @@ public class ModuleSetting<V> {
     @Getter
     private final ModuleFunction<V> getter;
     private final String name;
+    @Getter
     private final Consumer<V> setter;
 
     public V get() {
@@ -26,6 +27,7 @@ public class ModuleSetting<V> {
         this.name = name;
     }
 
+    @FunctionalInterface
     public interface ModuleFunction<V> {
         V get();
     }
