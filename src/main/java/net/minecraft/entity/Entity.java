@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;
@@ -51,6 +54,8 @@ public abstract class Entity implements ICommandSender
 {
     private static final AxisAlignedBB ZERO_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
     private static int nextEntityID;
+    @Getter
+    @Setter
     private int entityId;
     public double renderDistanceWeight;
 
@@ -188,7 +193,12 @@ public abstract class Entity implements ICommandSender
 
     /**
      * Whether this entity is currently inside of water (if it handles water movement that is)
+     * -- GETTER --
+     *  Checks if this entity is inside water (if inWater field is true as a result of handleWaterMovement() returning
+     *  true)
+
      */
+    @Getter
     protected boolean inWater;
 
     /**
@@ -197,6 +207,7 @@ public abstract class Entity implements ICommandSender
     public int hurtResistantTime;
     protected boolean firstUpdate;
     protected boolean isImmuneToFire;
+    @Getter
     protected DataWatcher dataWatcher;
     private double entityRiderPitchDelta;
     private double entityRiderYawDelta;
@@ -243,16 +254,6 @@ public abstract class Entity implements ICommandSender
     /** The command result statistics for this Entity. */
     private final CommandResultStats cmdResultStats;
 
-    public int getEntityId()
-    {
-        return this.entityId;
-    }
-
-    public void setEntityId(int id)
-    {
-        this.entityId = id;
-    }
-
     /**
      * Called by the /kill command.
      */
@@ -283,24 +284,19 @@ public abstract class Entity implements ICommandSender
         }
 
         this.dataWatcher = new DataWatcher(this);
-        this.dataWatcher.addObject(0, Byte.valueOf((byte)0));
-        this.dataWatcher.addObject(1, Short.valueOf((short)300));
-        this.dataWatcher.addObject(3, Byte.valueOf((byte)0));
+        this.dataWatcher.addObject(0, (byte) 0);
+        this.dataWatcher.addObject(1, (short) 300);
+        this.dataWatcher.addObject(3, (byte) 0);
         this.dataWatcher.addObject(2, "");
-        this.dataWatcher.addObject(4, Byte.valueOf((byte)0));
+        this.dataWatcher.addObject(4, (byte) 0);
         this.entityInit();
     }
 
     protected abstract void entityInit();
 
-    public DataWatcher getDataWatcher()
-    {
-        return this.dataWatcher;
-    }
-
     public boolean equals(Object p_equals_1_)
     {
-        return p_equals_1_ instanceof Entity ? ((Entity)p_equals_1_).entityId == this.entityId : false;
+        return p_equals_1_ instanceof Entity && ((Entity) p_equals_1_).entityId == this.entityId;
     }
 
     public int hashCode()
@@ -355,7 +351,7 @@ public abstract class Entity implements ICommandSender
 
             if (this.width > f && !this.firstUpdate && !this.worldObj.isRemote)
             {
-                this.moveEntity((double)(f - this.width), 0.0D, (double)(f - this.width));
+                this.moveEntity(f - this.width, 0.0D, f - this.width);
             }
         }
     }
@@ -725,7 +721,7 @@ public abstract class Entity implements ICommandSender
                 double d8 = z;
                 AxisAlignedBB axisalignedbb3 = this.getEntityBoundingBox();
                 this.setEntityBoundingBox(axisalignedbb);
-                y = (double)this.stepHeight;
+                y = this.stepHeight;
                 List<AxisAlignedBB> list = this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().addCoord(d3, y, d5));
                 AxisAlignedBB axisalignedbb4 = this.getEntityBoundingBox();
                 AxisAlignedBB axisalignedbb5 = axisalignedbb4.addCoord(d3, 0.0D, d5);
@@ -1097,15 +1093,6 @@ public abstract class Entity implements ICommandSender
     }
 
     /**
-     * Checks if this entity is inside water (if inWater field is true as a result of handleWaterMovement() returning
-     * true)
-     */
-    public boolean isInWater()
-    {
-        return this.inWater;
-    }
-
-    /**
      * Returns if this entity is in water and will end up adding the waters velocity to the entity
      */
     public boolean handleWaterMovement()
@@ -1442,15 +1429,10 @@ public abstract class Entity implements ICommandSender
      */
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
-        if (this.isEntityInvulnerable(source))
-        {
-            return false;
-        }
-        else
-        {
+        if (!this.isEntityInvulnerable(source)) {
             this.setBeenAttacked();
-            return false;
         }
+        return false;
     }
 
     /**
