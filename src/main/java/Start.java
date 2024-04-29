@@ -1,3 +1,7 @@
+import com.jagrosh.discordipc.IPCClient;
+import com.jagrosh.discordipc.IPCListener;
+import com.jagrosh.discordipc.entities.RichPresence;
+import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
 import dev.slangware.ultralight.UltraManager;
 import ir.albino.client.AlbinoClient;
 import ir.albino.client.features.DiscordRPC;
@@ -8,6 +12,7 @@ import net.janrupf.ujr.core.platform.option.PlatformEnvironmentOption;
 import net.minecraft.client.main.Main;
 
 import java.io.File;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 
 public class Start {
@@ -21,8 +26,6 @@ public class Start {
                 AlbinoClient.instance.getNAME(),
                 AlbinoClient.instance.getVERSION()));
 
-//            final DiscordRPC rpc = new DiscordRPC();
-//            rpc.start();
 
         final String[] input = new String[]{
                 "--version", "albinoclient",

@@ -4,6 +4,7 @@ import com.google.common.collect.*;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
+import com.jagrosh.discordipc.entities.RichPresence;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.properties.PropertyMap;
@@ -847,6 +848,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      */
     public void displayGuiScreen(GuiScreen guiScreenIn) {
         final GuiOpeningEvent event = new GuiOpeningEvent(guiScreenIn);
+        AlbinoClient client = AlbinoClient.instance;
+        client.richPresence.setState(String.format("In %s", guiScreenIn.getClass().getSimpleName().replaceAll("Gui", "")));
+        client.client.sendRichPresence(client.richPresence.build());
         if (guiScreenIn != null) {
             AlbinoClient.instance.eventManager.post(event);
         }

@@ -1,6 +1,10 @@
 package ir.albino.client;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.jagrosh.discordipc.IPCClient;
+import com.jagrosh.discordipc.IPCListener;
+import com.jagrosh.discordipc.entities.RichPresence;
+import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
 import dev.slangware.ultralight.UltraManager;
 import ir.albino.client.event.EventManager;
 import ir.albino.client.features.account.AltManager;
@@ -11,6 +15,7 @@ import ir.albino.client.utils.render.font.FontManager;
 import lombok.Getter;
 import net.janrupf.ujr.api.javascript.JSClass;
 import net.janrupf.ujr.api.javascript.JSGlobalContext;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +23,7 @@ import org.lwjgl.opengl.Display;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,9 +46,30 @@ public class AlbinoClient {
     public boolean debug = false;
     public JSGlobalContext context;
     public ExecutorService executorService;
+    public IPCClient client;
+    public RichPresence.Builder richPresence = new RichPresence.Builder()
+            .setState("Albino")
+            .setDetails("Albino")
+            .setStartTimestamp(OffsetDateTime.now())
+            .setLargeImage("game_icon", "AlbinoLarge")
+            .setMatchSecret("xyzzy")
+            .setJoinSecret("join");
 
 
     public void start() {
+        client = new IPCClient(1221159378724589629L);
+
+        client.setListener(new IPCListener() {
+            @Override
+            public void onReady(IPCClient client) {
+                client.sendRichPresence(richPresence.build());
+            }
+        });
+        try {
+            client.connect();
+        } catch (NoDiscordClientException e) {
+            throw new RuntimeException(e);
+        }
         this.executorService = Executors.newSingleThreadExecutor();
         this.detectAccounts();
         this.eventManager = new EventManager();
