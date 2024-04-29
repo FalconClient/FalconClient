@@ -40,7 +40,7 @@ public class GuiSpectator extends Gui implements ISpectatorMenuRecipient {
     }
 
     public void renderTooltip(ScaledResolution p_175264_1_, float p_175264_2_) {
-        Render2DEvent event = new Render2DEvent(p_175264_1_);
+        Render2DEvent event = new Render2DEvent(p_175264_1_, this);
         AlbinoClient.instance.eventManager.post(event);
 
         if (this.field_175271_i != null) {
