@@ -35,7 +35,6 @@ public class Effects extends Module {
     private void renderEffect(Gui screen, PotionEffect e, int y) {
         var res = new ScaledResolution(mc).getScaledWidth() - 64;
         var p = Potion.potionTypes[e.getPotionID()];
-        int i = p.getStatusIconIndex();
         this.mc.getTextureManager().bindTexture(InventoryEffectRenderer.inventoryBackground);
         int i1 = p.getStatusIconIndex();
         if (p.hasStatusIcon())
