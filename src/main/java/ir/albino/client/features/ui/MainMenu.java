@@ -5,6 +5,7 @@ import dev.slangware.ultralight.HtmlScreen;
 import dev.slangware.ultralight.UltraManager;
 import dev.slangware.ultralight.annotations.HTMLRoute;
 import ir.albino.client.AlbinoClient;
+import ir.albino.client.features.discord.DiscordState;
 import ir.albino.client.features.ui.altmanager.AltManagerMenu;
 import ir.albino.client.features.ui.chat.ChatMenu;
 import ir.albino.client.http.ApiEvent;
@@ -19,7 +20,7 @@ import spark.Response;
 import java.awt.*;
 import java.io.IOException;
 
-public class MainMenu extends HtmlScreen {
+public class MainMenu extends HtmlScreen implements DiscordState {
 
     private final static AlbinoClient client = AlbinoClient.instance;
 

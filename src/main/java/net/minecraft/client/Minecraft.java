@@ -15,6 +15,7 @@ import ir.albino.client.AlbinoClient;
 import ir.albino.client.event.impl.GuiOpeningEvent;
 import ir.albino.client.event.impl.KeypressEvent;
 import ir.albino.client.event.impl.MouseClickEvent;
+import ir.albino.client.features.discord.DiscordState;
 import ir.albino.client.features.ui.MainMenu;
 import lombok.Getter;
 import lombok.Setter;
@@ -849,7 +850,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     public void displayGuiScreen(GuiScreen guiScreenIn) {
         final GuiOpeningEvent event = new GuiOpeningEvent(guiScreenIn);
         AlbinoClient client = AlbinoClient.instance;
-        client.richPresence.setState(String.format("In %s", guiScreenIn.getClass().getSimpleName().replaceAll("Gui", "")));
+        if (guiScreenIn instanceof DiscordState)
+            client.richPresence.setState(((DiscordState) guiScreenIn).getState());
         client.client.sendRichPresence(client.richPresence.build());
         if (guiScreenIn != null) {
             AlbinoClient.instance.eventManager.post(event);

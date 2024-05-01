@@ -48,13 +48,10 @@ public class AlbinoClient {
     public ExecutorService executorService;
     public IPCClient client;
     public RichPresence.Builder richPresence = new RichPresence.Builder()
-            .setState("Albino")
-            .setDetails("Albino")
+            .setState("Idling")
+            .setDetails("AlbinoClient 1.8 | Iranian Client")
             .setStartTimestamp(OffsetDateTime.now())
-            .setLargeImage("game_icon", "AlbinoLarge")
-            .setMatchSecret("xyzzy")
-            .setJoinSecret("join");
-
+            .setLargeImage("game_icon", "AlbinoLarge");
 
     public void start() {
         client = new IPCClient(1221159378724589629L);

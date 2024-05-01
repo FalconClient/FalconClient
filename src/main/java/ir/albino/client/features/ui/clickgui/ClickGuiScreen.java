@@ -4,6 +4,7 @@ import ir.albino.client.AlbinoClient;
 import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.modules.impl.visual.Armors;
 import ir.albino.client.features.modules.impl.visual.ClickGUI;
+import ir.albino.client.features.modules.settings.DraggableSettings;
 import ir.albino.client.features.modules.settings.ModuleSetting;
 import ir.albino.client.utils.BoundingBox;
 import ir.albino.client.utils.render.RenderUtils;
@@ -78,8 +79,7 @@ public class ClickGuiScreen extends GuiScreen {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         int y = 0;
-        Predicate<Module> pred =
-                m -> map.containsKey(m) && map.get(m).contains(mouseX, mouseY);
+        Predicate<Module> pred = m -> map.containsKey(m) && map.get(m).contains(mouseX, mouseY);
         switch (mouseButton) {
             case 0:
                 for (Module m : AlbinoClient.instance.modules) {
@@ -96,13 +96,29 @@ public class ClickGuiScreen extends GuiScreen {
                 Optional<Module> optional = AlbinoClient.instance.modules.stream().filter(pred).findAny();
                 if (optional.isPresent()) {
                     Module m = optional.get();
+                    int[] margins = calculateMargin(30);
+                    int y1 = 0;
                     for (ModuleSetting<?> set : m.settings) {
-                        set.getSetter();
+                        this.drawModuleSetting(set, margins[0] + 5, y1);
+                        y1 += 20;
                     }
                 }
                 break;
         }
 
         super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    private void drawModuleSetting(ModuleSetting<?> setting, int x, int y) {
+        Object val = setting.get();
+        String text = setting.getName() + ":";
+        if (val instanceof Boolean) {
+            mc.standardGalacticFontRenderer.drawString(text, x, y, Color.WHITE.getRGB());
+            double x1 = mc.standardGalacticFontRenderer.getStringWidth(text) + x;
+            RenderUtils.rect(x1, y + 4, x1 + 4, y + 4, Color.GRAY.getRGB());
+        }
+        else if (setting instanceof DraggableSettings){
+            
+        }
     }
 }

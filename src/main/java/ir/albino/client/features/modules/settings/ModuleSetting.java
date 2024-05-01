@@ -1,16 +1,17 @@
 package ir.albino.client.features.modules.settings;
 
 import ir.albino.client.features.modules.Module;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.function.Consumer;
 
 
+@Getter
+@AllArgsConstructor
 public class ModuleSetting<V> {
-    @Getter
-    private final ModuleFunction<V> getter;
     private final String name;
-    @Getter
+    private final ModuleFunction<V> getter;
     private final Consumer<V> setter;
 
     public V get() {
@@ -19,12 +20,6 @@ public class ModuleSetting<V> {
 
     public void update(V newVal) {
         this.setter.accept(newVal);
-    }
-
-    public ModuleSetting(String name, ModuleFunction<V> getter, Consumer<V> setter) {
-        this.getter = getter;
-        this.setter = setter;
-        this.name = name;
     }
 
     @FunctionalInterface
