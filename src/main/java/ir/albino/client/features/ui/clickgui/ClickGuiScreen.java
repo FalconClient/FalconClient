@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 
 public class ClickGuiScreen extends GuiScreen {
     public Map<Module, BoundingBox> map = new HashMap<>();
-
+    public Module selected;
 
     /**
      * @param margin based margin
@@ -30,8 +30,8 @@ public class ClickGuiScreen extends GuiScreen {
      */
     private int[] calculateMargin(int margin) {
         ScaledResolution res = new ScaledResolution(mc);
-        int marginTop = new ScaledResolution(mc).getScaledHeight() - margin;
-        int marginRight = new ScaledResolution(mc).getScaledWidth() - margin;
+        int marginTop = res.getScaledHeight() - margin;
+        int marginRight = res.getScaledWidth() - margin;
         return new int[]{margin, margin, marginRight, marginTop};
     }
 
@@ -72,7 +72,15 @@ public class ClickGuiScreen extends GuiScreen {
             map.put(m, new BoundingBox(36, 36 + width, mY, mY + height, 0, 0));
             y += 15;
         }
+        // Rendering settings
 
+        if (selected != null) {
+            int y1 = margins[1] * 2;
+            for (ModuleSetting<?> set : selected.settings) {
+                set.render(mc, margins[0] * 4, y1, 20, 20);
+                y1 += 20;
+            }
+        }
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
@@ -94,31 +102,10 @@ public class ClickGuiScreen extends GuiScreen {
                 break;
             case 1:
                 Optional<Module> optional = AlbinoClient.instance.modules.stream().filter(pred).findAny();
-                if (optional.isPresent()) {
-                    Module m = optional.get();
-                    int[] margins = calculateMargin(30);
-                    int y1 = 0;
-                    for (ModuleSetting<?> set : m.settings) {
-                        this.drawModuleSetting(set, margins[0] + 5, y1);
-                        y1 += 20;
-                    }
-                }
+                optional.ifPresent(module -> this.selected = module);
                 break;
         }
-
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
-    private void drawModuleSetting(ModuleSetting<?> setting, int x, int y) {
-        Object val = setting.get();
-        String text = setting.getName() + ":";
-        if (val instanceof Boolean) {
-            mc.standardGalacticFontRenderer.drawString(text, x, y, Color.WHITE.getRGB());
-            double x1 = mc.standardGalacticFontRenderer.getStringWidth(text) + x;
-            RenderUtils.rect(x1, y + 4, x1 + 4, y + 4, Color.GRAY.getRGB());
-        }
-        else if (setting instanceof DraggableSettings){
-            
-        }
-    }
 }

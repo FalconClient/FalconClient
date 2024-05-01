@@ -4,6 +4,11 @@ import ir.albino.client.event.Listener;
 import ir.albino.client.event.impl.Render2DEvent;
 import ir.albino.client.features.modules.Module;
 import ir.albino.client.features.modules.ModuleInfo;
+import ir.albino.client.features.modules.settings.ModuleSetting;
+import ir.albino.client.features.modules.settings.Setting;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.var;
 import net.minecraft.client.gui.ScaledResolution;
 
@@ -12,6 +17,12 @@ import java.awt.*;
 
 @ModuleInfo(module = "Armor", description = "Shows your armor hp", version = "1.0", draggable = true, category = ModuleInfo.Category.VISUAL)
 public class Armors extends Module {
+    @Setting
+    public ModuleSetting<Boolean> test = new ModuleSetting<>("test", this::isB, this::setB);
+    @Getter
+    @Setter
+    public boolean b;
+
     @Listener
     public void onRender2D(Render2DEvent e) {
         int distance = 0;

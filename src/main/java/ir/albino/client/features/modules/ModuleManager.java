@@ -35,24 +35,18 @@ public class ModuleManager {
 
                 val loadClass = clz.loadClass();
                 val annotation = loadClass.getAnnotation(ModuleInfo.class);
-                val catFile = new File(Common.getModulesPath(), String.format("%s.json", annotation.module()));
 
                 final Module module;
-                JsonMapper map = new JsonMapper();
-//                if (catFile.exists()) {
-//                    module = (Module) map.readValue(catFile, loadClass);
-//                } else
                 module = (Module) loadClass.getConstructor().newInstance();
-                if (loadClass.isAnnotationPresent(Setting.class)) {
-                    module.setSettings(Arrays.stream(loadClass.getDeclaredFields())
-                            .filter(f -> f.isAnnotationPresent(Setting.class)).map(f -> {
-                                try {
-                                    return (ModuleSetting<?>) f.get(module);
-                                } catch (IllegalAccessException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            }).collect(Collectors.toList()));
-                }
+                module.setSettings(Arrays.stream(loadClass.getDeclaredFields())
+                        .filter(f -> f.isAnnotationPresent(Setting.class)).map(f -> {
+                            try {
+                                return (ModuleSetting<?>) f.get(module);
+                            } catch (IllegalAccessException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }).collect(Collectors.toList()));
+
                 module.setName(annotation.module());
                 module.setDescription(annotation.description());
                 module.setVersion(annotation.version());
@@ -62,7 +56,6 @@ public class ModuleManager {
                 if (AlbinoClient.instance.debug)
                     AlbinoClient.instance.getLogger().info(String.format("Module Loaded %s - %s", annotation.module(), annotation.version()));
 
-//                map.writeValue(catFile, module);
                 modules.add(module);
             }
         } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
