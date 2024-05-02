@@ -18,10 +18,10 @@ import java.awt.*;
 @ModuleInfo(module = "Armor", description = "Shows your armor hp", version = "1.0", draggable = true, category = ModuleInfo.Category.VISUAL)
 public class Armors extends Module {
     @Setting
-    public ModuleSetting<Boolean> test = new ModuleSetting<>("test", this::isB, this::setB);
+    public ModuleSetting<String> test = new ModuleSetting<>("test", this::getB, this::setB);
     @Getter
     @Setter
-    public boolean b;
+    public String b;
 
     @Listener
     public void onRender2D(Render2DEvent e) {

@@ -10,19 +10,20 @@ import ir.albino.client.utils.BoundingBox;
 import ir.albino.client.utils.render.RenderUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class ClickGuiScreen extends GuiScreen {
     public Map<Module, BoundingBox> map = new HashMap<>();
     public Module selected;
+    public List<GuiTextField> fields = new ArrayList<>();
 
     /**
      * @param margin based margin
@@ -50,7 +51,6 @@ public class ClickGuiScreen extends GuiScreen {
         //Modules-Background
         RenderUtils.rect(margins[0], margins[1], mc.fontRendererObj.getStringWidth(title) + 40, sr.getScaledHeight() - margins[1], new Color(0, 0, 0, 140).getRGB());
 
-
         //Title Text
         GlStateManager.pushMatrix();
         GlStateManager.disableBlend();
@@ -77,7 +77,7 @@ public class ClickGuiScreen extends GuiScreen {
         if (selected != null) {
             int y1 = margins[1] * 2;
             for (ModuleSetting<?> set : selected.settings) {
-                set.render(mc, margins[0] * 4, y1, 20, 20);
+                set.render(this, margins[0] * 4, y1, 20, 20);
                 y1 += 20;
             }
         }
@@ -108,4 +108,7 @@ public class ClickGuiScreen extends GuiScreen {
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
+    public void addTextField(GuiTextField f) {
+        this.fields.add(f);
+    }
 }

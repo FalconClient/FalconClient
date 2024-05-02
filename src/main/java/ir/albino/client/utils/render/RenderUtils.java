@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.*;
 
 @UtilityClass
 public class RenderUtils {
@@ -28,11 +28,10 @@ public class RenderUtils {
         float f1 = (fill >> 16 & 0xFF) / 255.0F;
         float f2 = (fill >> 8 & 0xFF) / 255.0F;
         float f3 = (fill & 0xFF) / 255.0F;
-
-        glEnable(3042);
-        GL11.glDisable(3553);
+        glEnable(GL_BLEND);
+        GL11.glDisable(GL_TEXTURE_2D);
         GL11.glBlendFunc(770, 771);
-        glEnable(2848);
+        glEnable(GL_LINE_SMOOTH);
 
         GL11.glPushMatrix();
         GL11.glColor4f(f1, f2, f3, f);
@@ -44,9 +43,9 @@ public class RenderUtils {
         GL11.glEnd();
         GL11.glPopMatrix();
 
-        glEnable(3553);
-        GL11.glDisable(3042);
-        GL11.glDisable(2848);
+        glEnable(GL_TEXTURE_2D);
+        GL11.glDisable(GL_BLEND);
+        GL11.glDisable(GL_LINE_SMOOTH);
     }
 
 }
