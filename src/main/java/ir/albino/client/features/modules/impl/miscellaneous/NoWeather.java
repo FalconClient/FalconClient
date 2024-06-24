@@ -16,7 +16,6 @@ public class NoWeather extends Module {
 
     @Listener
     public void onWeatherChange(WeatherChangeEvent e) {
-        System.out.println(e.weather);
         if (e.weather != Weather.CLEAR) e.setCancelled(true);
     }
 }

@@ -35,8 +35,14 @@ public class TextureManager implements ITickable, IResourceManagerReloadListener
     private ITextureObject boundTexture;
     private ResourceLocation boundTextureLocation;
 
+
     public TextureManager(IResourceManager resourceManager) {
         this.theResourceManager = resourceManager;
+    }
+
+    public void bindAlbinoTexture(String res) {
+        ResourceLocation loc = new ResourceLocation("Albino/images/" + res);
+        this.bindTexture(loc);
     }
 
     public void bindTexture(ResourceLocation resource) {

@@ -76,6 +76,7 @@ public class ClickGuiScreen extends GuiScreen {
 
         if (selected != null) {
             int y1 = margins[1] * 2;
+            System.out.println(selected.settings.size());
             for (ModuleSetting<?> set : selected.settings) {
                 set.render(this, margins[0] * 4, y1, 20, 20);
                 y1 += 20;
@@ -102,6 +103,7 @@ public class ClickGuiScreen extends GuiScreen {
                 break;
             case 1:
                 Optional<Module> optional = AlbinoClient.instance.modules.stream().filter(pred).findAny();
+                System.out.println(optional.isPresent());
                 optional.ifPresent(module -> this.selected = module);
                 break;
         }

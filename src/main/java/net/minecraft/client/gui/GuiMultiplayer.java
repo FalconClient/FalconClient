@@ -2,8 +2,9 @@ package net.minecraft.client.gui;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import dev.slangware.ultralight.HtmlScreen;
 import ir.albino.client.features.ui.IranianServerList;
+import ir.albino.client.features.ui.modules.AlbinoUI;
+import ir.albino.client.features.ui.modules.Button;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.multiplayer.GuiConnecting;
@@ -71,6 +72,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
      * window resizes, the buttonList is cleared beforehand.
      */
     public void initGui() {
+
         Keyboard.enableRepeatEvents(true);
         this.buttonList.clear();
         if (!this.initialized) {
@@ -91,7 +93,14 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
         } else {
             this.serverListSelector.setDimensions(this.width, this.height, 32, this.height - 64);
         }
+
+        uiManager.add(Button.builder()
+                .x(40).y(50).width(200).height(40).style(AlbinoUI.Style.DEFAULT).onClick(e -> {
+                    ((Button) e.ui).visible = false;
+                })
+                .build());
         this.createButtons();
+
     }
 
     /**

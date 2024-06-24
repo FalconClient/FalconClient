@@ -7,7 +7,6 @@ import lombok.extern.jackson.Jacksonized;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.util.ReportedException;
 import org.apache.commons.lang3.SystemUtils;
-import org.json.JSONPropertyIgnore;
 
 import java.net.MalformedURLException;
 import java.net.URI;

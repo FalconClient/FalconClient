@@ -15,7 +15,6 @@ import ir.albino.client.utils.render.font.FontManager;
 import lombok.Getter;
 import net.janrupf.ujr.api.javascript.JSClass;
 import net.janrupf.ujr.api.javascript.JSGlobalContext;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,18 +46,17 @@ public class AlbinoClient {
     public JSGlobalContext context;
     public ExecutorService executorService;
     public IPCClient client;
-    public RichPresence.Builder richPresence = new RichPresence.Builder()
-            .setState("Idling")
-            .setDetails("AlbinoClient 1.8 | Iranian Client")
-            .setStartTimestamp(OffsetDateTime.now())
-            .setLargeImage("game_icon", "AlbinoLarge");
+    public RichPresence.Builder richPresence;
 
     public void start() {
         client = new IPCClient(1221159378724589629L);
-
         client.setListener(new IPCListener() {
             @Override
             public void onReady(IPCClient client) {
+                richPresence = new RichPresence.Builder()
+                        .setState("Idling").setDetails("AlbinoClient 1.8 | Iranian Client")
+                        .setStartTimestamp(OffsetDateTime.now())
+                        .setLargeImage("game_icon", "AlbinoLarge");
                 client.sendRichPresence(richPresence.build());
             }
         });
@@ -77,6 +75,11 @@ public class AlbinoClient {
         this.soundList = new SoundList();
         UltraManager.getInstance().init("/templates");
         context = new JSGlobalContext((JSClass) null);
+//        try {
+//            new Radio("", "est").init();
+//        } catch (IOException | JavaLayerException e) {
+        //            throw new RuntimeException(e);
+        //        }
 
     }
 
@@ -87,7 +90,6 @@ public class AlbinoClient {
 
     public void detectAccounts() {
         File users = new File(Common.getGamePath(), "users.json");
-        AltManager manager = new AltManager();
         if (users.exists()) {
             try {
                 altManager = new JsonMapper().readValue(users, AltManager.class);

@@ -4,6 +4,8 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import ir.albino.client.AlbinoClient;
+import ir.albino.client.features.ui.modules.AlbinoUI;
+import ir.albino.client.features.ui.modules.Button;
 import ir.albino.client.utils.render.font.FontManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.stream.GuiTwitchUserMode;
@@ -38,14 +40,17 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Set<String> PROTOCOLS = Sets.newHashSet("http", "https");
     private static final Splitter NEWLINE_SPLITTER = Splitter.on('\n');
+    public List<AlbinoUI> uiManager = new ArrayList<>();
 
     /**
      * Reference to the Minecraft object.
@@ -99,6 +104,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
         for (GuiLabel guiLabel : this.labelList) {
             guiLabel.drawLabel(this.mc, mouseX, mouseY);
         }
+        drawAlbinoUI();
     }
 
     /**
@@ -414,6 +420,13 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
                     this.actionPerformed(guibutton);
                 }
             }
+            List<Button> buttons = uiManager.stream().filter(ui -> ui instanceof Button).map(ui -> (Button) ui).collect(Collectors.toCollection(Lists::newCopyOnWriteArrayList));
+            for (Button button : buttons) {
+                if (button.checkPress(mouseX, mouseY, mc)) {
+                    button.onClick(mouseX, mouseY, new ScaledResolution(mc));
+                }
+            }
+
         }
     }
 
@@ -450,9 +463,14 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
         this.fontRendererObj = mc.fontRendererObj;
         this.width = width;
         this.height = height;
-        if (!buttonList.isEmpty())
-            this.buttonList.clear();
+        if (!buttonList.isEmpty()) this.buttonList.clear();
         this.initGui();
+    }
+
+    public void drawAlbinoUI() {
+        for (AlbinoUI ui : uiManager) {
+            ui.render2D(mc);
+        }
     }
 
     public void a(int p_a_1_, int p_a_2_) {
@@ -465,6 +483,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
      * window resizes, the buttonList is cleared beforehand.
      */
     public void initGui() {
+
     }
 
     /**

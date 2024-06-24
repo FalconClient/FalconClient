@@ -39,9 +39,18 @@ public class ModuleSetting<V> {
         } else if (get() instanceof Boolean) {
             this.renderBoolean(screen, x, y, width, height);
         }
+        if (get() instanceof Integer) {
+            this.renderInteger(screen, x, y, width, height);
+        }
     }
 
     public void renderBoolean(ClickGuiScreen sc, int x, int y, int width, int height) {
+        double x1 = this.calculateX(sc.mc, x);
+        RenderUtils.rect(x1, y, x1 + width, y + height, Color.LIGHT_GRAY.getRGB());
+        sc.mc.fontRendererObj.drawString(name + ":", x, y, Color.WHITE.getRGB());
+    }
+
+    public void renderInteger(ClickGuiScreen sc, int x, int y, int width, int height) {
         double x1 = this.calculateX(sc.mc, x);
         RenderUtils.rect(x1, y, x1 + width, y + height, Color.LIGHT_GRAY.getRGB());
         sc.mc.fontRendererObj.drawString(name + ":", x, y, Color.WHITE.getRGB());
