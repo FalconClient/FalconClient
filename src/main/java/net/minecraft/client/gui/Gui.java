@@ -10,6 +10,8 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
+import static org.lwjgl.opengl.GL11.*;
+
 public class Gui {
     public static final ResourceLocation optionsBackground = new ResourceLocation("Albino/images/background.png");
     public static final ResourceLocation statIcons = new ResourceLocation("textures/gui/container/stats_icons.png");
@@ -228,6 +230,7 @@ public class Gui {
         float f = 1.0F / width;
         float f1 = 1.0F / height;
         Tessellator tessellator = Tessellator.getInstance();
+        GlStateManager.enableBlend();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
         worldrenderer.pos(x, y + height, 0.0D).tex(width * f, (height + height) * f1)
@@ -239,6 +242,7 @@ public class Gui {
         worldrenderer.pos(x, y, 0.0D).tex(width * f, height * f1)
                 .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
         tessellator.draw();
+        GlStateManager.disableBlend();
     }
 
     /**
@@ -250,10 +254,10 @@ public class Gui {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        worldrenderer.pos((double) x, (double) (y + height), 0.0D).tex((double) (u * f), (double) ((v + (float) vHeight) * f1)).endVertex();
-        worldrenderer.pos((double) (x + width), (double) (y + height), 0.0D).tex((double) ((u + (float) uWidth) * f), (double) ((v + (float) vHeight) * f1)).endVertex();
-        worldrenderer.pos((double) (x + width), (double) y, 0.0D).tex((double) ((u + (float) uWidth) * f), (double) (v * f1)).endVertex();
-        worldrenderer.pos((double) x, (double) y, 0.0D).tex((double) (u * f), (double) (v * f1)).endVertex();
+        worldrenderer.pos(x, (double) (y + height), 0.0D).tex((double) (u * f), (double) ((v + (float) vHeight) * f1)).endVertex();
+        worldrenderer.pos(x + width, y + height, 0.0D).tex((u + (float) uWidth) * f, (double) ((v + (float) vHeight) * f1)).endVertex();
+        worldrenderer.pos(x + width, y, 0.0D).tex((double) ((u + (float) uWidth) * f), (double) (v * f1)).endVertex();
+        worldrenderer.pos(x, y, 0.0D).tex((double) (u * f), (double) (v * f1)).endVertex();
         tessellator.draw();
     }
 }

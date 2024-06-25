@@ -97,7 +97,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
         uiManager.add(Button.builder()
                 .x(40).y(50).width(200).height(40).style(AlbinoUI.Style.DEFAULT).onClick(e -> {
                     ((Button) e.ui).visible = false;
-                })
+                }).text("Im not sticking")
                 .build());
         this.createButtons();
 

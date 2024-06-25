@@ -4,10 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
 import java.util.function.Consumer;
 
+import static java.lang.Math.*;
 
 @Builder()
 @AllArgsConstructor
@@ -21,6 +25,7 @@ public class Button implements AlbinoUI {
     public boolean enabled = true;
     @Builder.Default
     public boolean visible = true;
+    public String text;
 
     @Override
     public Style getStyle() {
@@ -59,9 +64,11 @@ public class Button implements AlbinoUI {
     }
 
     private void renderDefault(Minecraft mc) {
-        mc.getTextureManager().bindAlbinoTexture(DEFAULT_TEXTURES[0]);
-        Gui.drawSingleTexture(x, y, width, height);
 
+        mc.getTextureManager().bindAlbinoTexture(DEFAULT_TEXTURES[0]);
+        Gui.drawSingleTexture(x, y, width, height, Color.WHITE);
+
+        mc.fontRendererObj.drawString(text, (int) (x + (width / 2)), (int) (y + (height / 2)), Color.WHITE.getRGB());
     }
 
 
