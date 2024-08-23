@@ -12,9 +12,9 @@
 که هرکسی آزاد هست تا به نحوی کمک کنه.
 
 ## فضای مجازی
-[تلگرام](https://t.me/AlbinoClient)
+[تلگرام](https://t.me/FalconClient)
 
-[دیسکورد](https://discord.gg/ndwSr3UTJ5)
+[دیسکورد](https://discord.gg/NchawGdnMg)
 ## امکانات
 
 - آیکون کاستوم
